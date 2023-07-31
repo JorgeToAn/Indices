@@ -1,0 +1,83 @@
+Project INDICES {
+  database_type: 'MySQL'
+  Note: '''
+    # Proyecto INDICES
+  '''
+}
+
+Enum sexo {
+  HOMBRE [note: '0']
+  MUJER [note: '1']
+  INDEFINIDO [note: '2']
+}
+
+Enum tipo_registro {
+  INGRESO [note: '0']
+  EGRESO [note: '1']
+  TITULO [note: '2']
+}
+
+Table personal {
+  curp varchar(18) [pk, not null]
+  nombre varchar [not null]
+  paterno varchar [not null]
+  materno varchar
+  fecha_nac date [not null]
+  sexo sexo
+  habla_lengua_indigena bool [not null]
+}
+
+Table alumno {
+  id int [pk, increment]
+  no_control varchar(10) [not null]
+  periodo_ingreso varchar(5) [not null]
+  semestre_ingreso int [not null]
+  egresado varchar(5)
+  titulado varchar(5)
+  fk_curp varchar(18) [not null]
+  fk_carerra int [not null]
+}
+
+Table carreras {
+  id int [pk, increment]
+  clave varchar [not null, unique]
+  nombre varchar [not null]
+}
+
+Table plan_estudios {
+  id int [pk, increment]
+  clave varchar [not null, unique]
+  fecha_inicio date [not null]
+  fecha_final date
+}
+
+Table carreras_plan_estudios {
+  fk_carrera int [not null]
+  fk_plan_estudios int [not null]
+}
+
+Table registros {
+  id int [pk, increment]
+  periodo varchar(5) [not null]
+  tipo tipo_registro
+  fk_curp varchar(18) [not null]
+}
+
+Table discapacidades {
+  id int [pk, increment]
+  nombre varchar [not null]
+  descripcion varchar
+}
+
+Table personal_discapacidades {
+  fk_discapacidad int [not null]
+  fk_curp varchar(18) [not null]
+}
+
+Ref: personal.curp < alumno.fk_curp
+Ref: carreras.id < alumno.fk_carerra
+Ref: carreras.id < carreras_plan_estudios.fk_carrera
+Ref: plan_estudios.id < carreras_plan_estudios.fk_plan_estudios
+Ref: personal.curp < registros.fk_curp
+Ref: personal.curp < personal_discapacidades.fk_curp
+Ref: discapacidades.id < personal_discapacidades.fk_discapacidad
