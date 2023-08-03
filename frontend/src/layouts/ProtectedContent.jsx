@@ -4,8 +4,8 @@ import { useAuthStore } from '../store/auth';
 import PropTypes from 'prop-types';
 
 const ProtectedContent = ({ perms, groups, alt, children }) => {
-  const [isLoggedIn, user] = useAuthStore((state) => [
-    state.user,
+  const [user, isLoggedIn] = useAuthStore((state) => [
+    state.userData,
     state.isLoggedIn,
   ]);
 
@@ -25,7 +25,7 @@ const ProtectedContent = ({ perms, groups, alt, children }) => {
 
   let showContent = false;
 
-  if (!isLoggedIn) {
+  if (!isLoggedIn()) {
     return <Navigate to="/iniciar-sesion" />
   }
 
