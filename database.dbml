@@ -7,16 +7,16 @@ Project INDICES {
 
 // Las opciones de genero para alumnos y usuarios
 Enum generos {
-  HOMBRE [note: '0']
-  MUJER [note: '1']
-  INDEFINIDO [note: '2']
+  H [note: 'Hombre']
+  M [note: 'Mujer']
+  X [note: 'Indefinido u otro']
 }
 
 // Las tipos de registros por semestre
 Enum tipo_registros {
-  INGRESO [note: '0']
-  EGRESO [note: '1']
-  TITULACION [note: '2']
+  ING [note: 'Ingreso']
+  EGR [note: 'Egreso']
+  TIT [note: 'Titulación']
 }
 
 Table personal {
@@ -25,7 +25,7 @@ Table personal {
   paterno varchar [not null]
   materno varchar
   fecha_nacimiento date [not null]
-  genero generos [not null, default: '2', note: 'ENUM INT']
+  genero generos [not null, default: 'X']
   habla_lengua_indigena bool [not null]
   Note: 'Contiene la información personal del alumno'
 }
@@ -62,9 +62,9 @@ Table planes {
 Table registros {
   id int [pk, increment]
   periodo varchar(5) [not null]
-  tipo tipo_registros [not null, note: 'ENUM INT']
+  tipo tipo_registros [not null, note: 'Ingreso, Egreso o Titulación']
   fk_alumno varchar(18) [not null]
-  Note: 'El registro de cada semestre correspondiente a un alumno: Ingreso, Egreso, Titulacion'
+  Note: 'El registro de cada semestre correspondiente a un alumno'
 }
 
 Table discapacidades {
