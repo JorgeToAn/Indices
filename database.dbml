@@ -33,7 +33,6 @@ Table personal {
 Table alumnos {
   id int [pk, increment]
   no_control varchar(10) [not null]
-  semestre_ingreso int [not null, default: 1]
   periodo_ingreso varchar(5) [not null]
   periodo_egreso varchar(5) [not null]
   periodo_titulacion varchar(5) [not null, note: 'Solo puede titularse una vez egresado']
