@@ -5,16 +5,18 @@ Project INDICES {
   '''
 }
 
-Enum sexo {
-  HOMBRE [note: '0']
-  MUJER [note: '1']
-  INDEFINIDO [note: '2']
+// Las opciones de genero para alumnos y usuarios
+Enum generos {
+  H [note: 'Hombre']
+  M [note: 'Mujer']
+  X [note: 'Indefinido u otro']
 }
 
-Enum tipo_registro {
-  INGRESO [note: '0']
-  EGRESO [note: '1']
-  TITULO [note: '2']
+// Las tipos de registros por semestre
+Enum tipo_registros {
+  ING [note: 'Ingreso']
+  EGR [note: 'Egreso']
+  TIT [note: 'Titulación']
 }
 
 Table personal {
@@ -22,62 +24,64 @@ Table personal {
   nombre varchar [not null]
   paterno varchar [not null]
   materno varchar
-  fecha_nac date [not null]
-  sexo sexo
+  fecha_nacimiento date [not null]
+  genero generos [not null, default: 'X']
   habla_lengua_indigena bool [not null]
+  Note: 'Contiene la información personal del alumno'
 }
 
-Table alumno {
+Table alumnos {
   id int [pk, increment]
   no_control varchar(10) [not null]
   periodo_ingreso varchar(5) [not null]
-  semestre_ingreso int [not null]
-  egresado varchar(5)
-  titulado varchar(5)
+  periodo_egreso varchar(5) [not null]
+  periodo_titulacion varchar(5) [not null, note: 'Solo puede titularse una vez egresado']
+  periodo_liberacion_ingles varchar(5) [not null]
   fk_curp varchar(18) [not null]
   fk_carerra int [not null]
+  Note: 'Contiene la información asociada al número de control del alumno'
 }
 
 Table carreras {
   id int [pk, increment]
   clave varchar [not null, unique]
   nombre varchar [not null]
+  fk_plan int [not null, note: 'Cuando se crea un nuevo plan de estudios se tendra que crear una nueva carrera con ese plan']
+  Note: 'Información general de una carrera'
 }
 
-Table plan_estudios {
+Table planes {
   id int [pk, increment]
   clave varchar [not null, unique]
   fecha_inicio date [not null]
   fecha_final date
-}
-
-Table carreras_plan_estudios {
-  fk_carrera int [not null]
-  fk_plan_estudios int [not null]
+  Note: 'Plan de estudios, solo puede existir un plan de estudios activo a la vez'
 }
 
 Table registros {
   id int [pk, increment]
   periodo varchar(5) [not null]
-  tipo tipo_registro
-  fk_curp varchar(18) [not null]
+  tipo tipo_registros [not null, note: 'Ingreso, Egreso o Titulación']
+  fk_alumno varchar(18) [not null]
+  Note: 'El registro de cada semestre correspondiente a un alumno'
 }
 
 Table discapacidades {
   id int [pk, increment]
   nombre varchar [not null]
   descripcion varchar
+  Note: 'Información general de una discapacidad'
 }
 
 Table personal_discapacidades {
   fk_discapacidad int [not null]
   fk_curp varchar(18) [not null]
+  Note: 'Relación N:M para asociar discapacidades con un alumno'
 }
 
-Ref: personal.curp < alumno.fk_curp
-Ref: carreras.id < alumno.fk_carerra
-Ref: carreras.id < carreras_plan_estudios.fk_carrera
-Ref: plan_estudios.id < carreras_plan_estudios.fk_plan_estudios
-Ref: personal.curp < registros.fk_curp
+Ref: planes.id < carreras.fk_plan
+Ref: personal.curp < alumnos.fk_curp
+Ref: carreras.id < alumnos.fk_carerra
+Ref: alumnos.id < registros.fk_alumno
 Ref: personal.curp < personal_discapacidades.fk_curp
 Ref: discapacidades.id < personal_discapacidades.fk_discapacidad

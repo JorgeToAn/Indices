@@ -12,6 +12,10 @@
 
 - Abre una terminal de powershell o cmd dentro de la carpeta "backend".
 
+- Crea un entorno virtual **(venv)** para python.
+
+        python -m venv venv
+
 - Activa el venv utilizando el siguiente comando
 
         venv\Scripts\activate
