@@ -6,6 +6,7 @@ const indicesTheme = {
       colorScheme: 'light',
       colors: {
         'toronja': ["#FF785A", "#F3DDD9","#EEBEB3","#F29D8A", "#FEFCFC","#EB684B","#D65D42","#BE553D","#A05443","#875144","#744C44"],
+        'negro': ["#2C2C2C", "#282828", "#252525", "#212121", "#1E1E1E", "#1C1C1C", "#191919", "#171717", "#141414", "#121212", "#101010", "#0F0F0F", "#0D0D0D"]
       },
       defaultRadius: 10,
       primaryShade: 5,
