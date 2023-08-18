@@ -8,6 +8,7 @@ import Inicio from './views/Inicio';
 import Login from './views/Login';
 import CustomProvider from "./CustomProvider";
 import indicesTheme from "./CustomProvider";
+import Principal from "./views/Principal";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Inicio />,
+      },
+      {
+        path: '/principal',
+        element: <Principal />,
       },
     ]
   },

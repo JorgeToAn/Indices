@@ -13,6 +13,10 @@ const Inicio = () => {
     navigate('/iniciar-sesion');
   };
 
+  const handlePrincipal = () => {
+    navigate('/principal');
+  }
+  
   return (
     <>
       <Title oder={1}>Bienvenido {toTitle(user().first_name)}</Title>
@@ -20,6 +24,9 @@ const Inicio = () => {
       {user().is_staff && <Badge>Admin</Badge>}
       <Button onClick={handleLogout}>
         Cerrar sesión
+      </Button>
+      <Button onClick={handlePrincipal}>
+        Principal
       </Button>
     </>
   );
