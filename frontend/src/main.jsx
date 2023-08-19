@@ -9,6 +9,7 @@ import Login from './views/Login';
 import CustomProvider from "./CustomProvider";
 import indicesTheme from "./CustomProvider";
 import Principal from "./views/Principal";
+import SubirArchivos from "./views/SubirArchivos";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: '/principal',
         element: <Principal />,
+      },
+      {
+        path: '/subir-archivos',
+        element: <SubirArchivos />,
       },
     ]
   },

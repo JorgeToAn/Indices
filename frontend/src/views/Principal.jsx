@@ -9,13 +9,17 @@ import { Upload } from "tabler-icons-react";
 
 const Principal = () => {
     const user = useAuthStore((state) => state.user);
+    const navigate = useNavigate();
+    const toSubirArchivos = () => {
+        navigate('/subir-archivos');
+    }
     return (
         <Container style={{
             'max-width': '100vw'
         }}>
             <Group position="center">
-                <img className="logo" src="/img/logo/Logo-TecNM.png" alt="Logo del TecNM" />
-                <img  className="logo" src="/img/logo/sep_logo.png" alt="Logo de la secretaria de educacion" />
+                <img className="logos" src="/img/logo/Logo-TecNM.png" alt="Logo del TecNM" />
+                <img  className="logos" src="/img/logo/sep_logo.png" alt="Logo de la secretaria de educacion" />
             </Group>
             <Title order={2} mb={ 16 } align="center">Bienvenido, {toTitle(user().first_name)}</Title>
             <Group position="center" align="center" style={{width: '100vw'}}>
@@ -45,7 +49,7 @@ const Principal = () => {
                 </div>
             </Group>
             <Center>
-                <Button mt={ 32 } color="naranja" leftIcon={<Upload />}>
+                <Button mt={ 32 } color="naranja" leftIcon={<Upload />} onClick={toSubirArchivos}>
                     Subir archivos
                 </Button>
             </Center>
