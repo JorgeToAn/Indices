@@ -1,6 +1,7 @@
 .block {
     padding: 20px;
     width: 15vw;
+    max-height: 270px;
     background-color: #ECECEC;
     border-radius: 20px;
     display: flex;
@@ -8,4 +9,16 @@
     gap: 15px;
     justify-content: center;
     align-items: center;
+}
+
+.block > img {
+    width: 150px;
+    height: 150px;
+}
+
+.logo {
+    width: 20vw;
+    max-width: 280px;
+    margin: 20px;
+    height: auto;
 }
