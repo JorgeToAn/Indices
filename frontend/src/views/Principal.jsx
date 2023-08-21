@@ -15,7 +15,7 @@ const Principal = () => {
     }
     return (
         <Container style={{
-            'max-width': '100vw'
+            maxWidth: '100vw'
         }}>
             <Group position="center">
                 <img className="logos" src="/img/logo/Logo-TecNM.png" alt="Logo del TecNM" />
