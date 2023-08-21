@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/auth';
 import { setUser } from '../utils/auth';
 import { Navigate, Outlet } from 'react-router-dom';
+import Footer from '../components/footer';
 
 const MainLayout = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -25,6 +26,7 @@ const MainLayout = () => {
     <>
       <LoadingOverlay visible={loading} />
       <Outlet />
+      <Footer />
     </>
   );
 };
