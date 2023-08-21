@@ -6,28 +6,40 @@ import {
     Group,
     FileButton,
     Flex,
-    Modal
+    Modal,
+    List,
+    Accordion,
+    ActionIcon
 } from '@mantine/core'
 import { Dropzone } from '@mantine/dropzone';
 import { useState } from 'react';
-import { ArrowLeft, CircleCheck, FileUpload, Upload } from "tabler-icons-react";
+import { ArrowLeft, FileUpload, CircleX, CircleCheck, Upload } from "tabler-icons-react";
 import ResultadosLog from '../components/resultadosLog';
+import { useDisclosure } from '@mantine/hooks';
 
-function SubirArchivos ({}) {
-    const [opened, setOpened] = useState(false);
+const SubirArchivos = () => {
+    const [opened, { open, close }] = useDisclosure(false);
+    let info = {
+        "errores": ["Z20490712 no es un numero de control valido", "87907 no es un numero de control de valido"],
+        "advertencias": ["Ya existe un registro de titulacion para el numero de control 20490213", "Ya existe un registro de titulacion para el numero de control 18490658"],
+        "guardados": "Se guardaron 845 registros correctamente"
+    }
     const handleModal = () => {
-        console.log(opened);
         setOpened(true);
     }
     return (
         <Container>
-            <Button color="naranja">
+            <ActionIcon color='naranja' variant='filled' radius='lg' mt={16} mb={16}>
                 <ArrowLeft />
-            </Button>
+            </ActionIcon>
+            {/* <Button color="naranja">
+                <ArrowLeft />
+            </Button> */}
             <Title order={3}>Subir Archivos</Title>
             <p>Aqui se suben los tres archivos que utiliza el sistema para trabajar, estos deberan ser cargados una vez por semestre.<br />Los archivos deben de seguir el siguiente formato para ser aceptados en el sistema.</p>
-            <Group>
-                <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={handleModal}>
+            <Group position='center'>
+                {/* Alumnos inscritos en el semestre */}
+                <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={open}>
                     <Flex align="center" direction="column" position="center" gap="xl">
                         <Text fw={700} tt="capitalize">Alumnos Inscritos</Text>
                         {/* Es un icono */}
@@ -38,18 +50,42 @@ function SubirArchivos ({}) {
                     </Flex>
 
                     <Dropzone.Accept>
-                        <ResultadosLog />
-                        { console.log("Archivo aceptado")}
-                        
+                        { console.log("Archivo aceptado") }
                     </Dropzone.Accept>
-                    {/* <Modal  opened={opened} onClose={close} title="Resultados" centered>
-                        <Group position='center' align="center">
-                        <Button leftIcon={<CircleCheck />} color="verde">Continuar</Button>
-                        <Button color="gris">Cancelar</Button>
-                        </Group>
-                    </Modal> */}
-
                 </Dropzone>
+
+                {/* Alumnos egresados */}
+                <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={open}>
+                    <Flex align="center" direction="column" position="center" gap="xl">
+                        <Text fw={700} tt="capitalize">Egresados</Text>
+                        {/* Es un icono */}
+                        <FileUpload  size={72} color="#FFAA5A"/>
+                        <FileButton color='naranja'>
+                            {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
+                        </FileButton>
+                    </Flex>
+
+                    <Dropzone.Accept>
+                        { console.log("Archivo aceptado") }
+                    </Dropzone.Accept>
+                </Dropzone>
+
+                {/* Alumnos titulados */}
+                <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={open}>
+                    <Flex align="center" direction="column" position="center" gap="xl">
+                        <Text fw={700} tt="capitalize">Titulados</Text>
+                        {/* Es un icono */}
+                        <FileUpload  size={72} color="#FFAA5A"/>
+                        <FileButton color='naranja'>
+                            {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
+                        </FileButton>
+                    </Flex>
+
+                    <Dropzone.Accept>
+                        { console.log("Archivo aceptado") }
+                    </Dropzone.Accept>
+                </Dropzone>
+                <ResultadosLog opened={opened} close={close} info={info}/>
             </Group>
         </Container>
     );
