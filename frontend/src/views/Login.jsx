@@ -1,4 +1,4 @@
-
+import "./Login.css";
 import {
   Box,
   Title,
@@ -6,6 +6,8 @@ import {
   TextInput,
   PasswordInput,
   LoadingOverlay,
+  MantineProvider,
+  Center,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { MdError } from 'react-icons/md';
@@ -50,25 +52,32 @@ const Login = () => {
   };
 
   return  (
-    <>
-      <Title order={1}>Iniciar sesión</Title>
-      <Box>
-        <LoadingOverlay visible={loading} />
-        <form onSubmit={form.onSubmit(handleLogin)}>
-          <TextInput
-            label="Nombre de Usuario"
-            required
-            {...form.getInputProps('username')}
-          />
-          <PasswordInput
-            label="Contraseña"
-            required
-            {...form.getInputProps('password')}
-          />
-          <Button type="submit">Iniciar sesión</Button>
-        </form>
-      </Box>
-    </>
+      <div className='login'>
+        <img src="/img/patternpad.svg" alt="Patron de figuras" />
+        <div>
+          <img src="/img/logo/itmlogo.png" alt="Logo del ITM" className="logo"/>
+          <Title order={1} ta={ "center" }>Iniciar sesión</Title>
+          <Box>
+            <LoadingOverlay visible={loading} />
+              <form onSubmit={form.onSubmit(handleLogin)}>
+                <TextInput
+                  label="Nombre de Usuario"
+                  w={300}
+                  required
+                  {...form.getInputProps('username')}
+                />
+                <PasswordInput
+                  label="Contraseña"
+                  required
+                  {...form.getInputProps('password')}
+                />
+                <Center mx={ "auto" } >
+                  <Button type="submit" radius="lg" w={300} mt={ 16 } >Iniciar sesión</Button>
+                </Center>
+              </form>
+          </Box>
+        </div>
+      </div>
   );
 };
 
