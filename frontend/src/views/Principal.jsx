@@ -11,11 +11,12 @@ const Principal = () => {
     const user = useAuthStore((state) => state.user);
     return (
         <Container style={{
-            'max-width': '100vw'
+            'max-width': '100vw',
+            'padding': '0'
         }}>
             <Group position="center">
-                <img className="logo" src="/img/logo/Logo-TecNM.png" alt="Logo del TecNM" />
-                <img  className="logo" src="/img/logo/sep_logo.png" alt="Logo de la secretaria de educacion" />
+                <img className="logos" src="/img/logo/Logo-TecNM.png" alt="Logo del TecNM" />
+                <img  className="logos" src="/img/logo/sep_logo.png" alt="Logo de la secretaria de educacion" />
             </Group>
             <Title order={2} mb={ 16 } align="center">Bienvenido, {toTitle(user().first_name)}</Title>
             <Group position="center" align="center" style={{width: '100vw'}}>
