@@ -9,6 +9,7 @@ import Login from './views/Login';
 import CustomProvider from "./CustomProvider";
 import indicesTheme from "./CustomProvider";
 import Principal from "./views/Principal";
+import MiPerfil from "./views/MiPerfil";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
         path: '/principal',
         element: <Principal />,
       },
+      {
+        path: '/mi-perfil',
+        element: <MiPerfil />,
+      }
     ]
   },
   {
