@@ -4,13 +4,13 @@ import { CircleLetterC, QuestionMark } from "tabler-icons-react";
 
 const Footer = () => {
     return (
-        <Group>
+        <div className="footer">
             <Button color="negro" leftIcon={<QuestionMark />}>Ayuda</Button>
             <div>
                 <CircleLetterC />
                 Instituto Tecnológico de Mexicali, 2023
             </div>
-        </Group>
+        </div>
 
     );
 };
