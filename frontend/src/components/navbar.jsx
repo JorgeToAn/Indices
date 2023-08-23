@@ -1,8 +1,8 @@
 import "./navbar.css";
 import { ChevronDown, Home, Search, UserCircle } from "tabler-icons-react";
 import {
-    Header, 
-    Menu, 
+    Header,
+    Menu,
     Button,
     Group,
     TextInput,
@@ -107,7 +107,7 @@ const NavBar = () => {
                         </Menu.Dropdown>
                     </Menu>
                 </Group>
-                
+
 
                 {/* Menu de usuario */}
                 <Menu trigger="hover" openDelay={100} closeDelay={400}>
