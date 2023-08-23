@@ -1,12 +1,12 @@
 import { Accordion, Checkbox, List } from "@mantine/core";
 
 const Permisos = () => {
-    let permisos = {
+    const permisos = {
         "Tablas": ["Población", "Crecimiento"],
         "Indices": ["Permanencia", "Egreso", "Titulación", "Deserción"],
         "Reportes": ["Nuevo Ingreso", "Egresados", "Titulados"],
         "Cedulas": ["CACEI", "CACECA"],
-    }
+    };
     return (
         <Accordion variant="contained" radius="md"  >
             <Accordion.Item value="tablas" w="300px">

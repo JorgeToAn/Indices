@@ -15,7 +15,7 @@ const NavBar = () => {
     const navigate = useNavigate();
     const handleMiPerfil = () => {
         navigate('/mi-perfil');
-      }
+      };
 
     return (
         <Header bg="negro" height={40}>

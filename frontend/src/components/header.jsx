@@ -11,7 +11,7 @@ function Header ({color, route, section, title}) {
     const navigate = useNavigate();
     const handleRoute = () => {
         navigate(route);
-    }
+    };
 
     return(
         <Flex direction="column">
@@ -28,5 +28,6 @@ Header.propTypes = {
     route: PropTypes.string.isRequired,
     section: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired
-}
+};
+
 export default Header;
