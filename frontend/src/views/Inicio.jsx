@@ -15,7 +15,7 @@ const Inicio = () => {
 
   const handlePrincipal = () => {
     navigate('/principal');
-  }
+  };
 
   return (
     <>

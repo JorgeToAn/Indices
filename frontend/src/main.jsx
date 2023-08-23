@@ -6,7 +6,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import Inicio from './views/Inicio';
 import Login from './views/Login';
-import CustomProvider from "./CustomProvider";
 import indicesTheme from "./CustomProvider";
 import Principal from "./views/Principal";
 
@@ -30,17 +29,6 @@ const router = createBrowserRouter([
   },
 ]);
 
-
-const theme = {
-    fontFamily: "Inter, sans-serif",
-      colorScheme: 'light',
-      colors: {
-        'toronja': ["#FF785A", "#F3DDD9","#EEBEB3","#F29D8A", "#FEFCFC","#EB684B","#D65D42","#BE553D","#A05443","#875144","#744C44"],
-      },
-      defaultRadius: 10,
-      primaryShade: 5,
-      primaryColor: 'toronja',
-};
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
       <Notifications />
