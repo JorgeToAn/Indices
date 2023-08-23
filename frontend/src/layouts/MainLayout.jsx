@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/auth';
 import { setUser } from '../utils/auth';
 import { Navigate, Outlet } from 'react-router-dom';
+import NavBar from './../components/navbar';
 
 const MainLayout = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -22,10 +23,11 @@ const MainLayout = () => {
   }
 
   return (
-    <>
-      <LoadingOverlay visible={loading} />
-      <Outlet />
-    </>
+  <>
+    <NavBar />
+    <LoadingOverlay visible={loading} />
+    <Outlet />
+  </>
   );
 };
 
