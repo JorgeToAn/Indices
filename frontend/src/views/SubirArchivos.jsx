@@ -41,6 +41,7 @@ const SubirArchivos = () => {
                             {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
                         </FileButton>
                     </Flex>
+
                 </Dropzone>
 
                 {/* Alumnos egresados */}
@@ -53,6 +54,7 @@ const SubirArchivos = () => {
                             {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
                         </FileButton>
                     </Flex>
+
                 </Dropzone>
 
                 {/* Alumnos titulados */}
@@ -65,6 +67,7 @@ const SubirArchivos = () => {
                             {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
                         </FileButton>
                     </Flex>
+
                 </Dropzone>
                 <ResultadosLog opened={opened} close={close} info={info}/>
             </Group>

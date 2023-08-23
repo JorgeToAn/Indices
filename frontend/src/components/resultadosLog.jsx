@@ -3,8 +3,7 @@ import {
     Group,
     Modal,
     List,
-    Button,
-
+    Button
 } from "@mantine/core";
 import { CircleX, CircleCheck, AlertTriangle, DiscountCheck } from "tabler-icons-react";
 import { PropTypes } from 'prop-types';
