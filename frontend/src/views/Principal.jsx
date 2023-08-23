@@ -1,6 +1,5 @@
 import "./Principal.css"
 import { Button, Center, Container, Group, Title } from "@mantine/core";
-import { logout } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { toTitle } from '../utils/helpers';

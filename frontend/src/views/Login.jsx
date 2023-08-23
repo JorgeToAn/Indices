@@ -6,7 +6,6 @@ import {
   TextInput,
   PasswordInput,
   LoadingOverlay,
-  MantineProvider,
   Center,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';

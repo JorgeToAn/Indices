@@ -1,4 +1,4 @@
-import { LoadingOverlay, MantineProvider } from '@mantine/core';
+import { LoadingOverlay } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/auth';
 import { setUser } from '../utils/auth';
