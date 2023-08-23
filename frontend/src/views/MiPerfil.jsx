@@ -1,5 +1,13 @@
-import { Accordion, Button, Checkbox, Container, List, Flex, Group, TextInput, Title, ActionIcon } from "@mantine/core";
-import { ArrowLeft, DeviceFloppy, Edit } from "tabler-icons-react";
+import {
+    Accordion,
+    Button,
+    Checkbox,
+    List,
+    Flex,
+    Group,
+    TextInput
+} from "@mantine/core";
+import { DeviceFloppy, Edit } from "tabler-icons-react";
 import Header from "../components/header";
 import Permisos from "../components/permisos";
 import { useAuthStore } from "../store/auth";
@@ -31,19 +39,12 @@ const MiPerfil = () => {
             input[0].removeAttribute("data-disabled");
             console.log(input[0]);
         }
-
-
-        // inputs[0].setAttribute("data-disabled", false);
-        // for (let i in inputs) {
-            // inputs[i].setAttribute("disabled", false)
-        // }
     }
 
     const cancelarEdicion = () => {
         document.getElementById("btns").style.display = "none";
         document.getElementById("btn-editar").style.display = "block";
 
-        // let wrapper_divs = document.getElementsByClassName("user-info");
         for (let div in wrapper_divs) {
             let input = wrapper_divs[div].children[1].children;
             input[0].setAttribute("disabled", true);
@@ -52,18 +53,12 @@ const MiPerfil = () => {
         }
     }
 
-    let headerProps = {
-        "color": "toronja",
-        "section": "Usuario",
-        "title": "Perfil de Usuario",
-        "route": "/principal",
-    }
     return (
         <div style={{
             align: "left",
             padding: "2vw"
         }}>
-            <Header props={headerProps} />
+            <Header color="toronja" route="/principal" section="Usuario" title="Perfil de Usuario" />
             <Group align="flex-start" mt={20} spacing="xl" >
                 <Flex direction="column">
                     <form>

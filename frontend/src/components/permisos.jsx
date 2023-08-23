@@ -1,4 +1,4 @@
-import { Accordion, Checkbox, Group, Text, List } from "@mantine/core";
+import { Accordion, Checkbox, List } from "@mantine/core";
 
 const Permisos = () => {
     let permisos = {

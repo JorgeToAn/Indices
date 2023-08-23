@@ -1,6 +1,6 @@
 import "./footer.css"
-import { Button, Group, Text } from "@mantine/core";
-import { CircleLetterC, QuestionMark } from "tabler-icons-react";
+import { Button, Text } from "@mantine/core";
+import { CircleLetterC } from "tabler-icons-react";
 
 
 const Footer = () => {

@@ -6,6 +6,11 @@
     align-content: space-between;
 }
 
-.titulo-t > span {
+.toronja > span {
     color: #FF785A;
+}
+
+
+.naranja > span {
+    color: #FFAA5A;
 }
