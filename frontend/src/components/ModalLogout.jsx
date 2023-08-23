@@ -1,22 +1,30 @@
 import { Button, Group, Modal } from "@mantine/core";
 import { Logout } from "tabler-icons-react";
 import { PropTypes } from 'prop-types';
+import { logout } from "../utils/auth";
+import { useNavigate } from 'react-router-dom';
 
 
 const ModalLogout = ({opened, close}) => {
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        logout();
+        navigate('/iniciar-sesion');
+      };
+
     return (
         <Modal.Root opened={opened} close={close}>
             <Modal.Overlay />
             <Modal.Content>
                 <Modal.Header>
-                    <Modal.Title>Cerrar Sesión</Modal.Title>
+                    <Modal.Title><b>Cerrar Sesión</b></Modal.Title>
                     <Modal.CloseButton />
                 </Modal.Header>
                 <Modal.Body>
                     ¿Estas seguro de que deseas cerrar sesión? Todos los cambios no guardados serán descartados.
-                    <Group>
-                        <Button leftIcon={<Logout />} color="toronja">Cerrar Sesión</Button>
-                        <Button>Cancelar</Button>
+                    <Group position="center" mt={16}>
+                        <Button leftIcon={<Logout />} onClick={handleLogout} color="toronja">Cerrar Sesión</Button>
+                        <Button color="gris">Cancelar</Button>
                     </Group>
                 </Modal.Body>
             </Modal.Content>
