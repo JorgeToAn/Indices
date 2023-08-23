@@ -1,5 +1,6 @@
 import "./NavBar.css";
 import { ChevronDown, Home, Search, UserCircle } from "tabler-icons-react";
+import ModalLogout from './ModalLogout';
 import {
     Header,
     Menu,
@@ -7,9 +8,11 @@ import {
     Group,
     TextInput
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 
 
 const NavBar = () => {
+    const [opened, {open, close}] = useDisclosure(false);
     return (
         <Header bg="negro" height={40}>
             <div className="nav">
@@ -111,10 +114,11 @@ const NavBar = () => {
                     <Menu.Dropdown>
                         <Menu.Item>MI PERFIL</Menu.Item>
                         <Menu.Item >CAMBIO DE CONTRASEÑA</Menu.Item>
-                        <Menu.Item >CERRAR SESION</Menu.Item>
+                        <Menu.Item onClick={open} >CERRAR SESION</Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
             </div>
+            <ModalLogout opened={opened} close={close} />
         </Header>
     );
 };
