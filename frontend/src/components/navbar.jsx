@@ -5,10 +5,6 @@ import {
     Menu,
     Button,
     Group,
-<<<<<<< HEAD
-
-=======
->>>>>>> 40984d55401268cb06f2a19f5fcf973eb5874a08
     TextInput
 } from "@mantine/core";
 

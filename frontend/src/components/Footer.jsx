@@ -1,4 +1,4 @@
-import "./footer.css"
+import "./footer.css";
 import { Button, Text } from "@mantine/core";
 import { CircleLetterC } from "tabler-icons-react";
 
@@ -7,7 +7,7 @@ const Footer = () => {
     return (
         <div className="footer">
             <Button color="negro"  >
-                <img src="/img/icons/question-circle.svg" id="ayuda" />
+                <img src="/img/icons/question-circle.svg" id="ayuda" alt="Ayuda" />
                 Ayuda
             </Button>
             <div>
