@@ -26,7 +26,6 @@ function ResultadosLog ({opened, close, info}) {
                             <Accordion.Control icon={<CircleX  color="#ED4333" strokeWidth={3}/>}><b>Errores</b></Accordion.Control>
                             <Accordion.Panel>
                                 <List>
-                                    { console.log(info.errores) }
                                     { info.errores.map( (error, index) => <List.Item key={index}>{error}</List.Item>) }
                                 </List>
                             </Accordion.Panel>
@@ -35,7 +34,6 @@ function ResultadosLog ({opened, close, info}) {
                             <Accordion.Control icon={<AlertTriangle  color="#FFD25A" strokeWidth={3}/>}><b>Advertencias</b></Accordion.Control>
                             <Accordion.Panel>
                                 <List>
-                                { console.log(info.advertencias) }
                                 { info.advertencias.map( (advertencia, index) => <List.Item key={index} >{advertencia}</List.Item>) }
                                 </List>
                             </Accordion.Panel>
@@ -64,5 +62,6 @@ ResultadosLog.propTypes = {
     opened: PropTypes.bool,
     info: PropTypes.object,
     close: PropTypes.func,
-}
+};
+
 export default ResultadosLog;

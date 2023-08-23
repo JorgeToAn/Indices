@@ -3,6 +3,7 @@ import { Button, Center, Container, Group, Title } from "@mantine/core";
 import { useAuthStore } from '../store/auth';
 import { toTitle } from '../utils/helpers';
 import { Upload } from "tabler-icons-react";
+import { useNavigate } from "react-router-dom";
 
 
 const Principal = () => {
@@ -10,7 +11,7 @@ const Principal = () => {
     const navigate = useNavigate();
     const toSubirArchivos = () => {
         navigate('/subir-archivos');
-    }
+    };
     return (
         <Container style={{
             maxWidth: '100vw'

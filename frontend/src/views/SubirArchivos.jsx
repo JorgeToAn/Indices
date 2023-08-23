@@ -6,27 +6,20 @@ import {
     Group,
     FileButton,
     Flex,
-    Modal,
-    List,
-    Accordion,
     ActionIcon
-} from '@mantine/core'
+} from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
-import { useState } from 'react';
-import { ArrowLeft, FileUpload, CircleX, CircleCheck, Upload } from "tabler-icons-react";
+import { ArrowLeft, FileUpload, Upload } from "tabler-icons-react";
 import ResultadosLog from '../components/resultadosLog';
 import { useDisclosure } from '@mantine/hooks';
 
 const SubirArchivos = () => {
     const [opened, { open, close }] = useDisclosure(false);
-    let info = {
+    const info = {
         "errores": ["Z20490712 no es un numero de control valido", "87907 no es un numero de control de valido"],
         "advertencias": ["Ya existe un registro de titulacion para el numero de control 20490213", "Ya existe un registro de titulacion para el numero de control 18490658"],
         "guardados": "Se guardaron 845 registros correctamente"
-    }
-    const handleModal = () => {
-        setOpened(true);
-    }
+    };
     return (
         <Container>
             <ActionIcon color='naranja' variant='filled' radius='lg' mt={16} mb={16}>
@@ -48,10 +41,6 @@ const SubirArchivos = () => {
                             {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
                         </FileButton>
                     </Flex>
-
-                    <Dropzone.Accept>
-                        { console.log("Archivo aceptado") }
-                    </Dropzone.Accept>
                 </Dropzone>
 
                 {/* Alumnos egresados */}
@@ -64,10 +53,6 @@ const SubirArchivos = () => {
                             {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
                         </FileButton>
                     </Flex>
-
-                    <Dropzone.Accept>
-                        { console.log("Archivo aceptado") }
-                    </Dropzone.Accept>
                 </Dropzone>
 
                 {/* Alumnos titulados */}
@@ -80,10 +65,6 @@ const SubirArchivos = () => {
                             {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
                         </FileButton>
                     </Flex>
-
-                    <Dropzone.Accept>
-                        { console.log("Archivo aceptado") }
-                    </Dropzone.Accept>
                 </Dropzone>
                 <ResultadosLog opened={opened} close={close} info={info}/>
             </Group>

@@ -26,7 +26,7 @@ const ProtectedContent = ({ perms, groups, alt, children }) => {
   let showContent = false;
 
   if (!isLoggedIn()) {
-    return <Navigate to="/iniciar-sesion" />
+    return <Navigate to="/iniciar-sesion" />;
   }
 
   if (user?.is_superuser) {
