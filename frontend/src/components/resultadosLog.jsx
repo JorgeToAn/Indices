@@ -1,17 +1,17 @@
-import { 
+import {
     Accordion,
     Group,
     Modal,
     List,
     Button,
-    ActionIcon
+
 } from "@mantine/core";
-import { useState } from "react";
-import { CircleX, CircleCheck, AlertTriangle, DiscountCheck, X } from "tabler-icons-react";
+import { CircleX, CircleCheck, AlertTriangle, DiscountCheck } from "tabler-icons-react";
+import { PropTypes } from 'prop-types';
 
 
 function ResultadosLog ({opened, close, info}) {
-    
+
     return (
         <Modal.Root opened={opened} onClose={close} centered closeOnClickOutside={false}>
             <Modal.Overlay />
@@ -27,7 +27,7 @@ function ResultadosLog ({opened, close, info}) {
                             <Accordion.Panel>
                                 <List>
                                     { console.log(info.errores) }
-                                    { info.errores.map( error => <List.Item>{error}</List.Item>) }
+                                    { info.errores.map( (error, index) => <List.Item key={index}>{error}</List.Item>) }
                                 </List>
                             </Accordion.Panel>
                         </Accordion.Item>
@@ -36,7 +36,7 @@ function ResultadosLog ({opened, close, info}) {
                             <Accordion.Panel>
                                 <List>
                                 { console.log(info.advertencias) }
-                                { info.advertencias.map( advertencia => <List.Item >{advertencia}</List.Item>) }
+                                { info.advertencias.map( (advertencia, index) => <List.Item key={index} >{advertencia}</List.Item>) }
                                 </List>
                             </Accordion.Panel>
                         </Accordion.Item>
@@ -44,7 +44,7 @@ function ResultadosLog ({opened, close, info}) {
                             <Accordion.Control icon={<DiscountCheck  color="#80ED99" strokeWidth={3}/>}><b>Guardados</b></Accordion.Control>
                             <Accordion.Panel>
                                 <List>
-                                    
+
                                     <List.Item >{info.guardados}</List.Item>
                                 </List>
                             </Accordion.Panel>
@@ -58,6 +58,11 @@ function ResultadosLog ({opened, close, info}) {
             </Modal.Content>
         </Modal.Root>
     );
-};
+}
 
+ResultadosLog.propTypes = {
+    opened: PropTypes.bool,
+    info: PropTypes.object,
+    close: PropTypes.func,
+}
 export default ResultadosLog;
