@@ -1,11 +1,14 @@
-import "./navbar.css";
+import "./NavBar.css";
 import { ChevronDown, Home, Search, UserCircle } from "tabler-icons-react";
 import {
     Header,
     Menu,
     Button,
     Group,
+<<<<<<< HEAD
 
+=======
+>>>>>>> 40984d55401268cb06f2a19f5fcf973eb5874a08
     TextInput
 } from "@mantine/core";
 
@@ -19,7 +22,6 @@ const NavBar = () => {
                         Inicio
                     </Button>
                     <TextInput placeholder="BUSCAR" icon={<Search />} size="xs"/>
-
                 </Group>
 
                 <Group>
@@ -119,6 +121,6 @@ const NavBar = () => {
             </div>
         </Header>
     );
-}
+};
 
-export default NavBar
+export default NavBar;

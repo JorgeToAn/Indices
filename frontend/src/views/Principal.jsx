@@ -1,6 +1,5 @@
-import "./Principal.css"
+import "./Principal.css";
 import { Button, Center, Container, Group, Title } from "@mantine/core";
-import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
 import { toTitle } from '../utils/helpers';
 import { Upload } from "tabler-icons-react";
@@ -24,27 +23,27 @@ const Principal = () => {
             <Group position="center" align="center" style={{width: '100vw'}}>
                 <div className="block">
                     <h3>Tablas</h3>
-                    <img src="/img/tablas.svg" alt="Icono Tablas" />  
+                    <img src="/img/tablas.svg" alt="Icono Tablas" />
                 </div>
 
                 <div className="block">
                     <h3>Indices</h3>
-                    <img src="/img/indices.svg" alt="Icono Indices" />  
+                    <img src="/img/indices.svg" alt="Icono Indices" />
                 </div>
-                
+
                 <div className="block">
                     <h3 color="toronja">Reportes</h3>
-                    <img src="/img/reportes.svg" alt="Icono Reportes" />  
+                    <img src="/img/reportes.svg" alt="Icono Reportes" />
                 </div>
 
                 <div className="block">
                     <h3>Cédulas</h3>
-                    <img src="/img/cedulas.svg" alt="Icono Cedulas" />  
+                    <img src="/img/cedulas.svg" alt="Icono Cedulas" />
                 </div>
 
                 <div className="block">
                     <h3>Alumnos</h3>
-                    <img src="/img/alumnos.svg" alt="Icono Alumnos" />  
+                    <img src="/img/alumnos.svg" alt="Icono Alumnos" />
                 </div>
             </Group>
             <Center>
@@ -53,8 +52,7 @@ const Principal = () => {
                 </Button>
             </Center>
         </Container>
-    )
-
+    );
 };
 
 export default Principal;
