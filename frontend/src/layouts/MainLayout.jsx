@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/auth';
 import { setUser } from '../utils/auth';
 import { Navigate, Outlet } from 'react-router-dom';
-import Footer from '../components/footer';
-import NavBar from './../components/navbar';
+import Footer from '../components/Footer';
+import NavBar from '../components/Navbar';
 
 const MainLayout = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -20,7 +20,7 @@ const MainLayout = () => {
   }, []);
 
   if (!isLoggedIn()) {
-    return <Navigate replace to="/iniciar-sesion" />
+    return <Navigate replace to="/iniciar-sesion" />;
   }
 
   return (

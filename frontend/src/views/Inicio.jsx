@@ -15,8 +15,8 @@ const Inicio = () => {
 
   const handlePrincipal = () => {
     navigate('/principal');
-  }
-  
+  };
+
   return (
     <>
       <Title oder={1}>Bienvenido {toTitle(user().first_name)}</Title>

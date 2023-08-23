@@ -1,4 +1,4 @@
-import "./navbar.css";
+import "./NavBar.css";
 import { ChevronDown, Home, Search, UserCircle } from "tabler-icons-react";
 import {
     Header,
@@ -25,7 +25,6 @@ const NavBar = () => {
                         Inicio
                     </Button>
                     <TextInput placeholder="BUSCAR" icon={<Search />} size="xs"/>
-
                 </Group>
 
                 <Group>
@@ -128,6 +127,6 @@ const NavBar = () => {
             </div>
         </Header>
     );
-}
+};
 
-export default NavBar
+export default NavBar;

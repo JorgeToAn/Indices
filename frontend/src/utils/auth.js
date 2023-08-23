@@ -69,7 +69,7 @@ export const getRefreshToken = async () => {
     return response.data;
 };
 
-export const isAccessTokenExpired = async (accessToken) => {
+export const isAccessTokenExpired = (accessToken) => {
   try {
     const decodedToken = jwt_decode(accessToken);
     return decodedToken.exp < Date.now() / 1000;
