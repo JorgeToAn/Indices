@@ -1,4 +1,4 @@
-import "./Principal.css"
+import "./Principal.css";
 import { Button, Center, Container, Group, Title } from "@mantine/core";
 import { useAuthStore } from '../store/auth';
 import { toTitle } from '../utils/helpers';
@@ -49,8 +49,7 @@ const Principal = () => {
                 </Button>
             </Center>
         </Container>
-    )
-
+    );
 };
 
 export default Principal;

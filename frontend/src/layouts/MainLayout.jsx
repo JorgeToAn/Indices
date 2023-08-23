@@ -20,7 +20,7 @@ const MainLayout = () => {
   }, []);
 
   if (!isLoggedIn()) {
-    return <Navigate replace to="/iniciar-sesion" />
+    return <Navigate replace to="/iniciar-sesion" />;
   }
 
   return (

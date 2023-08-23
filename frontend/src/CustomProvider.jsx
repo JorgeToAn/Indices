@@ -1,5 +1,3 @@
-import { MantineProvider } from "@mantine/core";
-
 /* indicesTheme contiene todos los cambios globales que se le realizan al tema de mantine */
 const indicesTheme = {
     fontFamily: "Inter, sans-serif",
