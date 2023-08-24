@@ -17,6 +17,9 @@ const Inicio = () => {
     navigate('/principal');
   };
 
+  const handleRegistro = () => {
+    navigate('/registro/carrera');
+  };
   return (
     <>
       <Title oder={1}>Bienvenido {toTitle(user().first_name)}</Title>
@@ -28,6 +31,7 @@ const Inicio = () => {
       <Button onClick={handlePrincipal}>
         Principal
       </Button>
+      <Button onClick={handleRegistro}>Carreras</Button>
     </>
   );
 };
