@@ -9,6 +9,7 @@ import Login from './views/Login';
 import indicesTheme from "./CustomProvider";
 import Principal from "./views/Principal";
 import MiPerfil from "./views/MiPerfil";
+import SubirArchivos from "./views/SubirArchivos";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,9 @@ const router = createBrowserRouter([
         path: '/mi-perfil',
         element: <MiPerfil />,
       }
+        path: '/subir-archivos',
+        element: <SubirArchivos />,
+      },
     ]
   },
   {

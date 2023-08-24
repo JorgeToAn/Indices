@@ -10,7 +10,6 @@ import {
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 
-
 const NavBar = () => {
     const navigate = useNavigate();
     const handleMiPerfil = () => {
@@ -105,6 +104,8 @@ const NavBar = () => {
                             <Menu.Item >LISTA DE ALUMNOS</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
+
+                    <Button color="negro">SUBIR ARCHIVOS</Button>
                 </Group>
 
 

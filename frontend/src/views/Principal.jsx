@@ -3,10 +3,15 @@ import { Button, Center, Container, Group, Title } from "@mantine/core";
 import { useAuthStore } from '../store/auth';
 import { toTitle } from '../utils/helpers';
 import { Upload } from "tabler-icons-react";
+import { useNavigate } from "react-router-dom";
 
 
 const Principal = () => {
     const user = useAuthStore((state) => state.user);
+    const navigate = useNavigate();
+    const toSubirArchivos = () => {
+        navigate('/subir-archivos');
+    };
     return (
         <Container style={{
             'max-width': '100vw',
@@ -44,7 +49,7 @@ const Principal = () => {
                 </div>
             </Group>
             <Center>
-                <Button mt={ 32 } color="naranja" leftIcon={<Upload />}>
+                <Button mt={ 32 } color="naranja" leftIcon={<Upload />} onClick={toSubirArchivos}>
                     Subir archivos
                 </Button>
             </Center>
