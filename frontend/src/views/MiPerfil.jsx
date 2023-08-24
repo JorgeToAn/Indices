@@ -8,15 +8,15 @@ import {
     TextInput
 } from "@mantine/core";
 import { DeviceFloppy, Edit } from "tabler-icons-react";
-import Header from "../components/header";
-import Permisos from "../components/permisos";
+import Header from "../components/Header";
+import Permisos from "../components/Permisos";
 import { useAuthStore } from "../store/auth";
 
 
 const MiPerfil = () => {
     const user = useAuthStore((state) => state.user);
 
-    let carreras = [
+    const carreras = [
         "Ing. Sistemas Computacionales",
         "Contador Público",
         "Ing. Química",
@@ -27,31 +27,29 @@ const MiPerfil = () => {
         "Ing. Electrónica",
         "Ing. Logística",
         "Ing. Gestión Empresarial"
-    ]
+    ];
 
-    let wrapper_divs = document.getElementsByClassName("user-info");
+    const wrapper_divs = document.getElementsByClassName("user-info");
     const editarUsuario = () => {
         document.getElementById("btns").style.display = "block";
         document.getElementById("btn-editar").style.display = "none";
-        for (let div in wrapper_divs) {
-            let input = wrapper_divs[div].children[1].children;
+        for (const div in wrapper_divs) {
+            const input = wrapper_divs[div].children[1].children;
             input[0].removeAttribute("disabled");
             input[0].removeAttribute("data-disabled");
-            console.log(input[0]);
         }
-    }
+    };
 
     const cancelarEdicion = () => {
         document.getElementById("btns").style.display = "none";
         document.getElementById("btn-editar").style.display = "block";
 
-        for (let div in wrapper_divs) {
-            let input = wrapper_divs[div].children[1].children;
+        for (const div in wrapper_divs) {
+            const input = wrapper_divs[div].children[1].children;
             input[0].setAttribute("disabled", true);
             input[0].setAttribute("data-disabled", true);
-            console.log(input[0]);
         }
-    }
+    };
 
     return (
         <div style={{
