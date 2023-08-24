@@ -8,7 +8,6 @@ import {
     TextInput
 } from "@mantine/core";
 
-
 const NavBar = () => {
     return (
         <Header bg="negro" height={40}>
@@ -98,6 +97,8 @@ const NavBar = () => {
                             <Menu.Item >LISTA DE ALUMNOS</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
+
+                    <Button color="negro">SUBIR ARCHIVOS</Button>
                 </Group>
 
 
