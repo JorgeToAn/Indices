@@ -6,8 +6,8 @@ import { CircleLetterC } from "tabler-icons-react";
 const Footer = () => {
     return (
         <div className="footer">
-            <Button color="negro"  >
-                <img src="/img/icons/question-circle.svg" id="ayuda" />
+            <Button color="negro" >
+                <img src="/img/icons/question-circle.svg" alt="Ayuda" id="ayuda" />
                 Ayuda
             </Button>
             <div>
