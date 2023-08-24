@@ -18,13 +18,13 @@ const ModalLogout = ({opened, close}) => {
             <Modal.Content>
                 <Modal.Header>
                     <Modal.Title><b>Cerrar Sesión</b></Modal.Title>
-                    <Modal.CloseButton />
+                    <Modal.CloseButton onClick={close} bg="gris" color="negro"/>
                 </Modal.Header>
                 <Modal.Body>
                     ¿Estas seguro de que deseas cerrar sesión? Todos los cambios no guardados serán descartados.
                     <Group position="center" mt={16}>
                         <Button leftIcon={<Logout />} onClick={handleLogout} color="toronja">Cerrar Sesión</Button>
-                        <Button color="gris">Cancelar</Button>
+                        <Button color="gris" onClick={close}>Cancelar</Button>
                     </Group>
                 </Modal.Body>
             </Modal.Content>

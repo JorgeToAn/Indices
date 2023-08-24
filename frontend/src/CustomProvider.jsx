@@ -18,6 +18,27 @@ const indicesTheme = {
           "#876544",
           "#745B44"
         ],
+        'blanco': [
+          "#FFFFFF",
+          "#E6E6E6",
+          "#CFCFCF",
+          "#BABABA",
+          "#A7A7A7",
+          "#979797",
+          "#888888"
+        ],
+        'gris': [
+          "#F6F6F6",
+          "#E0E0E0",
+          "#CBCBCB",
+          "#B9B9B9",
+          "#A7A7A7",
+          "#969696",
+          "#878787",
+          "#797979",
+          "#6D6D6D",
+          "#626262"
+        ]
       },
       defaultRadius: 10,
       primaryShade: 5,
