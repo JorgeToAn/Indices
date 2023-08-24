@@ -6,13 +6,14 @@ import {
     Menu,
     Button,
     Group,
-    TextInput
+    TextInput,
+    ActionIcon
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
-
 const NavBar = () => {
     const [opened, {open, close}] = useDisclosure(false);
+
     return (
         <Header bg="negro" height={40}>
             <div className="nav">
@@ -101,18 +102,23 @@ const NavBar = () => {
                             <Menu.Item >LISTA DE ALUMNOS</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
+
+                    <Button color="negro">SUBIR ARCHIVOS</Button>
                 </Group>
 
 
                 {/* Menu de usuario */}
                 <Menu trigger="hover" openDelay={100} closeDelay={400}>
                     <Menu.Target>
-                        <Button color="negro" leftIcon={<UserCircle />}>
-                        </Button>
+                        {/* <Button color="negro" leftIcon={<UserCircle />}>
+                        </Button> */}
+                        <ActionIcon variant="filled" color="negro" mr={10}>
+                            <UserCircle />
+                        </ActionIcon>
                     </Menu.Target>
 
                     <Menu.Dropdown>
-                        <Menu.Item>MI PERFIL</Menu.Item>
+                        <Menu.Item onClick={handleMiPerfil}>MI PERFIL</Menu.Item>
                         <Menu.Item >CAMBIO DE CONTRASEÑA</Menu.Item>
                         <Menu.Item onClick={open} >CERRAR SESION</Menu.Item>
                     </Menu.Dropdown>

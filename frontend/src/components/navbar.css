@@ -5,3 +5,12 @@
     align-items: center;
     align-content: space-between;
 }
+
+.toronja > span {
+    color: #FF785A;
+}
+
+
+.naranja > span {
+    color: #FFAA5A;
+}

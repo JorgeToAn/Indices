@@ -1,3 +1,4 @@
+
 /* indicesTheme contiene todos los cambios globales que se le realizan al tema de mantine */
 const indicesTheme = {
     fontFamily: "Inter, sans-serif",
@@ -27,7 +28,19 @@ const indicesTheme = {
           "#979797",
           "#888888"
         ],
-        'gris': [
+        'verde': [
+          "#EEF8F0",
+          "#CCEDD4",
+          "#A8E9B7",
+          "#80ED99",
+          "#6EDB87",
+          "#60C778",
+          "#56B46C",
+          "#539D64",
+          "#51865D",
+          "#4E7457"
+        ],
+        "gris": [
           "#F6F6F6",
           "#E0E0E0",
           "#CBCBCB",
@@ -38,11 +51,21 @@ const indicesTheme = {
           "#797979",
           "#6D6D6D",
           "#626262"
-        ]
+        ],
       },
       defaultRadius: 10,
       primaryShade: 5,
       primaryColor: 'toronja',
+      components: {
+        span: {
+          'toronja': {
+            color: "toronja",
+          },
+          'naranja': {
+            color: "naranja",
+          },
+        }
+      }
 };
 
 
