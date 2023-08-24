@@ -19,6 +19,15 @@ const indicesTheme = {
           "#876544",
           "#745B44"
         ],
+        'blanco': [
+          "#FFFFFF",
+          "#E6E6E6",
+          "#CFCFCF",
+          "#BABABA",
+          "#A7A7A7",
+          "#979797",
+          "#888888"
+        ],
         'verde': [
           "#EEF8F0",
           "#CCEDD4",
