@@ -10,9 +10,14 @@ import {
     ActionIcon
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
     const [opened, {open, close}] = useDisclosure(false);
+    const navigate = useNavigate();
+    const handleMiPerfil = () => {
+      navigate('mi-perfil');
+    };
 
     return (
         <Header bg="negro" height={40}>
