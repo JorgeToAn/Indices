@@ -190,6 +190,7 @@ SIMPLE_JWT = {
 # https://django-guardian.readthedocs.io/en/stable/configuration.html
 
 AUTHENTICATION_BACKENDS = (
+    'backend.auth.CustomBackend',
     'django.contrib.auth.backends.ModelBackend',
     'guardian.backends.ObjectPermissionBackend',
 )
