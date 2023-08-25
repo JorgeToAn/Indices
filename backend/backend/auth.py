@@ -12,7 +12,10 @@ class CustomBackend(ModelBackend):
             validate_email(username)
             user = UserModel.objects.get(email=username)
         except ValidationError:
-            user = UserModel.objects.get(username=username)
+            try:
+                user = UserModel.objects.get(username=username)
+            except UserModel.DoesNotExist:
+                return None
         except UserModel.DoesNotExist:
             return None
         else:
