@@ -1,8 +1,8 @@
 from .models import Usuario
 from django.contrib.auth.password_validation import validate_password
+from django.utils.translation import gettext_lazy as _
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -11,10 +11,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         token['username'] = user.username
         token['first_name'] = user.first_name
-        token['last_name'] = user.last_name
-        token['second_last_name'] = user.second_last_name
+        token['paternal_surname'] = user.paternal_surname
+        token['maternal_surname'] = user.maternal_surname
         token['email'] = user.email
-        token['sexo'] = user.sexo
+        token['gender'] = user.gender
         token['is_staff'] = user.is_staff
         token['is_superuser'] = user.is_superuser
         token['groups'] = list(user.groups.values_list('name', flat = True))
@@ -31,10 +31,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = [
             'username',
             'first_name',
-            'last_name',
-            'second_last_name',
+            'paternal_surname',
+            'maternal_surname',
             'email',
-            'sexo',
+            'gender',
             'password',
             'password2'
         ]
@@ -42,7 +42,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError(
-                {'password': 'Los campos de contraseñas no son iguales'}
+                {'password': _('Los campos de contraseñas no son iguales')}
             )
         return attrs
 
@@ -50,10 +50,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         usuario = Usuario.objects.create(
             username=validated_data['username'],
             first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            second_last_name=validated_data['second_last_name'],
+            paternal_surname=validated_data['paternal_surname'],
+            maternal_surname=validated_data['maternal_surname'],
             email=validated_data['email'],
-            sexo=validated_data['sexo']
+            gender=validated_data['gender']
         )
 
         usuario.set_password(validated_data['password'])

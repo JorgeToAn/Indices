@@ -11,7 +11,7 @@ class Usuario(AbstractUser):
         OTHER = 2, _('Other')
 
     def validate_name(value):
-        match = re.search(r'^[A-ZÁÉÍÓÚÑÄËÏÖÜ]+$', value.upper())
+        match = re.search(r'^[A-ZÁÉÍÓÚÑÄËÏÖÜ ]+$', value.upper())
         if not match:
             raise ValidationError(
                 _('Enter a valid name'),
