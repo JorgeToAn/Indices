@@ -28,7 +28,7 @@ const RegistroPlanes = () => {
                             <DateInput label="Fecha de inicio" width="45%" withAsterisk/>
                             <DateInput label="Fecha de terminación" width="45%" />
                         </Group>
-                        <Center> 
+                        <Center>
                             <Button type="submit" mt={16} leftIcon={<CirclePlus />} color="naranja">Crear Plan</Button>
                         </Center>
                     </form>

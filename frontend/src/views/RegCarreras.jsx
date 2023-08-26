@@ -43,7 +43,7 @@ const RegistroCarreras = () => {
                     <Flex direction="column" justify="center" align="center" mt={16} p={10} style={{backgroundColor: '#EBEBEB', borderRadius: '20px'}}>
                         <img style={{width: '5vw'}} src="/img/icons/question-circle-black.svg" alt="Signo de interrogacion" />
                         ¿Necesitas crear un nuevo plan de estudios?
-                        <Link to="#">Da clic aquí</Link>
+                        <Link to="#"style={{color: "#FF785A"}}>Da clic aquí</Link>
                     </Flex>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >

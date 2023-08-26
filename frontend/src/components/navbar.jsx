@@ -128,7 +128,9 @@ const NavBar = () => {
                             <Menu.Item onClick={()=>{
                                 navigate('/registro/planes');
                                 }}>PLANES DE ESTUDIO</Menu.Item>
-                            <Menu.Item>DISCAPACIDADES</Menu.Item>
+                            <Menu.Item onClick={()=>{
+                                navigate('/registro/discapacidades');
+                                }}>DISCAPACIDADES</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
                 </Group>
