@@ -16,6 +16,7 @@ import { useAuthStore } from "../store/auth";
 const MiPerfil = () => {
     const user = useAuthStore((state) => state.user);
 
+    // Realizar fetch de las carreras registradas
     const carreras = [
         "Ing. Sistemas Computacionales",
         "Contador Público",
@@ -63,9 +64,9 @@ const MiPerfil = () => {
                         <TextInput id="username" className="user-info" value={user().username} disabled withAsterisk label="Nombre de usuario"/>
                         <TextInput id="email" className="user-info"  value={user().email} disabled withAsterisk label="Correo electrónico"/>
                         <TextInput id="first_name" className="user-info" value={user().first_name} disabled withAsterisk label="Nombre"/>
-                        <TextInput id="last_name"  className="user-info" value={user().last_name} disabled withAsterisk label="Apellido Paterno"/>
-                        <TextInput  value={user().username} className="user-info" disabled  label="Apellido Materno"/>
-                        <TextInput id="sex" className="user-info" value={user().username} disabled  label="Sexo"/>
+                        <TextInput id="paternal_surname" className="user-info" value={user().paternal_surname} disabled withAsterisk label="Apellido Paterno"/>
+                        <TextInput id="maternal_surname" className="user-info" value={user().maternal_surname} disabled  label="Apellido Materno"/>
+                        <TextInput id="gender" className="user-info" value={user().gender} disabled  label="Sexo"/>
                         <Button leftIcon={<Edit />}  mt={16} id="btn-editar" w="100%" onClick={editarUsuario}>Editar</Button>
                         <Flex direction="column" id="btns" wrap="wrap" justify="center" align="center" style={{display:"none"}}>
                             <Button leftIcon={<DeviceFloppy />} w="100%" id="btn-actualizar" mt={16} type="submit">Actualizar</Button>
@@ -81,7 +82,6 @@ const MiPerfil = () => {
                             <Accordion.Panel>
                                 <List withPadding listStyleType="none">
                                     { carreras.map((carrera,index) =><List.Item key={index}><Checkbox label={carrera} labelPosition="right" radius="sm" /></List.Item> )}
-
                                 </List>
                             </Accordion.Panel>
                         </Accordion.Item>

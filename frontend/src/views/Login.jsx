@@ -39,7 +39,6 @@ const Login = () => {
     const { error } = await login(values.username, values.password);
     if (error) {
       notifications.show({
-        title: 'Error',
         message: error,
         color: 'red',
         icon: <MdError />,
@@ -60,7 +59,7 @@ const Login = () => {
             <LoadingOverlay visible={loading} />
               <form onSubmit={form.onSubmit(handleLogin)}>
                 <TextInput
-                  label="Nombre de Usuario"
+                  label="Nombre de Usuario o Correo Electrónico"
                   w={300}
                   required
                   {...form.getInputProps('username')}
