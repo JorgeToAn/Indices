@@ -4,11 +4,11 @@ import ReactDOM from 'react-dom/client';
 import { Notifications } from '@mantine/notifications';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
-import Inicio from './views/Inicio';
 import Login from './views/Login';
 import indicesTheme from "./CustomProvider";
-import Principal from "./views/Principal";
-import RegistroCarreras from "./views/RegCarreras";
+import Inicio from './views/Inicio';
+import MiPerfil from "./views/MiPerfil";
+import SubirArchivos from "./views/SubirArchivos";
 
 const router = createBrowserRouter([
   {
@@ -19,8 +19,12 @@ const router = createBrowserRouter([
         element: <Inicio />,
       },
       {
-        path: '/principal',
-        element: <Principal />,
+        path: '/mi-perfil',
+        element: <MiPerfil />,
+      },
+      {
+        path: '/subir-archivos',
+        element: <SubirArchivos />,
       },
       {
         path: '/registro/carrera',
