@@ -109,6 +109,24 @@ const NavBar = () => {
                     </Menu>
 
                     <Button color="negro">SUBIR ARCHIVOS</Button>
+
+                    {/* Menu de registros */}
+                    <Menu trigger="hover" openDelay={100} closeDelay={400}>
+                        <Menu.Target>
+                            <Button color="negro">
+                                REGISTROS
+                                <ChevronDown size={16} strokeWidth={2} color={'white'} />
+                            </Button>
+                        </Menu.Target>
+
+                        <Menu.Dropdown>
+                            <Menu.Item onClick={()=>{
+                                navigate('/registro/carrera');
+                                }}>CARRERAS</Menu.Item>
+                            <Menu.Item>PLANES DE ESTUDIO</Menu.Item>
+                            <Menu.Item>DISCAPACIDADES</Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
                 </Group>
 
 

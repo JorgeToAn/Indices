@@ -1,0 +1,15 @@
+.tabla-toronja > thead{
+    background-color: #FF785A;
+    border-radius: 5px;
+}
+
+.tabla-toronja th, td {
+    color: white !important;
+}
+
+.tabla-toronja tbody {
+    background-color: #5B5B5B;
+}
+
+.tabla-toronja {
+}

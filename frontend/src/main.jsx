@@ -9,6 +9,7 @@ import indicesTheme from "./CustomProvider";
 import Inicio from './views/Inicio';
 import MiPerfil from "./views/MiPerfil";
 import SubirArchivos from "./views/SubirArchivos";
+import RegistroCarreras from "./views/RegCarreras";
 
 const router = createBrowserRouter([
   {

@@ -1,7 +1,8 @@
-import { ActionIcon, Button, Flex, Group, Select, Table, TextInput, Title } from "@mantine/core";
+import { Button, Flex, Group, Select, TextInput } from "@mantine/core";
 import { Link } from "react-router-dom";
-import { ArrowLeft, CirclePlus } from 'tabler-icons-react';
-
+import { CirclePlus } from 'tabler-icons-react';
+import Header from '../components/header';
+import Tabla from "../components/Tabla";
 
 const RegistroCarreras = () => {
     const tabla = [
@@ -9,18 +10,17 @@ const RegistroCarreras = () => {
         ['ISIC', 'Sistemas Computacionales', 'ISIC-2011'],
         ['QUI', 'Quimica', 'QUI-2008']
     ];
+
+    const headers = [
+        'CLAVE', 'NOMBRE', 'PLAN DE ESTUDIO'
+    ];
     return(
         <div style={{
             width: '100vw',
             padding: '3vw',
         }}>
-            <Flex direction="column">
-                <ActionIcon color='naranja' variant='filled' radius='lg' mt={16} mb={16}>
-                    <ArrowLeft />
-                </ActionIcon>
-                <Title>Registro Carreras</Title>
-            </Flex>
-            <Group>
+            <Header color="toronja" section="Registro" title="Carreras" route="/"/>
+            <Group align="flex-start" spacing="3vw">
                 <Flex direction="column">
                     <form>
                         <TextInput label="Nombre"/>
@@ -43,20 +43,9 @@ const RegistroCarreras = () => {
                         <Link to="#">Da clic aquí</Link>
                     </Flex>
                 </Flex>
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>CLAVE</th>
-                            <th>NOMBRE</th>
-                            <th>PLAN DE ESTUDIOS</th>
-                        </tr>
-                    </thead>
-                    { tabla.map( (fila, index) => <tr key={index}>
-                        <td>{fila[0]}</td>
-                        <td>{fila[1]}</td>
-                        <td>{fila[2]}</td>
-                    </tr>)}
-                </Table>
+                <Flex direction="column" align="flex-start" justify="flex-start" >
+                    <Tabla headers={headers} content={tabla} />
+                </Flex>
             </Group>
         </div>
     );
