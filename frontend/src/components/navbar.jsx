@@ -23,7 +23,9 @@ const NavBar = () => {
         <Header bg="negro" height={40}>
             <div className="nav">
                 <Group>
-                    <Button color="negro" leftIcon={<Home />} uppercase={true}>
+                    <Button color="negro" leftIcon={<Home />} uppercase={true} onClick={()=> {
+                        navigate('/');
+                    }}>
                         Inicio
                     </Button>
                     <TextInput placeholder="BUSCAR" icon={<Search />} size="xs"/>
@@ -123,7 +125,9 @@ const NavBar = () => {
                             <Menu.Item onClick={()=>{
                                 navigate('/registro/carrera');
                                 }}>CARRERAS</Menu.Item>
-                            <Menu.Item>PLANES DE ESTUDIO</Menu.Item>
+                            <Menu.Item onClick={()=>{
+                                navigate('/registro/planes');
+                                }}>PLANES DE ESTUDIO</Menu.Item>
                             <Menu.Item>DISCAPACIDADES</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>

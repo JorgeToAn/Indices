@@ -10,6 +10,7 @@ import Inicio from './views/Inicio';
 import MiPerfil from "./views/MiPerfil";
 import SubirArchivos from "./views/SubirArchivos";
 import RegistroCarreras from "./views/RegCarreras";
+import RegistroPlanes from "./views/RegPlanes";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,11 @@ const router = createBrowserRouter([
       {
         path: '/registro/carrera',
         element: <RegistroCarreras />
-      }
+      },
+      {
+        path: '/registro/planes',
+        element: <RegistroPlanes />
+      },
     ]
   },
   {
