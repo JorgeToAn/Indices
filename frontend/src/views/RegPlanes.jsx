@@ -1,4 +1,4 @@
-import { Button, Flex, Group, TextInput } from "@mantine/core";
+import { Button, Center, Flex, Group, TextInput } from "@mantine/core";
 import { CirclePlus } from 'tabler-icons-react';
 import Header from '../components/header';
 import Tabla from "../components/Tabla";
@@ -19,7 +19,7 @@ const RegistroPlanes = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="toronja" section="Registro" title="Carreras" route="/"/>
+            <Header color="naranja" section="Registro" title="Planes de Estudio" route="/"/>
             <Group align="flex-start" spacing="3vw">
                 <Flex direction="column">
                     <form>
@@ -28,11 +28,13 @@ const RegistroPlanes = () => {
                             <DateInput label="Fecha de inicio" width="45%" withAsterisk/>
                             <DateInput label="Fecha de terminación" width="45%" />
                         </Group>
-                        <Button type="submit" leftIcon={<CirclePlus />}>Crear Carrera</Button>
+                        <Center> 
+                            <Button type="submit" mt={16} leftIcon={<CirclePlus />} color="naranja">Crear Plan</Button>
+                        </Center>
                     </form>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >
-                    <Tabla headers={headers} content={tabla} />
+                    <Tabla headers={headers} content={tabla} colors="tabla-naranja" />
                 </Flex>
             </Group>
         </div>

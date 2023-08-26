@@ -1,13 +1,10 @@
 .tabla-toronja > thead{
     background-color: #FF785A;
-    border-radius: 5px;
 }
-
-.tabla-toronja th, td {
+.tabla-naranja > thead{
+    background-color: #FFAA5A;
+}
+th {
     color: white !important;
-}
-
-.tabla-toronja tbody {
-    background-color: #5B5B5B;
 }
 

@@ -1,4 +1,4 @@
-import { Button, Flex, Group, Select, TextInput } from "@mantine/core";
+import { Button, Center, Flex, Group, Select, TextInput } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { CirclePlus } from 'tabler-icons-react';
 import Header from '../components/header';
@@ -36,7 +36,9 @@ const RegistroCarreras = () => {
                                 withAsterisk
                             />
                         </Group>
-                        <Button type="submit" leftIcon={<CirclePlus />}>Crear Carrera</Button>
+                        <Center> 
+                            <Button type="submit" mt={16} leftIcon={<CirclePlus />}>Crear Carrera</Button>
+                        </Center>
                     </form>
                     <Flex direction="column" justify="center" align="center" mt={16} p={10} style={{backgroundColor: '#EBEBEB', borderRadius: '20px'}}>
                         <img style={{width: '5vw'}} src="/img/icons/question-circle-black.svg" alt="Signo de interrogacion" />
@@ -45,7 +47,7 @@ const RegistroCarreras = () => {
                     </Flex>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >
-                    <Tabla headers={headers} content={tabla} />
+                    <Tabla headers={headers} content={tabla} colors="tabla-toronja" />
                 </Flex>
             </Group>
         </div>
