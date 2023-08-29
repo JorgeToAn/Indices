@@ -8,7 +8,7 @@ import {
     TextInput
 } from "@mantine/core";
 import { DeviceFloppy, Edit } from "tabler-icons-react";
-import Header from "../components/Header";
+import Header from "../components/header.jsx";
 import Permisos from "../components/Permisos";
 import { useAuthStore } from "../store/auth";
 
