@@ -35,3 +35,8 @@ __pycache__/
 
 # Base de datos
 *.sqlite3
+
+# Migraciones de django
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py

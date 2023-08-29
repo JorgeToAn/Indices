@@ -9,14 +9,20 @@ Project INDICES {
 Enum generos {
   H [note: 'Hombre']
   M [note: 'Mujer']
-  X [note: 'Indefinido u otro']
+  X [note: 'Otro']
 }
 
-// Las tipos de registros por semestre
-Enum tipo_registros {
-  ING [note: 'Ingreso']
-  EGR [note: 'Egreso']
-  TIT [note: 'Titulación']
+Enum tipos_ingresos {
+  EX [note: 'Examen']
+  EQ [note: 'Equivalencia']
+  TR [note: 'Traslado']
+  CO [note: 'Convalidación']
+}
+
+Enum tipos_titulaciones {
+  TE [note: 'Tesis']
+  RE [note: 'Residencia']
+  DU [note: 'Modelo Dual']
 }
 
 Table personal {
@@ -58,12 +64,24 @@ Table planes {
   Note: 'Plan de estudios, solo puede existir un plan de estudios activo a la vez'
 }
 
-Table registros {
+Table ingresos {
   id int [pk, increment]
   periodo varchar(5) [not null]
-  tipo tipo_registros [not null, note: 'Ingreso, Egreso o Titulación']
-  fk_alumno varchar(18) [not null]
-  Note: 'El registro de cada semestre correspondiente a un alumno'
+  tipo_ingreso tipos_ingresos
+  fk_alumno int [not null]
+}
+
+Table egresos {
+  id int [pk, increment]
+  periodo varchar(5) [not null]
+  fk_alumno int [not null]
+}
+
+Table titulaciones {
+  id int [pk, increment]
+  periodo varchar(5) [not null]
+  tipo_titulacion tipos_titulaciones
+  fk_alumno int [not null]
 }
 
 Table discapacidades {
@@ -82,6 +100,8 @@ Table personal_discapacidades {
 Ref: planes.id < carreras.fk_plan
 Ref: personal.curp < alumnos.fk_curp
 Ref: carreras.id < alumnos.fk_carerra
-Ref: alumnos.id < registros.fk_alumno
+Ref: alumnos.id < ingresos.fk_alumno
+Ref: alumnos.id < egresos.fk_alumno
+Ref: alumnos.id < titulaciones.fk_alumno
 Ref: personal.curp < personal_discapacidades.fk_curp
 Ref: discapacidades.id < personal_discapacidades.fk_discapacidad
