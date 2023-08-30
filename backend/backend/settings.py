@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'guardian',
     'usuario',
+    'personal',
 ]
 
 MIDDLEWARE = [
@@ -152,6 +153,7 @@ AUTH_USER_MODEL = 'usuario.Usuario'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     )
 }
 SIMPLE_JWT = {
