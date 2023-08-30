@@ -1,0 +1,10 @@
+.tabla-toronja > thead{
+    background-color: #FF785A;
+}
+.tabla-naranja > thead{
+    background-color: #FFAA5A;
+}
+th {
+    color: white !important;
+}
+

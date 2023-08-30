@@ -1,7 +1,8 @@
-import { ActionIcon, Button, Flex, Group, Select, Table, TextInput, Title } from "@mantine/core";
+import { Button, Center, Flex, Group, Select, TextInput } from "@mantine/core";
 import { Link } from "react-router-dom";
-import { ArrowLeft, CirclePlus } from 'tabler-icons-react';
-
+import { CirclePlus } from 'tabler-icons-react';
+import Header from '../components/header';
+import Tabla from "../components/Tabla";
 
 const RegistroCarreras = () => {
     const tabla = [
@@ -9,23 +10,22 @@ const RegistroCarreras = () => {
         ['ISIC', 'Sistemas Computacionales', 'ISIC-2011'],
         ['QUI', 'Quimica', 'QUI-2008']
     ];
+
+    const headers = [
+        'CLAVE', 'NOMBRE', 'PLAN DE ESTUDIO'
+    ];
     return(
         <div style={{
             width: '100vw',
             padding: '3vw',
         }}>
-            <Flex direction="column">
-                <ActionIcon color='naranja' variant='filled' radius='lg' mt={16} mb={16}>
-                    <ArrowLeft />
-                </ActionIcon>
-                <Title>Registro Carreras</Title>
-            </Flex>
-            <Group>
-                <Flex direction="column" style={{ width: '400px'}}>
+            <Header color="toronja" section="Registro" title="Carreras" route="/"/>
+            <Group align="flex-start" spacing="3vw">
+                <Flex direction="column">
                     <form>
-                        <TextInput label="Nombre"/>
+                        <TextInput label="Nombre" withAsterisk/>
                         <Group>
-                            <TextInput label="Clave" />
+                            <TextInput label="Clave" withAsterisk/>
                             <Select
                                 label="Plan de estudios"
                                 placeholder="Seleccione un plan de estudios"
@@ -33,30 +33,22 @@ const RegistroCarreras = () => {
                                     {value: 'ISIC-2010', label: 'ISIC-2010'},
                                     {value: 'ISIC-2011', label: 'ISic-2011'}
                                 ]}
+                                withAsterisk
                             />
                         </Group>
-                        <Button type="submit" leftIcon={<CirclePlus />}>Crear Carrera</Button>
+                        <Center> 
+                            <Button type="submit" mt={16} leftIcon={<CirclePlus />}>Crear Carrera</Button>
+                        </Center>
                     </form>
                     <Flex direction="column" justify="center" align="center" mt={16} p={10} style={{backgroundColor: '#EBEBEB', borderRadius: '20px'}}>
                         <img style={{width: '5vw'}} src="/img/icons/question-circle-black.svg" alt="Signo de interrogacion" />
                         ¿Necesitas crear un nuevo plan de estudios?
-                        <Link to="#">Da clic aquí</Link>
+                        <Link to="#"style={{color: "#FF785A"}}>Da clic aquí</Link>
                     </Flex>
                 </Flex>
-                <Table>
-                    <thead>
-                        <tr>
-                            <th>CLAVE</th>
-                            <th>NOMBRE</th>
-                            <th>PLAN DE ESTUDIOS</th>
-                        </tr>
-                    </thead>
-                    { tabla.map( (fila, index) => <tr key={index}>
-                        <td>{fila[0]}</td>
-                        <td>{fila[1]}</td>
-                        <td>{fila[2]}</td>
-                    </tr>)}
-                </Table>
+                <Flex direction="column" align="flex-start" justify="flex-start" >
+                    <Tabla headers={headers} content={tabla} colors="tabla-toronja" />
+                </Flex>
             </Group>
         </div>
     );
