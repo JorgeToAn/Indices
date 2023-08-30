@@ -9,6 +9,7 @@ import indicesTheme from "./CustomProvider";
 import Inicio from './views/Inicio';
 import MiPerfil from "./views/MiPerfil";
 import SubirArchivos from "./views/SubirArchivos";
+import IndicePermanencia from './views/IndPermanencia';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
         path: '/subir-archivos',
         element: <SubirArchivos />,
       },
+      {
+        path: '/indices/permanencia',
+        element: <IndicePermanencia />,
+      }
     ]
   },
   {
