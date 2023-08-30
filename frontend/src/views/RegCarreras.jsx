@@ -21,7 +21,7 @@ const RegistroCarreras = () => {
                 <Title>Registro Carreras</Title>
             </Flex>
             <Group>
-                <Flex direction="column">
+                <Flex direction="column" style={{ width: '400px'}}>
                     <form>
                         <TextInput label="Nombre"/>
                         <Group>
