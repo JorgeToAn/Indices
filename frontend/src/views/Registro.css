@@ -1,0 +1,13 @@
+.col-input {
+    width: 25vw;
+    max-width: 450px;
+    min-width: 400px;
+}
+
+.col-input > input {
+    width: 100%;
+}
+
+.col-input > div > input {
+    width: 45%;
+}

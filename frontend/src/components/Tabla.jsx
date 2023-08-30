@@ -13,11 +13,6 @@ function Tabla ({headers, content, colors}) {
                 </tr>
             </thead>
             <tbody>
-                {/* { content.map( (fila, index) => <tr key={index}>
-                    <td>{fila[0]}</td>
-                    <td style={{width:'300px'}}>{fila[1]}</td>
-                    <td>{fila[2]}</td>
-                </tr>)} */}
                 { content.map( (fila, index) => <tr key={index}>
                     { fila.map( (celda, i) => <td key={i}>{celda}</td>)}
                 </tr>) }
