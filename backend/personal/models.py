@@ -1,8 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
-from django.db.models.functions import Now
 from django.db import models
-import re
+import re, datetime
 
 class Personal(models.Model):
     class Gender(models.IntegerChoices):
@@ -32,6 +31,7 @@ class Personal(models.Model):
     materno = models.CharField(verbose_name=_('apellido materno'), max_length=150, null=True, blank=False, validators=[validate_solo_letras])
     fecha_nacimiento = models.DateField(null=False, blank=False)
     genero = models.IntegerField(choices=Gender.choices, default=Gender.OTHER, null=False)
+    discapacidades = models.ManyToManyField('discapacidades.Discapacidad', related_name='discapacidades')
     habla_lengua_indigena = models.BooleanField(default=False)
 
     REQUIRED_FIELDS = [
@@ -49,11 +49,11 @@ class Personal(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.curp} | {self.nombre} {self.paterno}'
+        return f'[{self.pk}] {self.nombre} {self.paterno}'
 
     class Meta:
         verbose_name = 'información personal'
         verbose_name_plural = 'informaciones personales'
         constraints = [
-            models.CheckConstraint(check=models.Q(fecha_nacimiento__lte=Now()), name='fecha_nacimiento_check_lte_date')
+            models.CheckConstraint(check=models.Q(fecha_nacimiento__lte=datetime.date.today()), name='fecha_nacimiento_check_lte_date')
         ]
