@@ -25,7 +25,7 @@ const RegistroCarreras = () => {
                 <Flex direction="column" className="col-input">
                     <form>
                         <TextInput label="Nombre" withAsterisk/>
-                        <Group>
+                        <Group className="input-group">
                             <TextInput label="Clave" withAsterisk/>
                             <Select
                                 label="Plan de estudios"

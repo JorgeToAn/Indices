@@ -8,6 +8,10 @@
     width: 100%;
 }
 
-.col-input > div > input {
-    width: 45%;
+.input-group {
+    width: 100%;
+}
+
+.input-group > div {
+    width: 48%;
 }

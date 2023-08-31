@@ -26,7 +26,7 @@ const RegistroPlanes = () => {
                 <Flex direction="column" className="col-input">
                     <form>
                         <TextInput label="Nombre" withAsterisk/>
-                        <Group>
+                        <Group className="input-group">
                             <DateInput label="Fecha de inicio" width="45%" withAsterisk/>
                             <DateInput label="Fecha de terminación" width="45%" />
                         </Group>
