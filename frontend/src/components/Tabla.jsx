@@ -3,21 +3,25 @@ import { Table } from '@mantine/core';
 import { PropTypes } from 'prop-types';
 import './Tabla.css';
 
-function Tabla ({headers, content, colors}) {
+function Tabla ({headers, content, colors, doubleHeader}) {
 
     return(
-        <Table highlightOnHover withBorder withColumnBorders horizontalSpacing='md' verticalSpacing='sm' className={colors}>
-            <thead>
-                <tr>
-                    { headers.map( (head, index) =><th key={index}>{head}</th>) }
-                </tr>
-            </thead>
+        <Table highlightOnHover withBorder withColumnBorders horizontalSpacing='xs' verticalSpacing='xs' className={colors}>
+            {doubleHeader ?
+                <thead>
+                    { headers.map( (fila, index) => index === 0 ? <tr key={index}><th colSpan={headers[index+1].length}>{fila[0]}</th></tr> : <tr key={index}>
+                    { fila.map( (celda, i) => <th key={i}>{celda}</th>)}
+                    </tr>) }
+                </thead>
+            :
+                <thead>
+                    <tr>
+                        { headers.map( (head, index) =><th key={index}>{head}</th>) }
+                    </tr>
+                </thead>
+
+            }
             <tbody>
-                {/* { content.map( (fila, index) => <tr key={index}>
-                    <td>{fila[0]}</td>
-                    <td style={{width:'300px'}}>{fila[1]}</td>
-                    <td>{fila[2]}</td>
-                </tr>)} */}
                 { content.map( (fila, index) => <tr key={index}>
                     { fila.map( (celda, i) => <td key={i}>{celda}</td>)}
                 </tr>) }
@@ -30,5 +34,6 @@ Tabla.propTypes = {
     headers : PropTypes.array,
     content : PropTypes.array,
     colors: PropTypes.string,
+    doubleHeader: PropTypes.bool,
 };
 export default Tabla;
