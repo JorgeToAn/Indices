@@ -7,6 +7,9 @@ function Tabla ({headers, content, colors, doubleHeader}) {
 
     return(
         <Table highlightOnHover withBorder withColumnBorders horizontalSpacing='xs' verticalSpacing='xs' className={colors}>
+            {/* Si la propiedad "doubleHeader" es true, entonces la primer celda del primer renglon
+             tendra una longitud de toda la tabla, si no, entonces solo habra un renglon en donde cada
+             columna es un encabezado */}
             {doubleHeader ?
                 <thead>
                     { headers.map( (fila, index) => index === 0 ? <tr key={index}><th colSpan={headers[index+1].length}>{fila[0]}</th></tr> : <tr key={index}>

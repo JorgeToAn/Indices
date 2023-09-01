@@ -11,6 +11,7 @@ const IndicePermanencia = () => {
         ['Semestre 4', '2015-1', '45','-','15','30','66.75'],
         ['Semestre 5', '2015-1', '45','-','15','30','66.75'],
         ['Semestre 6', '2015-1', '45','-','15','30','66.75'],
+        ['','Acumulado', '','14','31']
     ];
 
     const headers = [
@@ -26,9 +27,9 @@ const IndicePermanencia = () => {
             <Flex direction="column">
                 <Group>
                     <Selector  label="Programa educativo" color="toronja" data={[
-                        {value: 'Sistemas computacionales', label:"Sistemas computacionales"},
-                        {value: 'Quimica', label:"Quimica"},
-                        {value: 'Industrial', label:"Industrial"},
+                        ['Sistemas computacionales','Sistemas computacionales'],
+                        ['Quimica','Quimica'],
+                        ['Industrial','Industrial'],
                     ]} />
                     <Select label="Programa educativo" variant="filled" placeholder='' data={[
                         {value: 'Sistemas computacionales', label:"Sistemas computacionales"},

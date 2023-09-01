@@ -3,34 +3,29 @@ import "./Selector.css";
 import { PropTypes } from 'prop-types';
 
 function Selector ({label, data, color}) {
-    const handleClick = (element) => {
-        // const select = document.getElementById(element+"-label");
-        console.log(element);
-        // select.style.display="block";
-    };
+    // const handleClick = (element) => {
+    //     // const select = document.getElementById(element+"-label");
+    //     console.log(element);
+    //     // select.style.display="block";
+    // };
     return(
         <Select
-            onClick={handleClick(this)}
-            className={"selector "+color}
-            label={label}
+        className={"selector "+color}
+        label={label}
             placeholder={label}
-            data={[
-                {value: 'Sistemas computacionales', label:"Sistemas computacionales"},
-                {value: 'Quimica', label:"Quimica"},
-                {value: 'Industrial', label:"Industrial"},
-            ]}
+            data={data.map((fila) => ({"value":fila[0], "label":fila[1]}) )}
             styles={(theme) => ({
                 input: {
                     backgroundColor: "#FF785A",
                     color: theme.white,
                     borderRadius: "md",
                 },
-                dropdown: {
-                    color: '#FFFFFF',
+                label: {
+                    visibility: "hidden"
                 }
             })}
             variant="filled"
-        />
+            />
     );
 };
 
