@@ -23,7 +23,9 @@ const NavBar = () => {
         <Header bg="negro" height={40}>
             <div className="nav">
                 <Group>
-                    <Button color="negro" leftIcon={<Home />} uppercase={true}>
+                    <Button color="negro" leftIcon={<Home />} uppercase={true} onClick={()=> {
+                        navigate('/');
+                    }}>
                         Inicio
                     </Button>
                     <TextInput placeholder="BUSCAR" icon={<Search />} size="xs"/>
@@ -111,6 +113,28 @@ const NavBar = () => {
                     </Menu>
 
                     <Button color="negro">SUBIR ARCHIVOS</Button>
+
+                    {/* Menu de registros */}
+                    <Menu trigger="hover" openDelay={100} closeDelay={400}>
+                        <Menu.Target>
+                            <Button color="negro">
+                                REGISTROS
+                                <ChevronDown size={16} strokeWidth={2} color={'white'} />
+                            </Button>
+                        </Menu.Target>
+
+                        <Menu.Dropdown>
+                            <Menu.Item onClick={()=>{
+                                navigate('/registro/carrera');
+                                }}>CARRERAS</Menu.Item>
+                            <Menu.Item onClick={()=>{
+                                navigate('/registro/planes');
+                                }}>PLANES DE ESTUDIO</Menu.Item>
+                            <Menu.Item onClick={()=>{
+                                navigate('/registro/discapacidades');
+                                }}>DISCAPACIDADES</Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
                 </Group>
 
 
