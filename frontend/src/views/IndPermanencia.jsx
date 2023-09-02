@@ -1,8 +1,7 @@
 import { Flex, Group } from '@mantine/core';
-import { Select } from '@mantine/core';
-import Selector from '../components/Selector';
 import Tabla from '../components/Tabla';
 import Header from './../components/header';
+import Dropdown from '../components/Dropdown';
 
 const IndicePermanencia = () => {
     const tabla = [
@@ -25,16 +24,30 @@ const IndicePermanencia = () => {
         }}>
             <Header color="toronja" section="Indices" title="Permanencia por cohorte generacional" route="indices/permanencia" />
             <Flex direction="column">
-                <Group>
-                    <Selector  label="Programa educativo" color="toronja" data={[
-                        ['Sistemas computacionales','Sistemas computacionales'],
-                        ['Quimica','Quimica'],
-                        ['Industrial','Industrial'],
+                <Group mt={0} mb={16}>
+                    <Dropdown  label="Programa educativo" color="toronja" data={[
+                        ['ISIC','Sistemas computacionales'],
+                        ['QUI','Quimica'],
+                        ['IND','Industrial'],
                     ]} />
-                    <Select label="Programa educativo" variant="filled" placeholder='' data={[
-                        {value: 'Sistemas computacionales', label:"Sistemas computacionales"},
-                        {value: 'Quimica', label:"Quimica"},
-                        {value: 'Industrial', label:"Industrial"},
+                    <Dropdown  label="Cohorte generacional" color="toronja" data={[
+                        ['2015-1','2015-2'],
+                        ['2016-1','2016-1'],
+                        ['2016-2','2016-2'],
+                        ['2017-1','2017-1'],
+                    ]} />
+                    <Dropdown  label="Cálculo de semestres" color="toronja" data={[
+                        ['9','9 semestres'],
+                        ['10','10 semestres'],
+                        ['11','11 semestres'],
+                        ['12','12 semestres'],
+                        ['13','13 semestres'],
+                        ['14','14 semestres'],
+                        ['15','15 semestres'],
+                    ]} />
+                    <Dropdown  label="Exportar" color="toronja" data={[
+                        ['Excel','Excel'],
+                        ['PDF','PDF'],
                     ]} />
                 </Group>
                 <Tabla doubleHeader colors="tabla-toronja"  headers={headers} content={tabla} />
