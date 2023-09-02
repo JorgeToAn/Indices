@@ -2,7 +2,7 @@ import { Select } from "@mantine/core";
 import { PropTypes } from 'prop-types';
 import { Selector } from "tabler-icons-react";
 
-function Dropdown ({label, data}) {
+function Dropdown ({label, color, data}) {
     return(
         <Select
         searchable
@@ -16,13 +16,14 @@ function Dropdown ({label, data}) {
                 input: {
                     '&:focus-within': {
                         backgroundColor: theme.white,
+                        borderColor: color,
                         color: theme.black,
                         fontWeight: "400",
                     },
                     '&::placeholder': {
                         color: theme.white,
                     },
-                    backgroundColor: "#FF785A",
+                    backgroundColor: color,
                     color: theme.white,
                     borderRadius: "md",
                     fontWeight: "bold",
@@ -46,6 +47,7 @@ function Dropdown ({label, data}) {
 };
 Dropdown.propTypes = {
     label: PropTypes.string,
+    color: PropTypes.string,
     data: PropTypes.array
 };
 export default Dropdown;

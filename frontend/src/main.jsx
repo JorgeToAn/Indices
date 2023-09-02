@@ -13,6 +13,9 @@ import RegistroCarreras from "./views/RegCarreras";
 import RegistroPlanes from "./views/RegPlanes";
 import RegistroDiscapacidades from "./views/RegDiscapacidades";
 import IndicePermanencia from './views/IndPermanencia';
+import IndiceEgreso from "./views/IndEgreso";
+import IndiceDesercion from "./views/IndDesercion";
+import IndiceTitulacion from "./views/IndTitulacion";
 
 const router = createBrowserRouter([
   {
@@ -45,7 +48,19 @@ const router = createBrowserRouter([
       {
         path: '/indices/permanencia',
         element: <IndicePermanencia />,
-      }
+      },
+      {
+        path: '/indices/egreso',
+        element: <IndiceEgreso />,
+      },
+      {
+        path: '/indices/desercion',
+        element: <IndiceDesercion />,
+      },
+      {
+        path: '/indices/titulacion',
+        element: <IndiceTitulacion />,
+      },
     ]
   },
   {

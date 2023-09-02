@@ -60,9 +60,15 @@ const NavBar = () => {
                             <Menu.Item onClick={() => {
                                 navigate('/indices/permanencia');
                             }}>PERMANENCIA</Menu.Item>
-                            <Menu.Item >EGRESO</Menu.Item>
-                            <Menu.Item >TITULACION</Menu.Item>
-                            <Menu.Item >DESERCION</Menu.Item>
+                            <Menu.Item onClick={() => {
+                                navigate('/indices/egreso');
+                            }}>EGRESO</Menu.Item>
+                            <Menu.Item onClick={() => {
+                                navigate('/indices/titulacion');
+                            }}>TITULACION</Menu.Item>
+                            <Menu.Item onClick={() => {
+                                navigate('/indices/desercion');
+                            }}>DESERCION</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
 
