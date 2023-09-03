@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { CirclePlus } from 'tabler-icons-react';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
+import './Registro.css';
+
 
 const RegistroCarreras = () => {
     const tabla = [
@@ -24,9 +26,10 @@ const RegistroCarreras = () => {
                 <Flex direction="column">
                     <form>
                         <TextInput label="Nombre" withAsterisk/>
-                        <Group>
-                            <TextInput label="Clave" withAsterisk/>
+                        <Group className="input-group">
+                            <TextInput label="Clave" withAsterisk width="45%"/>
                             <Select
+                                width="45%"
                                 label="Plan de estudios"
                                 placeholder="Seleccione un plan de estudios"
                                 data={[

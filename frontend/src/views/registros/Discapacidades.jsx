@@ -2,6 +2,8 @@ import { Button, Center, Flex, Group, TextInput, Textarea } from "@mantine/core"
 import { CirclePlus } from 'tabler-icons-react';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
+import './Registro.css';
+
 
 const RegistroDiscapacidades = () => {
     const tabla = [
@@ -20,7 +22,7 @@ const RegistroDiscapacidades = () => {
         }}>
             <Header color="toronja" section="Registro" title="Discapacidades" route="/"/>
             <Group align="flex-start" spacing="3vw">
-                <Flex direction="column">
+                <Flex direction="column" className="col-input">
                     <form>
                         <TextInput label="Nombre" withAsterisk/>
                         <Textarea withAsterisk label="Descripción" autosize/>
