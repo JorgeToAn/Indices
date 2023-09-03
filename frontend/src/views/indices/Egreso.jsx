@@ -1,29 +1,29 @@
 import { Flex, Group } from '@mantine/core';
-import Tabla from '../components/Tabla';
-import Header from '../components/header';
-import Dropdown from '../components/Dropdown';
+import Header from './../../components/header';
+import Tabla from './../../components/Tabla';
+import Dropdown from './../../components/Dropdown';
 
-const IndiceDesercion = () => {
+const IndiceEgreso = () => {
     // Informacion de prueba, no representa el comportamiento real
     const tabla = [
-        ['Semestre 1', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 2', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 4', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 5', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 6', '2015-1', '45','-','15','30','66.75'],
-        ['','Acumulado', '225','','75','150']
+        ['Semestre 1', '2015-1', '45','-','0.00%'],
+        ['Semestre 2', '2015-1', '45','-','0.00%'],
+        ['Semestre 4', '2015-1', '45','-','0.00%'],
+        ['Semestre 5', '2015-1', '45','-','0.00%'],
+        ['Semestre 6', '2015-1', '45','-','0.00%'],
+        ['','Acumulado', '225','']
     ];
 
     const headers = [
         ['Indices de rendimiento escolar cohorte generacional 2015-1 ingenieria mecanica'],
-        ['Semestre', 'Periodo', 'Activos', 'Egresados','Desercion', 'Matricula final','Tasa de abandono escolar'],
+        ['Semestre', 'Periodo', 'Activos', 'Egresados', 'Egreso terminal'],
      ];
     return(
         <div style={{
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="naranja" section="Indices" title="Deserción por cohorte generacional" route="/" />
+            <Header color="naranja" section="Indices" title="Egreso por cohorte generacional" route="/" />
             <Flex direction="column">
                 <Group mt={0} mb={16}>
                     <Dropdown  label="Programa educativo" color="#FFAA5A" data={[
@@ -57,4 +57,4 @@ const IndiceDesercion = () => {
     );
 };
 
-export default IndiceDesercion;
+export default IndiceEgreso;

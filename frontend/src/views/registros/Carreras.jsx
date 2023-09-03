@@ -1,9 +1,8 @@
 import { Button, Center, Flex, Group, Select, TextInput } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { CirclePlus } from 'tabler-icons-react';
-import Header from '../components/header';
-import Tabla from "../components/Tabla";
-import './Registro.css';
+import Header from './../../components/header';
+import Tabla from './../../components/Tabla';
 
 const RegistroCarreras = () => {
     const tabla = [
@@ -22,10 +21,10 @@ const RegistroCarreras = () => {
         }}>
             <Header color="toronja" section="Registro" title="Carreras" route="/"/>
             <Group align="flex-start" spacing="3vw">
-                <Flex direction="column" className="col-input">
+                <Flex direction="column">
                     <form>
                         <TextInput label="Nombre" withAsterisk/>
-                        <Group className="input-group">
+                        <Group>
                             <TextInput label="Clave" withAsterisk/>
                             <Select
                                 label="Plan de estudios"

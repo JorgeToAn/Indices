@@ -1,10 +1,8 @@
 import { Button, Center, Flex, Group, TextInput } from "@mantine/core";
 import { CirclePlus } from 'tabler-icons-react';
-import Header from '../components/header';
-import Tabla from "../components/Tabla";
 import { DateInput } from "@mantine/dates";
-import './Registro.css';
-
+import Header from './../../components/header';
+import Tabla from './../../components/Tabla';
 
 const RegistroPlanes = () => {
     const tabla = [
@@ -23,10 +21,10 @@ const RegistroPlanes = () => {
         }}>
             <Header color="naranja" section="Registro" title="Planes de Estudio" route="/"/>
             <Group align="flex-start" spacing="3vw">
-                <Flex direction="column" className="col-input">
+                <Flex direction="column">
                     <form>
                         <TextInput label="Nombre" withAsterisk/>
-                        <Group className="input-group">
+                        <Group>
                             <DateInput label="Fecha de inicio" width="45%" withAsterisk/>
                             <DateInput label="Fecha de terminación" width="45%" />
                         </Group>

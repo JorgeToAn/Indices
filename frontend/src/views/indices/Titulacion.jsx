@@ -1,29 +1,29 @@
 import { Flex, Group } from '@mantine/core';
-import Tabla from '../components/Tabla';
-import Header from './../components/header';
-import Dropdown from '../components/Dropdown';
+import Header from './../../components/header';
+import Tabla from './../../components/Tabla';
+import Dropdown from './../../components/Dropdown';
 
-const IndicePermanencia = () => {
+const IndiceTitulacion = () => {
     // Informacion de prueba, no representa el comportamiento real
     const tabla = [
-        ['Semestre 1', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 2', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 4', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 5', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 6', '2015-1', '45','-','15','30','66.75'],
-        ['','Acumulado', '','14','31']
+        ['Semestre 1', '2015-1', '45','-','-','0.00%'],
+        ['Semestre 2', '2015-1', '45','-','-','0.00%'],
+        ['Semestre 4', '2015-1', '45','-','-','0.00%'],
+        ['Semestre 5', '2015-1', '45','-','-','0.00%'],
+        ['Semestre 6', '2015-1', '45','-','-','0.00%'],
+        ['','Acumulado', '225','','']
     ];
 
     const headers = [
         ['Indices de rendimiento escolar cohorte generacional 2015-1 ingenieria mecanica'],
-        ['Semestre', 'Periodo', 'Activos', 'Egresados','Desercion', 'Matricula final','Tasa de retencion'],
+        ['Semestre', 'Periodo', 'Activos', 'Egresados', 'Titulados', 'Eficiencia de titulación '],
      ];
     return(
         <div style={{
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="toronja" section="Indices" title="Permanencia por cohorte generacional" route="/" />
+            <Header color="toronja" section="Indices" title="Titulación por cohorte generacional" route="/" />
             <Flex direction="column">
                 <Group mt={0} mb={16}>
                     <Dropdown  label="Programa educativo" color="#FF785A" data={[
@@ -57,4 +57,4 @@ const IndicePermanencia = () => {
     );
 };
 
-export default IndicePermanencia;
+export default IndiceTitulacion;
