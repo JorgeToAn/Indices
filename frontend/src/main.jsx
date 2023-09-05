@@ -4,14 +4,21 @@ import ReactDOM from 'react-dom/client';
 import { Notifications } from '@mantine/notifications';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
-import Login from './views/Login';
 import indicesTheme from "./CustomProvider";
+
+import Login from './views/Login';
 import Inicio from './views/Inicio';
 import MiPerfil from "./views/MiPerfil";
+
 import SubirArchivos from "./views/SubirArchivos";
-import RegistroCarreras from "./views/RegCarreras";
-import RegistroPlanes from "./views/RegPlanes";
-import RegistroDiscapacidades from "./views/RegDiscapacidades";
+
+import RegistroCarreras from './views/registros/Carreras';
+import RegistroPlanes from './views/registros/Planes';
+import RegistroDiscapacidades from './views/registros/Discapacidades';
+import IndicePermanencia from './views/indices/Permanencia';
+import IndiceEgreso from './views/indices/Egreso';
+import IndiceDesercion from './views/indices/Desercion';
+import IndiceTitulacion from './views/indices/Titulacion';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +47,22 @@ const router = createBrowserRouter([
       {
         path: '/registro/discapacidades',
         element: <RegistroDiscapacidades />
+      },
+      {
+        path: '/indices/permanencia',
+        element: <IndicePermanencia />,
+      },
+      {
+        path: '/indices/egreso',
+        element: <IndiceEgreso />,
+      },
+      {
+        path: '/indices/desercion',
+        element: <IndiceDesercion />,
+      },
+      {
+        path: '/indices/titulacion',
+        element: <IndiceTitulacion />,
       },
     ]
   },

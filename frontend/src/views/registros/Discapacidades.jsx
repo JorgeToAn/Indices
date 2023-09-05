@@ -1,8 +1,9 @@
 import { Button, Center, Flex, Group, TextInput, Textarea } from "@mantine/core";
 import { CirclePlus } from 'tabler-icons-react';
-import Header from '../components/header';
-import Tabla from "../components/Tabla";
+import Header from './../../components/header';
+import Tabla from './../../components/Tabla';
 import './Registro.css';
+
 
 const RegistroDiscapacidades = () => {
     const tabla = [
