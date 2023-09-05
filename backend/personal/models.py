@@ -54,6 +54,3 @@ class Personal(models.Model):
     class Meta:
         verbose_name = 'información personal'
         verbose_name_plural = 'informaciones personales'
-        constraints = [
-            models.CheckConstraint(check=models.Q(fecha_nacimiento__lte=datetime.date.today()), name='fecha_nacimiento_check_lte_date')
-        ]
