@@ -12,7 +12,7 @@ class Plan(models.Model):
     ]
 
     def __str__(self):
-        f'[{self.pk}] {self.clave}'
+        return f'[{self.pk}] {self.clave}'
 
     def save(self, *args, **kwargs):
         self.clave = self.clave.upper()

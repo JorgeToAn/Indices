@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'personal',
     'discapacidades',
     'planes',
+    'carreras',
 ]
 
 MIDDLEWARE = [
