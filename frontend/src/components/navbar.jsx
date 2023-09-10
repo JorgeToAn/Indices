@@ -7,21 +7,40 @@ import {
     Button,
     Group,
     TextInput,
-    ActionIcon
+    ActionIcon,
+    Burger,
+    createStyles
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 
+const useStyles = createStyles((theme) => ({
+    burger: {
+        [theme.fn.largerThan('sm')]: {
+          display: 'none',
+        },
+      },
+
+    menus: {
+    [theme.fn.smallerThan('sm')]: {
+        display: 'none',
+    },
+    },
+}));
 const NavBar = () => {
+    const { classes } = useStyles();
+
     const [opened, {open, close}] = useDisclosure(false);
     const navigate = useNavigate();
     const handleMiPerfil = () => {
       navigate('mi-perfil');
     };
 
+    const [opend, { toggle }] = useDisclosure(false);
     return (
         <Header bg="negro" height={40}>
             <div className="nav">
+
                 <Group>
                     <Button color="negro" leftIcon={<Home />} uppercase={true} onClick={()=> {
                         navigate('/');
@@ -34,7 +53,7 @@ const NavBar = () => {
                 <Group>
                     {/* Menu de tablas */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro" uppercase={true}>
                                 Tablas
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
@@ -45,13 +64,15 @@ const NavBar = () => {
                             <Menu.Item onClick={() => {
                                 navigate('/tablas/poblacion');
                             }}>POBLACION</Menu.Item>
-                            <Menu.Item >CRECIMIENTO</Menu.Item>
+                            <Menu.Item onClick={() => {
+                                navigate('/tablas/crecimiento');
+                            }}>CRECIMIENTO</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
 
                     {/* Menu de indices */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro">
                                 INDICES
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
@@ -76,7 +97,7 @@ const NavBar = () => {
 
                     {/* Menu de reportes */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro">
                                 REPORTES
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
@@ -92,7 +113,7 @@ const NavBar = () => {
 
                     {/* Menu de cedulas */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro">
                                 CEDULAS
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
@@ -107,7 +128,7 @@ const NavBar = () => {
 
                     {/* Menu de alumnos */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro">
                                 ALUMNOS
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
@@ -120,18 +141,18 @@ const NavBar = () => {
                         </Menu.Dropdown>
                     </Menu>
 
-                    <Button color="negro">SUBIR ARCHIVOS</Button>
+                    <Button color="negro" className={classes.menus}>SUBIR ARCHIVOS</Button>
 
                     {/* Menu de registros */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro">
                                 REGISTROS
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
                             </Button>
                         </Menu.Target>
 
-                        <Menu.Dropdown>
+                        <Menu.Dropdown className={classes.menus}>
                             <Menu.Item onClick={()=>{
                                 navigate('/registro/carrera');
                                 }}>CARRERAS</Menu.Item>
@@ -144,13 +165,37 @@ const NavBar = () => {
                         </Menu.Dropdown>
                     </Menu>
                 </Group>
+                <Menu trigger="hover" openDelay={100} closeDelay={400}>
+                        <Menu.Target className={classes.menus}>
+                            <Burger
+                                opened={opend}
+                                onClick={toggle}
+                                className={classes.burger}
+                                size="sm"
+                                color="#fff"
+                            />
+                        </Menu.Target>
 
+                        <Menu.Dropdown>
+                            <Menu.Item onClick={() => {
+                                navigate('/tablas/poblacion');
+                            }}>POBLACION</Menu.Item>
+                            <Menu.Item onClick={() => {
+                                navigate('/tablas/crecimiento');
+                            }}>CRECIMIENTO</Menu.Item>
+                        </Menu.Dropdown>
+                    </Menu>
+                <Burger
+                    opened={opend}
+                    onClick={toggle}
+                    className={classes.burger}
+                    size="sm"
+                    color="#fff"
+                />
 
                 {/* Menu de usuario */}
                 <Menu trigger="hover" openDelay={100} closeDelay={400}>
                     <Menu.Target>
-                        {/* <Button color="negro" leftIcon={<UserCircle />}>
-                        </Button> */}
                         <ActionIcon variant="filled" color="negro" mr={10}>
                             <UserCircle />
                         </ActionIcon>

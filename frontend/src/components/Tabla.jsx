@@ -6,7 +6,7 @@ import './Tabla.css';
 function Tabla ({headers, content, colors, doubleHeader}) {
 
     return(
-        <Table highlightOnHover withBorder withColumnBorders horizontalSpacing='xs' verticalSpacing='xs' className={colors}>
+        <Table highlightOnHover withBorder withColumnBorders horizontalSpacing='xs' verticalSpacing='xs' className={colors+" tabla"}>
             {/* Si la propiedad "doubleHeader" es true, entonces la primer celda del primer renglon
              tendra una longitud de toda la tabla, si no, entonces solo habra un renglon en donde cada
              columna es un encabezado */}

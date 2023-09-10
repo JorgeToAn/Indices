@@ -3,7 +3,7 @@ import Header from "../../components/header";
 import Dropdown from "../../components/Dropdown";
 import Tabla from "../../components/Tabla";
 
-const TablaPoblacion = () => {
+const TablaCrecimiento = () => {
     const tabla = [
         ['Contador Público', 'CP', '14','16','25','30','27'],
         ['Ingeniería Electrica', 'ELE', '14','16','25','30','27'],
@@ -26,26 +26,26 @@ const TablaPoblacion = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="toronja" section="Tablas" title="Población" route="/" />
+            <Header color="naranja" section="Tablas" title="Crecimiento" route="/" />
             <Flex direction="column">
                 <Group mt={0} mb={16}>
-                    <Dropdown label="Población" color="#FF785A" data={[
+                    <Dropdown label="Población" color="#FFAA5A" data={[
                         ['Nuevo ingreso','Nuevo ingreso'],
                         ['Por carrera','Por carrera'],
                         ['Egresados','Egresados'],
                         ['Titulados','Titulados']
                         ]}/>
-                    <Dropdown label="Semestres" color="#FF785A" data={[
+                    <Dropdown label="Semestres" color="#FFAA5A" data={[
                         ['Todos los semestres','Todos los semestres'],
                         ['Semestres impares','Semestres impares'],
                         ['Semestres pares','Semestres pares']
                         ]}/>
-                    <Dropdown  label="Programa educativo" color="#FF785A" data={[
+                    <Dropdown  label="Programa educativo" color="#FFAA5A" data={[
                         ['ISIC','Sistemas computacionales'],
                         ['QUI','Quimica'],
                         ['IND','Industrial'],
                     ]} />
-                    <Dropdown label="Periodo de inicio" color="#FF785A" data={[
+                    <Dropdown label="Periodo de inicio" color="#FFAA5A" data={[
                         ['2023-2','2023-2'],
                         ['2023-1','2023-1'],
                         ['2022-2','2022-2'],
@@ -56,7 +56,7 @@ const TablaPoblacion = () => {
                         ['2020-1','2020-1'],
                         ['2019-2','2019-2'],
                         ]}/>
-                    <Dropdown label="Periodo de finalización" color="#FF785A" data={[
+                    <Dropdown label="Periodo de finalización" color="#FFAA5A" data={[
                         ['2023-2','2023-2'],
                         ['2023-1','2023-1'],
                         ['2022-2','2022-2'],
@@ -67,15 +67,15 @@ const TablaPoblacion = () => {
                         ['2020-1','2020-1'],
                         ['2019-2','2019-2'],
                         ]}/>
-                    <Dropdown  label="Exportar" color="#FF785A" data={[
+                    <Dropdown  label="Exportar" color="#FFAA5A" data={[
                         ['Excel','Excel'],
                         ['PDF','PDF'],
                     ]} />
                 </Group>
-                <Tabla headers={headers} content={tabla} colors="tabla-toronja" />
+                <Tabla headers={headers} content={tabla} colors="tabla-naranja" />
             </Flex>
         </div>
     );
 };
 
-export default TablaPoblacion;
+export default TablaCrecimiento;
