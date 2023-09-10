@@ -9,7 +9,11 @@ import {
     TextInput,
     ActionIcon,
     Burger,
-    createStyles
+    createStyles,
+    Text,
+    Divider,
+    SimpleGrid,
+    UnstyledButton
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +30,18 @@ const useStyles = createStyles((theme) => ({
         display: 'none',
     },
     },
+
+    subLink: {
+        width: '100%',
+        padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+        borderRadius: theme.radius.md,
+
+        ...theme.fn.hover({
+          backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
+        }),
+
+        '&:active': theme.activeStyles,
+      },
 }));
 const NavBar = () => {
     const { classes } = useStyles();
@@ -165,8 +181,9 @@ const NavBar = () => {
                         </Menu.Dropdown>
                     </Menu>
                 </Group>
-                <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target className={classes.menus}>
+                {/* Menu movil */}
+                <Menu trigger="click" openDelay={100} closeDelay={400}>
+                        <Menu.Target >
                             <Burger
                                 opened={opend}
                                 onClick={toggle}
@@ -177,21 +194,65 @@ const NavBar = () => {
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Menu.Item onClick={() => {
-                                navigate('/tablas/poblacion');
-                            }}>POBLACION</Menu.Item>
-                            <Menu.Item onClick={() => {
-                                navigate('/tablas/crecimiento');
-                            }}>CRECIMIENTO</Menu.Item>
+                            <Group position="apart" px="md" w="70vw" >
+                                <Group>
+                                    <Text>Menu</Text>
+                                </Group>
+                                <Divider my="sm"  />
+                                <SimpleGrid cols={3}>
+                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                        <Group noWrap align="center">
+                                            <div className="menu-movil-icon">
+                                                <img src="/img/tablas.svg" alt="Icono Tablas" />
+                                            </div>
+                                            <Text fw={600}>Tablas</Text>
+                                        </Group>
+                                    </UnstyledButton>
+                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                        <Group noWrap align="center">
+                                            <div className="menu-movil-icon">
+                                                <img src="/img/indices.svg" alt="Icono Tablas" />
+                                            </div>
+                                            <Text fw={600}>Indices</Text>
+                                        </Group>
+                                    </UnstyledButton>
+                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                        <Group noWrap align="center">
+                                            <div className="menu-movil-icon">
+                                                <img src="/img/reportes.svg" alt="Icono Tablas" />
+                                            </div>
+                                            <Text fw={600}>Reportes</Text>
+                                        </Group>
+                                    </UnstyledButton>
+                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                        <Group noWrap align="center">
+                                            <div className="menu-movil-icon">
+                                                <img src="/img/cedulas.svg" alt="Icono Tablas" />
+                                            </div>
+                                            <Text fw={600}>Cédulas</Text>
+                                        </Group>
+                                    </UnstyledButton>
+                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                        <Group noWrap align="center">
+                                            <div className="menu-movil-icon">
+                                                <img src="/img/alumnos.svg" alt="Icono Tablas" />
+                                            </div>
+                                            <Text fw={600}>Alumnos</Text>
+                                        </Group>
+                                    </UnstyledButton>
+                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                        <Group noWrap align="center">
+                                            <div className="menu-movil-icon">
+                                                <img src="/img/tablas.svg" alt="Icono Tablas" />
+                                            </div>
+                                            <Text fw={600}>Subir Archivos</Text>
+                                        </Group>
+                                    </UnstyledButton>
+                                </SimpleGrid>
+                            </Group>
                         </Menu.Dropdown>
                     </Menu>
-                <Burger
-                    opened={opend}
-                    onClick={toggle}
-                    className={classes.burger}
-                    size="sm"
-                    color="#fff"
-                />
+
 
                 {/* Menu de usuario */}
                 <Menu trigger="hover" openDelay={100} closeDelay={400}>
