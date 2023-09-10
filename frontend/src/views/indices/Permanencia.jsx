@@ -6,17 +6,21 @@ import Dropdown from './../../components/Dropdown';
 const IndicePermanencia = () => {
     // Informacion de prueba, no representa el comportamiento real
     const tabla = [
-        ['Semestre 1', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 2', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 4', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 5', '2015-1', '45','-','15','30','66.75'],
-        ['Semestre 6', '2015-1', '45','-','15','30','66.75'],
-        ['','Acumulado', '','14','31']
+        ['Contador Público', 'CP', '14','16','25','30','27'],
+        ['Ingeniería Electrica', 'ELE', '14','16','25','30','27'],
+        ['Ingeniería Electronica', 'ELN', '14','16','25','30','27'],
+        ['Ingeniería Mecatronica', 'MKT', '14','16','25','30','27'],
+        ['Ingeniería Industrial', 'IND', '14','16','25','30','27'],
+        ['Ingeniería Mecanica', 'MEC', '14','16','25','30','27'],
+        ['Ingeniería en Energias Renovables','ENR', '14','16','25','30','27'],
+        ['Ingeniería en Gestion Empresarial','GEM', '14','16','25','30','27'],
+        ['Ingeniería en Sistemas Computacionales','SYC', '14','16','25','30','27'],
+        ['Ingeniería Quimica','QUI','14','16','25','30','27'],
+        ['Ingeniería en Logistica','LOG', '14','16','25','30','27']
     ];
 
     const headers = [
-        ['Indices de rendimiento escolar cohorte generacional 2015-1 ingenieria mecanica'],
-        ['Semestre', 'Periodo', 'Activos', 'Egresados','Desercion', 'Matricula final','Tasa de retencion'],
+        "Carrera", "", "2015-1","2015-2", "2016-1", "2016-2", "2017-1"
      ];
     return(
         <div style={{
@@ -51,7 +55,7 @@ const IndicePermanencia = () => {
                         ['PDF','PDF'],
                     ]} />
                 </Group>
-                <Tabla doubleHeader colors="tabla-toronja"  headers={headers} content={tabla} />
+                <Tabla colors="tabla-toronja"  headers={headers} content={tabla} />
             </Flex>
         </div>
     );

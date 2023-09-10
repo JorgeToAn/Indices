@@ -42,7 +42,9 @@ const NavBar = () => {
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Menu.Item>POBLACION</Menu.Item>
+                            <Menu.Item onClick={() => {
+                                navigate('/tablas/poblacion');
+                            }}>POBLACION</Menu.Item>
                             <Menu.Item >CRECIMIENTO</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
