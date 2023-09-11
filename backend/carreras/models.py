@@ -14,7 +14,6 @@ class Carrera(models.Model):
 
     clave = models.CharField(max_length=50, unique=True, null=False, blank=False)
     nombre = models.CharField(max_length=150, null=False, blank=False, validators=[validate_nombre])
-    planes = models.ManyToManyField('planes.Plan', related_name='planes')
 
     def __str__(self):
         return f'[{self.pk}] {self.clave} - {self.nombre}'

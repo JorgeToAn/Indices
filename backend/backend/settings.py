@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'guardian',
     'usuario',
     'personal',
+    'alumnos',
     'discapacidades',
     'planes',
     'carreras',
