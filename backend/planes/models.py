@@ -4,7 +4,7 @@ class Plan(models.Model):
 
     clave = models.CharField(max_length=150, unique=True, null=False, blank=False)
     fecha_inicio = models.DateField(null=False, blank=False)
-    fecha_final = models.DateField(null=True, blank=False)
+    fecha_final = models.DateField(null=True, blank=True)
 
     REQUIRED_FIELDS = [
         'clave',

@@ -1,7 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.db import models
-import re, datetime
+import re
 
 class Personal(models.Model):
     class Gender(models.IntegerChoices):
@@ -28,10 +28,10 @@ class Personal(models.Model):
     curp = models.CharField(verbose_name='CURP', primary_key=True, max_length=18, blank=False, validators=[validate_curp])
     nombre = models.CharField(max_length=150, null=False, blank=False, validators=[validate_solo_letras])
     paterno = models.CharField(verbose_name=_('apellido paterno'), max_length=150, null=False, blank=False, validators=[validate_solo_letras])
-    materno = models.CharField(verbose_name=_('apellido materno'), max_length=150, null=True, blank=False, validators=[validate_solo_letras])
+    materno = models.CharField(verbose_name=_('apellido materno'), max_length=150, null=True, blank=True, validators=[validate_solo_letras])
     fecha_nacimiento = models.DateField(null=False, blank=False)
     genero = models.IntegerField(choices=Gender.choices, default=Gender.OTHER, null=False)
-    discapacidades = models.ManyToManyField('discapacidades.Discapacidad', related_name='discapacidades')
+    discapacidades = models.ManyToManyField('discapacidades.Discapacidad', related_name='discapacidades', blank=True)
     habla_lengua_indigena = models.BooleanField(default=False)
 
     REQUIRED_FIELDS = [
@@ -49,7 +49,10 @@ class Personal(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'[{self.pk}] {self.nombre} {self.paterno}'
+        fullname = f'{self.nombre} {self.paterno}'
+        if self.materno:
+            fullname += f' {self.materno}'
+        return f'[{self.pk}] {fullname}'
 
     class Meta:
         verbose_name = 'información personal'
