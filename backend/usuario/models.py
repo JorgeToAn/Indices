@@ -38,7 +38,7 @@ class Usuario(AbstractUser):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.username} | {self.email}'
+        return f'{self.username}'
 
     class Meta:
         permissions = [
