@@ -30,3 +30,10 @@
     max-width: 25px;
     height: auto;
 }
+
+.menuDiv {
+    width: 55vw;
+    max-width: 600px;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}

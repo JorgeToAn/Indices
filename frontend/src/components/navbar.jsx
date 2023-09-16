@@ -11,26 +11,34 @@ import {
     Burger,
     createStyles,
     Text,
-    Divider,
     SimpleGrid,
-    UnstyledButton
+    UnstyledButton,
+    Divider
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
     burger: {
-        [theme.fn.largerThan('sm')]: {
+        [theme.fn.largerThan(1340)]: {
           display: 'none',
         },
+        marginLeft: '50%',
       },
 
     menus: {
-    [theme.fn.smallerThan('sm')]: {
+    [theme.fn.smallerThan(1340)]: {
         display: 'none',
     },
     },
-
+    mobileMenu: {
+        [theme.fn.largerThan(1340)]: {
+            display: 'none',
+        },
+        width: '60vw',
+        maxWidth: 650,
+        height: 'auto',
+    },
     subLink: {
         width: '100%',
         padding: `${theme.spacing.xs} ${theme.spacing.md}`,
@@ -41,7 +49,13 @@ const useStyles = createStyles((theme) => ({
         }),
 
         '&:active': theme.activeStyles,
-      },
+    },
+    spanMenu: {
+        [theme.fn.smallerThan(1340)]: {
+            display: 'none',
+        },
+    },
+
 }));
 const NavBar = () => {
     const { classes } = useStyles();
@@ -61,7 +75,7 @@ const NavBar = () => {
                     <Button color="negro" leftIcon={<Home />} uppercase={true} onClick={()=> {
                         navigate('/');
                     }}>
-                        Inicio
+                        <span className={classes.spanMenu}>Inicio</span>
                     </Button>
                     <TextInput placeholder="BUSCAR" icon={<Search />} size="xs"/>
                 </Group>
@@ -182,76 +196,80 @@ const NavBar = () => {
                     </Menu>
                 </Group>
                 {/* Menu movil */}
-                <Menu trigger="click" openDelay={100} closeDelay={400}>
-                        <Menu.Target >
-                            <Burger
-                                opened={opend}
-                                onClick={toggle}
-                                className={classes.burger}
-                                size="sm"
-                                color="#fff"
-                            />
-                        </Menu.Target>
+                <Menu trigger="click" openDelay={100} closeDelay={400} position="right" >
+                    <Menu.Target>
+                        <Burger
+                            opened={opend}
+                            onClick={toggle}
+                            className={classes.burger}
+                            size="sm"
+                            color="#fff"
+                        />
+                    </Menu.Target>
 
-                        <Menu.Dropdown>
-                            <Group position="apart" px="md" w="70vw" >
-                                <Group>
-                                    <Text>Menu</Text>
-                                </Group>
-                                <Divider my="sm"  />
-                                <SimpleGrid cols={3}>
-                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
-                                        <Group noWrap align="center">
-                                            <div className="menu-movil-icon">
-                                                <img src="/img/tablas.svg" alt="Icono Tablas" />
-                                            </div>
-                                            <Text fw={600}>Tablas</Text>
-                                        </Group>
-                                    </UnstyledButton>
-                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
-                                        <Group noWrap align="center">
-                                            <div className="menu-movil-icon">
-                                                <img src="/img/indices.svg" alt="Icono Tablas" />
-                                            </div>
-                                            <Text fw={600}>Indices</Text>
-                                        </Group>
-                                    </UnstyledButton>
-                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
-                                        <Group noWrap align="center">
-                                            <div className="menu-movil-icon">
-                                                <img src="/img/reportes.svg" alt="Icono Tablas" />
-                                            </div>
-                                            <Text fw={600}>Reportes</Text>
-                                        </Group>
-                                    </UnstyledButton>
-                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
-                                        <Group noWrap align="center">
-                                            <div className="menu-movil-icon">
-                                                <img src="/img/cedulas.svg" alt="Icono Tablas" />
-                                            </div>
-                                            <Text fw={600}>Cédulas</Text>
-                                        </Group>
-                                    </UnstyledButton>
-                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
-                                        <Group noWrap align="center">
-                                            <div className="menu-movil-icon">
-                                                <img src="/img/alumnos.svg" alt="Icono Tablas" />
-                                            </div>
-                                            <Text fw={600}>Alumnos</Text>
-                                        </Group>
-                                    </UnstyledButton>
-                                    <UnstyledButton variant="unstyled" className={classes.subLink}>
-                                        <Group noWrap align="center">
-                                            <div className="menu-movil-icon">
-                                                <img src="/img/tablas.svg" alt="Icono Tablas" />
-                                            </div>
-                                            <Text fw={600}>Subir Archivos</Text>
-                                        </Group>
-                                    </UnstyledButton>
-                                </SimpleGrid>
+                    <Menu.Dropdown mt={45} >
+                        <Group position="apart" px="md"  className={classes.mobileMenu} >
+                            <Group mt={10}>
+                                <Text fw={700}>Menu</Text>
+                                <Divider my="md" mt={0} mb={0} className="menuDiv"/>
                             </Group>
-                        </Menu.Dropdown>
-                    </Menu>
+                            <SimpleGrid  breakpoints={[
+                                {maxWidth: 600, cols: 1},
+                                {maxWidth: 750, cols: 2},
+                                {maxWidth: 1350, cols: 3},
+                            ]}>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/tablas.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Tablas</Text>
+                                    </Group>
+                                </UnstyledButton>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/indices.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Indices</Text>
+                                    </Group>
+                                </UnstyledButton>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/reportes.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Reportes</Text>
+                                    </Group>
+                                </UnstyledButton>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/cedulas.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Cédulas</Text>
+                                    </Group>
+                                </UnstyledButton>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/alumnos.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Alumnos</Text>
+                                    </Group>
+                                </UnstyledButton>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/tablas.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Subir Archivos</Text>
+                                    </Group>
+                                </UnstyledButton>
+                            </SimpleGrid>
+                        </Group>
+                    </Menu.Dropdown>
+                </Menu>
 
 
                 {/* Menu de usuario */}
