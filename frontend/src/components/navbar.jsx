@@ -56,13 +56,17 @@ const useStyles = createStyles((theme) => ({
         },
     },
     searchBar: {
-        [theme.fn.smallerThan(1200)]: {
-            display: 'none',
+        [theme.fn.smallerThan(1340)]: {
             input: {
                 '&::placeholder': {
-                    display: 'none'
-                },
+                    color: theme.white,
+                    },
+
+                display: 'none',
             },
+            icon: {
+                color: theme.white,
+            }
         },
     }
 
@@ -87,7 +91,7 @@ const NavBar = () => {
                     }}>
                         <span className={classes.spanMenu}>Inicio</span>
                     </Button>
-                    <TextInput placeholder="BUSCAR" className={classes.searchBar} icon={<Search />} size="xs"/>
+                    <TextInput placeholder="BUSCAR" icon={<Search />} className={classes.searchBar}  size="xs"/>
                 </Group>
 
                 <Group>
@@ -228,7 +232,9 @@ const NavBar = () => {
                                 {maxWidth: 750, cols: 2},
                                 {maxWidth: 1350, cols: 3},
                             ]}>
-                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                <UnstyledButton variant="unstyled" className={classes.subLink} onClick={() => {
+                                navigate('/tablas');
+                            }}>
                                     <Group noWrap align="center">
                                         <div className="menu-movil-icon">
                                             <img src="/img/tablas.svg" alt="Icono Tablas" />
@@ -236,7 +242,9 @@ const NavBar = () => {
                                         <Text fw={600}>Tablas</Text>
                                     </Group>
                                 </UnstyledButton>
-                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                <UnstyledButton variant="unstyled" className={classes.subLink} onClick={() => {
+                                navigate('/indices');
+                            }}>
                                     <Group noWrap align="center">
                                         <div className="menu-movil-icon">
                                             <img src="/img/indices.svg" alt="Icono Tablas" />
@@ -268,12 +276,24 @@ const NavBar = () => {
                                         <Text fw={600}>Alumnos</Text>
                                     </Group>
                                 </UnstyledButton>
-                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                <UnstyledButton variant="unstyled" className={classes.subLink} onClick={() => {
+                                navigate('/subir-archivos');
+                            }}>
                                     <Group noWrap align="center">
                                         <div className="menu-movil-icon">
-                                            <img src="/img/tablas.svg" alt="Icono Tablas" />
+                                            <img src="/img/subir-archivos.svg" alt="Icono Subir Archivos" />
                                         </div>
                                         <Text fw={600}>Subir Archivos</Text>
+                                    </Group>
+                                </UnstyledButton>
+                                <UnstyledButton variant="unstyled" className={classes.subLink} onClick={() => {
+                                navigate('/registro');
+                            }}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/registros.svg" alt="Icono Registros" />
+                                        </div>
+                                        <Text fw={600}>Registros</Text>
                                     </Group>
                                 </UnstyledButton>
                             </SimpleGrid>
