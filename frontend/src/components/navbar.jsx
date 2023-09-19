@@ -7,26 +7,75 @@ import {
     Button,
     Group,
     TextInput,
-    ActionIcon
+    ActionIcon,
+    Burger,
+    createStyles,
+    Text,
+    SimpleGrid,
+    UnstyledButton,
+    Divider
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 
+const useStyles = createStyles((theme) => ({
+    burger: {
+        [theme.fn.largerThan(1340)]: {
+          display: 'none',
+        },
+        marginLeft: '50%',
+      },
+
+    menus: {
+    [theme.fn.smallerThan(1340)]: {
+        display: 'none',
+    },
+    },
+    mobileMenu: {
+        [theme.fn.largerThan(1340)]: {
+            display: 'none',
+        },
+        width: '60vw',
+        maxWidth: 650,
+        height: 'auto',
+    },
+    subLink: {
+        width: '100%',
+        padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+        borderRadius: theme.radius.md,
+
+        ...theme.fn.hover({
+          backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
+        }),
+
+        '&:active': theme.activeStyles,
+    },
+    spanMenu: {
+        [theme.fn.smallerThan(1340)]: {
+            display: 'none',
+        },
+    },
+
+}));
 const NavBar = () => {
+    const { classes } = useStyles();
+
     const [opened, {open, close}] = useDisclosure(false);
     const navigate = useNavigate();
     const handleMiPerfil = () => {
       navigate('mi-perfil');
     };
 
+    const [opend, { toggle }] = useDisclosure(false);
     return (
         <Header bg="negro" height={40}>
             <div className="nav">
+
                 <Group>
                     <Button color="negro" leftIcon={<Home />} uppercase={true} onClick={()=> {
                         navigate('/');
                     }}>
-                        Inicio
+                        <span className={classes.spanMenu}>Inicio</span>
                     </Button>
                     <TextInput placeholder="BUSCAR" icon={<Search />} size="xs"/>
                 </Group>
@@ -34,7 +83,7 @@ const NavBar = () => {
                 <Group>
                     {/* Menu de tablas */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro" uppercase={true}>
                                 Tablas
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
@@ -42,14 +91,18 @@ const NavBar = () => {
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Menu.Item>POBLACION</Menu.Item>
-                            <Menu.Item >CRECIMIENTO</Menu.Item>
+                            <Menu.Item onClick={() => {
+                                navigate('/tablas/poblacion');
+                            }}>POBLACION</Menu.Item>
+                            <Menu.Item onClick={() => {
+                                navigate('/tablas/crecimiento');
+                            }}>CRECIMIENTO</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
 
                     {/* Menu de indices */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro">
                                 INDICES
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
@@ -74,7 +127,7 @@ const NavBar = () => {
 
                     {/* Menu de reportes */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro">
                                 REPORTES
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
@@ -90,7 +143,7 @@ const NavBar = () => {
 
                     {/* Menu de cedulas */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro">
                                 CEDULAS
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
@@ -105,7 +158,7 @@ const NavBar = () => {
 
                     {/* Menu de alumnos */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro">
                                 ALUMNOS
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
@@ -118,18 +171,18 @@ const NavBar = () => {
                         </Menu.Dropdown>
                     </Menu>
 
-                    <Button color="negro">SUBIR ARCHIVOS</Button>
+                    <Button color="negro" className={classes.menus}>SUBIR ARCHIVOS</Button>
 
                     {/* Menu de registros */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                        <Menu.Target>
+                        <Menu.Target className={classes.menus}>
                             <Button color="negro">
                                 REGISTROS
                                 <ChevronDown size={16} strokeWidth={2} color={'white'} />
                             </Button>
                         </Menu.Target>
 
-                        <Menu.Dropdown>
+                        <Menu.Dropdown className={classes.menus}>
                             <Menu.Item onClick={()=>{
                                 navigate('/registro/carrera');
                                 }}>CARRERAS</Menu.Item>
@@ -142,13 +195,86 @@ const NavBar = () => {
                         </Menu.Dropdown>
                     </Menu>
                 </Group>
+                {/* Menu movil */}
+                <Menu trigger="click" openDelay={100} closeDelay={400} position="right" >
+                    <Menu.Target>
+                        <Burger
+                            opened={opend}
+                            onClick={toggle}
+                            className={classes.burger}
+                            size="sm"
+                            color="#fff"
+                        />
+                    </Menu.Target>
+
+                    <Menu.Dropdown mt={45} >
+                        <Group position="apart" px="md"  className={classes.mobileMenu} >
+                            <Group mt={10}>
+                                <Text fw={700}>Menu</Text>
+                                <Divider my="md" mt={0} mb={0} className="menuDiv"/>
+                            </Group>
+                            <SimpleGrid  breakpoints={[
+                                {maxWidth: 600, cols: 1},
+                                {maxWidth: 750, cols: 2},
+                                {maxWidth: 1350, cols: 3},
+                            ]}>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/tablas.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Tablas</Text>
+                                    </Group>
+                                </UnstyledButton>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/indices.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Indices</Text>
+                                    </Group>
+                                </UnstyledButton>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/reportes.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Reportes</Text>
+                                    </Group>
+                                </UnstyledButton>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/cedulas.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Cédulas</Text>
+                                    </Group>
+                                </UnstyledButton>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/alumnos.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Alumnos</Text>
+                                    </Group>
+                                </UnstyledButton>
+                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                    <Group noWrap align="center">
+                                        <div className="menu-movil-icon">
+                                            <img src="/img/tablas.svg" alt="Icono Tablas" />
+                                        </div>
+                                        <Text fw={600}>Subir Archivos</Text>
+                                    </Group>
+                                </UnstyledButton>
+                            </SimpleGrid>
+                        </Group>
+                    </Menu.Dropdown>
+                </Menu>
 
 
                 {/* Menu de usuario */}
                 <Menu trigger="hover" openDelay={100} closeDelay={400}>
                     <Menu.Target>
-                        {/* <Button color="negro" leftIcon={<UserCircle />}>
-                        </Button> */}
                         <ActionIcon variant="filled" color="negro" mr={10}>
                             <UserCircle />
                         </ActionIcon>

@@ -19,6 +19,8 @@ import IndicePermanencia from './views/indices/Permanencia';
 import IndiceEgreso from './views/indices/Egreso';
 import IndiceDesercion from './views/indices/Desercion';
 import IndiceTitulacion from './views/indices/Titulacion';
+import TablaPoblacion from "./views/tablas/Poblacion";
+import TablaCrecimiento from './views/tablas/Crecimiento';
 
 const router = createBrowserRouter([
   {
@@ -63,6 +65,14 @@ const router = createBrowserRouter([
       {
         path: '/indices/titulacion',
         element: <IndiceTitulacion />,
+      },
+      {
+        path: '/tablas/poblacion',
+        element: <TablaPoblacion />,
+      },
+      {
+        path: '/tablas/crecimiento',
+        element: <TablaCrecimiento />,
       },
     ]
   },

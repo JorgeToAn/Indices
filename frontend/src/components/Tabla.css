@@ -9,3 +9,9 @@ th {
     text-transform: uppercase;
 }
 
+.tabla tr > td {
+    max-width: 150px !important;
+}
+.tabla {
+    width: 85vw;
+}
