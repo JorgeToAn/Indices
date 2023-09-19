@@ -55,6 +55,16 @@ const useStyles = createStyles((theme) => ({
             display: 'none',
         },
     },
+    searchBar: {
+        [theme.fn.smallerThan(1200)]: {
+            display: 'none',
+            input: {
+                '&::placeholder': {
+                    display: 'none'
+                },
+            },
+        },
+    }
 
 }));
 const NavBar = () => {
@@ -77,7 +87,7 @@ const NavBar = () => {
                     }}>
                         <span className={classes.spanMenu}>Inicio</span>
                     </Button>
-                    <TextInput placeholder="BUSCAR" icon={<Search />} size="xs"/>
+                    <TextInput placeholder="BUSCAR" className={classes.searchBar} icon={<Search />} size="xs"/>
                 </Group>
 
                 <Group>
