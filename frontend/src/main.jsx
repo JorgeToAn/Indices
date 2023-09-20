@@ -21,6 +21,9 @@ import IndiceDesercion from './views/indices/Desercion';
 import IndiceTitulacion from './views/indices/Titulacion';
 import TablaPoblacion from "./views/tablas/Poblacion";
 import TablaCrecimiento from './views/tablas/Crecimiento';
+import SeleccionIndices from "./views/indices/Seleccion";
+import SeleccionTablas from './views/tablas/Seleccion';
+import SeleccionRegistros from "./views/registros/Seleccion";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +42,10 @@ const router = createBrowserRouter([
         element: <SubirArchivos />,
       },
       {
+        path: '/registro',
+        element: <SeleccionRegistros />,
+      },
+      {
         path: '/registro/carrera',
         element: <RegistroCarreras />
       },
@@ -49,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: '/registro/discapacidades',
         element: <RegistroDiscapacidades />
+      },
+      {
+        path: '/indices',
+        element: <SeleccionIndices />,
       },
       {
         path: '/indices/permanencia',
@@ -65,6 +76,10 @@ const router = createBrowserRouter([
       {
         path: '/indices/titulacion',
         element: <IndiceTitulacion />,
+      },
+      {
+        path: '/tablas',
+        element: <SeleccionTablas />,
       },
       {
         path: '/tablas/poblacion',

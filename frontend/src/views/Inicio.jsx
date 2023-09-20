@@ -28,10 +28,10 @@ const Principal = () => {
                     <img src="/img/tablas.svg" alt="Icono Tablas" />
                 </div>
 
-                <div className="block">
+                <a className="block" href="/indices">
                     <h3>Indices</h3>
                     <img src="/img/indices.svg" alt="Icono Indices" />
-                </div>
+                </a>
 
                 <div className="block">
                     <h3 color="toronja">Reportes</h3>

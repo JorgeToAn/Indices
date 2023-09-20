@@ -51,7 +51,7 @@ const IndicePermanencia = () => {
                         ['PDF','PDF'],
                     ]} />
                 </Group>
-                <Tabla colors="tabla-toronja"  headers={headers} content={tabla} />
+                <Tabla colors="tabla-toronja" doubleHeader  headers={headers} content={tabla} />
             </Flex>
         </div>
     );
