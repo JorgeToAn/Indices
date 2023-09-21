@@ -1,4 +1,4 @@
-import { Flex, Group } from '@mantine/core';
+import { Checkbox, Flex, Group } from '@mantine/core';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import Dropdown from './../../components/Dropdown';
@@ -50,6 +50,10 @@ const IndiceEgreso = () => {
                         ['Excel','Excel'],
                         ['PDF','PDF'],
                     ]} />
+                </Group>
+                <Group mt={0} mb={16} >
+                    <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
+                    <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                 </Group>
                 <Tabla doubleHeader colors="tabla-naranja"  headers={headers} content={tabla} />
             </Flex>
