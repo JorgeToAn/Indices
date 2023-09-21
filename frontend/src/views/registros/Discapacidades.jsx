@@ -31,7 +31,7 @@ const RegistroDiscapacidades = () => {
                         </Center>
                     </form>
                 </Flex>
-                <Flex direction="column" align="flex-start" justify="flex-start" >
+                <Flex direction="column" align="flex-start" justify="flex-start" w="50%" >
                     <Tabla headers={headers} content={tabla} colors="tabla-toronja" />
                 </Flex>
             </Group>

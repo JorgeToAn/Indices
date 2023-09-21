@@ -49,7 +49,7 @@ const RegistroCarreras = () => {
                         <Link to="#"style={{color: "#FF785A"}}>Da clic aquí</Link>
                     </Flex>
                 </Flex>
-                <Flex direction="column" align="flex-start" justify="flex-start" >
+                <Flex direction="column" align="flex-start" justify="flex-start" maw="50%" >
                     <Tabla headers={headers} content={tabla} colors="tabla-toronja" />
                 </Flex>
             </Group>
