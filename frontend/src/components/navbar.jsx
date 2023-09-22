@@ -185,7 +185,9 @@ const NavBar = () => {
                         </Menu.Dropdown>
                     </Menu>
 
-                    <Button color="negro" className={classes.menus}>SUBIR ARCHIVOS</Button>
+                    <Button color="negro" className={classes.menus} onClick={()=>{
+                                navigate('/subir-archivos');
+                                }} >SUBIR ARCHIVOS</Button>
 
                     {/* Menu de registros */}
                     <Menu trigger="hover" openDelay={100} closeDelay={400}>

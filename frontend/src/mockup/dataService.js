@@ -4,22 +4,23 @@ const tablaPermanencia = [
     ['Semestre', 'Periodo', 'Inscritos', 'Egresados','Desercion', 'Matricula final','Tasa de retencion'],
     ['Semestre 1', '2015-1', 41,0,10,31,75.61],
     ['Semestre 2', '2015-2', 31,0,5,26,63.41],
-    ['Semestre 4', '2016-1',  26 , 0 , 3 , 23 , 56.10 ],
-    ['Semestre 5', '2016-2',  23 , 0 , 2 , 21 , 51.22],
-    ['Semestre 6', '2017-1',  21 , 0 , 0 , 21 , 51.22 ],
-    ['Semestre 7', '2017-2',  18 , 0 , 0 , 18 , 43.90 ],
-    ['Semestre 8', '2018-1',  16 , 0 , 0 , 16 , 39.02 ],
-    [ 'Semestre 9' , '2018-2',  16 , 0 , 0 , 16 , 39.5 ],
-    ['Semestre 10', '2019-1',  16 , 1 , 2 , 16 , 39.02 ],
-    ['Semestre 11', '2019-2',  13 , 5 , 0 , 8 , 19.51 ],
+    ['Semestre 3', '2016-1',  26 , 0 , 3 , 23 , 56.10 ],
+    ['Semestre 4', '2016-2',  23 , 0 , 2 , 21 , 51.22],
+    ['Semestre 5', '2017-1',  21 , 0 , 0 , 21 , 51.22 ],
+    ['Semestre 6', '2017-2',  18 , 0 , 0 , 18 , 43.90 ],
+    ['Semestre 7', '2018-1',  16 , 0 , 0 , 16 , 39.02 ],
+    ['Semestre 8' , '2018-2',  16 , 0 , 0 , 16 , 39.5 ],
+    ['Semestre 9', '2019-1',  16 , 1 , 2 , 16 , 39.02 ],
+    ['Semestre 10', '2019-2',  13 , 5 , 0 , 8 , 19.51 ],
+    ['Semestre 11', '2020-1',  8 , 2 , 0 , 6 , 14.63 ],
     ['Semestre 12', '2020-1',  8 , 2 , 0 , 6 , 14.63 ],
-    ['Semestre 13', '2020-2',  6 , 2 , 2 , 2 , 4.88 ],
-    ['Semestre 14', '2021-1',  2 , 2 , 0 , 0 , 4.88 ],
+    ['Semestre 13', '2021-1',  2 , 2 , 0 , 0 , 4.88 ],
+    ['Semestre 14', '2021-2',  2 , 2 , 0 , 0 , 4.88 ],
     ['Semestre 15', '2021-2',  2 , 2 , 0 , 0 , 4.88 ],
 ];
 
 function datosIndicesPermanencia(cohorte, numSemestres, carrera) {
-    const tablaCopy = tablaPermanencia.slice();
+    const tablaCopy = [...tablaPermanencia];
     const tabla = [];
     let activoInd = 0;
     let desercionInd = 0;
@@ -49,17 +50,20 @@ function datosIndicesPermanencia(cohorte, numSemestres, carrera) {
             default: continue;
         }
     }
-    for (let sem = 2; sem < (numSemestres+2); sem++) {
-        tabla.push(tablaCopy[sem]);
+    numSemestres = Number(numSemestres)+2;
+    console.log(numSemestres);
+    for (let sem = 2; sem < numSemestres; sem++) {
         if (sem === 2){
             periodo = cohorte.split("-");
         } else {
             periodo = anioPeriodo(periodo);
         }
+        tabla.push(tablaCopy[sem]);
         tabla[sem][1] = String(periodo[0])+"-"+String(periodo[1]);
         tabla[sem][matriculaInd] = tabla[sem][activoInd]-tabla[sem][desercionInd]-tabla[sem][egresoInd];
-        tabla[sem][tasaInd] = (tabla[sem][matriculaInd]/tabla[sem][activoInd])*100;
+        tabla[sem][tasaInd] = String(((tabla[sem][matriculaInd]/tabla[sem][activoInd])*100).toFixed(2))+" %";
     }
+    
     return tabla;
 };
 

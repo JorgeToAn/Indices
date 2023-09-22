@@ -3,12 +3,17 @@ import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import Dropdown from './../../components/Dropdown';
 import datosIndicesPermanencia from '../../mockup/dataService';
-import { Container } from '@mantine/core';
 import { useState } from 'react';
+import { useInputState } from '@mantine/hooks';
+import { ZoomCheck } from 'tabler-icons-react';
 
 const IndicePermanencia = () => {
     const [heading, setHeading] = useState([]);
     const [data, setData] = useState([]);
+    const [cohorte, setCohorte] = useInputState('');
+    const [carrera, setCarrera] = useInputState('');
+    const [numSemestres, setNumSemestre] = useInputState(0);
+    // const [params, setParams] = useState({});
     // Informacion de prueba, no representa el comportamiento real
     // const tabla = [
     //     ['Semestre 1', '2015-1', '41','0','10','31','75.61'],
@@ -35,7 +40,9 @@ const IndicePermanencia = () => {
     const headers = [];
     let tablaCompleta = [];
     const handleTable = () => {
-        tablaCompleta = datosIndicesPermanencia("2016-1", 9, "Ingenieria en Sistemas Computacionales");
+        // console.log(numSemestres);
+        // tablaCompleta = datosIndicesPermanencia(params['Cohorte generacional'], params['Cálculo de semestres'], params['Programa educativo']);
+        tablaCompleta = datosIndicesPermanencia(cohorte, numSemestres, carrera);
         headers.push(tablaCompleta[0]);
         headers.push(tablaCompleta[1]);
         for (let fila = 2; fila < tablaCompleta.length; fila++) {
@@ -43,7 +50,19 @@ const IndicePermanencia = () => {
         }
         setHeading(headers);
         setData(tabla);
+        // console.log(tablaCompleta);
     };
+
+    // const handleDrop = (e) => {
+    //     const label = e.target.name;
+    //     const data = e.target.value;
+    //     const parameters = {...data};
+    //     console.log(parameters);
+    //     parameters[label] = data;
+    //     setParams(parameters);
+    //     handleTable();
+    // };
+
 
     return(
         <div style={{
@@ -53,18 +72,18 @@ const IndicePermanencia = () => {
             <Header color="toronja" section="Indices" title="Permanencia por cohorte generacional" route="/" />
             <Flex direction="column">
                 <Group mt={0} mb={16}>
-                    <Dropdown  label="Programa educativo" color="#FF785A" data={[
-                        ['ISIC','Sistemas computacionales'],
-                        ['QUI','Quimica'],
-                        ['IND','Industrial'],
+                    <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera} data={[
+                        ['Ingenieria en Sistemas computacionales','Sistemas computacionales'],
+                        ['Ingenieria Quimica','Quimica'],
+                        ['Ingenieria Industrial','Industrial'],
                     ]} />
-                    <Dropdown  label="Cohorte generacional" color="#FF785A" data={[
-                        ['2015-1','2015-2'],
+                    <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={[
+                        ['2015-2','2015-2'],
                         ['2016-1','2016-1'],
                         ['2016-2','2016-2'],
                         ['2017-1','2017-1'],
                     ]} />
-                    <Dropdown  label="Cálculo de semestres" color="#FF785A" data={[
+                    <Dropdown  label="Cálculo de semestres" color="#FF785A" handleChangeFn={setNumSemestre} data={[
                         ['9','9 semestres'],
                         ['10','10 semestres'],
                         ['11','11 semestres'],
@@ -77,15 +96,13 @@ const IndicePermanencia = () => {
                         ['Excel','Excel'],
                         ['PDF','PDF'],
                     ]} />
-                    <Button onClick={handleTable}>Activar</Button>
                 </Group>
+                <Button onClick={handleTable} color='gris' w={150} leftIcon={<ZoomCheck />}>Activar</Button>
                 <Group mt={0} mb={16} >
                     <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
                     <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                 </Group>
-                <Container id='tabla-ind'>
-                    <Tabla colors="tabla-toronja" doubleHeader  headers={heading} content={data} />
-                </Container>
+                <Tabla colors="tabla-toronja" doubleHeader  headers={heading} content={data} />
             </Flex>
         </div>
     );
