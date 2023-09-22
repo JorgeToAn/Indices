@@ -31,6 +31,13 @@ function Dropdown ({label, color, data, handleChangeFn}) {
                     borderRadius: "md",
                     fontWeight: "bold",
                 },
+                dropdown: {
+                    option : {
+                        '&:focus-within': {
+                            backgroundColor: color,
+                        }
+                    },
+                },
                 label: {
                     visibility: "hidden",
                     fontWeight: "bold",
