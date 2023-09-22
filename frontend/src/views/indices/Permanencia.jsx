@@ -3,8 +3,12 @@ import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import Dropdown from './../../components/Dropdown';
 import datosIndicesPermanencia from '../../mockup/dataService';
+import { Container } from '@mantine/core';
+import { useState } from 'react';
 
 const IndicePermanencia = () => {
+    const [heading, setHeading] = useState([]);
+    const [data, setData] = useState([]);
     // Informacion de prueba, no representa el comportamiento real
     // const tabla = [
     //     ['Semestre 1', '2015-1', '41','0','10','31','75.61'],
@@ -34,10 +38,11 @@ const IndicePermanencia = () => {
         tablaCompleta = datosIndicesPermanencia("2016-1", 9, "Ingenieria en Sistemas Computacionales");
         headers.push(tablaCompleta[0]);
         headers.push(tablaCompleta[1]);
-
         for (let fila = 2; fila < tablaCompleta.length; fila++) {
             tabla.push(tablaCompleta[fila]);
         }
+        setHeading(headers);
+        setData(tabla);
     };
 
     return(
@@ -78,7 +83,9 @@ const IndicePermanencia = () => {
                     <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
                     <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                 </Group>
-                <Tabla colors="tabla-toronja" doubleHeader  headers={headers} content={tabla} />
+                <Container id='tabla-ind'>
+                    <Tabla colors="tabla-toronja" doubleHeader  headers={heading} content={data} />
+                </Container>
             </Flex>
         </div>
     );
