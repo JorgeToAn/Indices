@@ -98,6 +98,7 @@ function datosIndicesPermanencia(cohorte, numSemestres, carrera) {
     let tasaInd = 0;
     let periodo = [];
     let inscritos = 0;
+    let nuevoIngreso = 0;
     tabla.push(["Indices de rendimiento escolar cohorte generacional "+cohorte+" "+carrera]);
     tabla.push(tablaCopy[1]);
     for (const c in tabla[1]) {
@@ -126,6 +127,7 @@ function datosIndicesPermanencia(cohorte, numSemestres, carrera) {
         if (sem === 2){
             periodo = cohorte.split("-");
             inscritos = tabla[sem][2];
+            nuevoIngreso = inscritos;
         } else {
             periodo = anioPeriodo(periodo);
         }
@@ -133,7 +135,7 @@ function datosIndicesPermanencia(cohorte, numSemestres, carrera) {
         tabla[sem][1] = String(periodo[0])+"-"+String(periodo[1]);
         tabla[sem][matriculaInd] = tabla[sem][activoInd]-tabla[sem][desercionInd]-tabla[sem][egresoInd];
         inscritos = tabla[sem][matriculaInd];
-        tabla[sem][tasaInd] = String(((tabla[sem][matriculaInd]/tabla[sem][activoInd])*100).toFixed(2))+" %";
+        tabla[sem][tasaInd] = String(((tabla[sem][matriculaInd]/nuevoIngreso)*100).toFixed(2))+" %";
     }
     return tabla;
 };
@@ -141,17 +143,15 @@ function datosIndicesPermanencia(cohorte, numSemestres, carrera) {
 function datosIndicesEgreso(cohorte, numSemestres, carrera) {
     const tablaCopyE = [...tablaEgreso];
     const tabla = [];
-    let activoInd = 0;
     let egresoInd = 0;
     let tasaInd = 0;
+    let inscritos = 0;
+    let nuevoIngreso = 0;
     let periodo = [];
     tabla.push(["Indices de rendimiento escolar cohorte generacional "+cohorte+" "+carrera]);
     tabla.push(tablaCopyE[1]);
     for (const c in tabla[1]) {
         switch(tabla[1][c]) {
-            case 'Inscritos':
-                activoInd = c;
-                break;
             case 'Eficiencia terminal':
                 tasaInd = c;
                 break;
@@ -163,14 +163,17 @@ function datosIndicesEgreso(cohorte, numSemestres, carrera) {
     }
     numSemestres = Number(numSemestres)+2;
     for (let sem = 2; sem < numSemestres; sem++) {
+        tabla.push(tablaCopyE[sem]);
         if (sem === 2){
             periodo = cohorte.split("-");
+            inscritos = tabla[sem][2];
+            nuevoIngreso = inscritos;
         } else {
             periodo = anioPeriodo(periodo);
         }
-        tabla.push(tablaCopyE[sem]);
+        tabla[sem][2] = inscritos;
         tabla[sem][1] = String(periodo[0])+"-"+String(periodo[1]);
-        tabla[sem][tasaInd] = String(((tabla[sem][egresoInd]/tabla[sem][activoInd])*100).toFixed(2))+" %";
+        tabla[sem][tasaInd] = String(((tabla[sem][egresoInd]/nuevoIngreso)*100).toFixed(2))+" %";
     }
     return tabla;
 };
@@ -178,17 +181,15 @@ function datosIndicesEgreso(cohorte, numSemestres, carrera) {
 function datosIndicesTitulacion(cohorte, numSemestres, carrera) {
     const tablaCopyE = [...tablaTitulacion];
     const tabla = [];
-    let activoInd = 0;
     let tituloInd = 0;
     let tasaInd = 0;
     let periodo = [];
+    let inscritos = 0;
+    let nuevoIngreso = 0;
     tabla.push(["Indices de rendimiento escolar cohorte generacional "+cohorte+" "+carrera]);
     tabla.push(tablaCopyE[1]);
     for (const c in tabla[1]) {
         switch(tabla[1][c]) {
-            case 'Inscritos':
-                activoInd = c;
-                break;
             case 'Eficiencia de titulacion':
                 tasaInd = c;
                 break;
@@ -200,14 +201,17 @@ function datosIndicesTitulacion(cohorte, numSemestres, carrera) {
     }
     numSemestres = Number(numSemestres)+2;
     for (let sem = 2; sem < numSemestres; sem++) {
+        tabla.push(tablaCopyE[sem]);
         if (sem === 2){
             periodo = cohorte.split("-");
+            inscritos = tabla[sem][2];
+            nuevoIngreso = inscritos;
         } else {
             periodo = anioPeriodo(periodo);
         }
-        tabla.push(tablaCopyE[sem]);
+        tabla[sem][2] = inscritos;
         tabla[sem][1] = String(periodo[0])+"-"+String(periodo[1]);
-        tabla[sem][tasaInd] = String(((tabla[sem][tituloInd]/tabla[sem][activoInd])*100).toFixed(2))+" %";
+        tabla[sem][tasaInd] = String(((tabla[sem][tituloInd]/nuevoIngreso)*100).toFixed(2))+" %";
     }
     return tabla;
 };
