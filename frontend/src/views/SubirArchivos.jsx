@@ -9,9 +9,10 @@ import {
     ActionIcon
 } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
-import { ArrowLeft, FileUpload, Upload } from "tabler-icons-react";
+import { ArrowLeft, Download, FileUpload, Upload } from "tabler-icons-react";
 import ResultadosLog from '../components/resultadosLog';
 import { useDisclosure } from '@mantine/hooks';
+import { Link } from 'react-router-dom';
 
 const SubirArchivos = () => {
     const [opened, { open, close }] = useDisclosure(false);
@@ -32,43 +33,55 @@ const SubirArchivos = () => {
             <p>Aqui se suben los tres archivos que utiliza el sistema para trabajar, estos deberan ser cargados una vez por semestre.<br />Los archivos deben de seguir el siguiente formato para ser aceptados en el sistema.</p>
             <Group position='center'>
                 {/* Alumnos inscritos en el semestre */}
-                <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={open}>
-                    <Flex align="center" direction="column" position="center" gap="xl">
-                        <Text fw={700} tt="capitalize">Alumnos Inscritos</Text>
-                        {/* Es un icono */}
-                        <FileUpload  size={72} color="#FFAA5A"/>
-                        <FileButton color='naranja'>
-                            {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
-                        </FileButton>
-                    </Flex>
-
-                </Dropzone>
+                <div>
+                    <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={open}>
+                        <Flex align="center" direction="column" position="center" gap="xl">
+                            <Text fw={700} tt="capitalize">Alumnos Inscritos</Text>
+                            {/* Es un icono */}
+                            <FileUpload  size={72} color="#FFAA5A"/>
+                            <FileButton color='naranja'>
+                                {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
+                            </FileButton>
+                        </Flex>
+                    </Dropzone>
+                    <Link to="/documents/Plantilla_Lista_Alumnos.csv" target="_blank" download >
+                        <Button rightIcon={<Download />} styles="textDecoration: none;" variant='light' color='gris' fullWidth mt="10px">Descargar Plantilla</Button>
+                    </Link>
+                </div>
 
                 {/* Alumnos egresados */}
-                <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={open}>
-                    <Flex align="center" direction="column" position="center" gap="xl">
-                        <Text fw={700} tt="capitalize">Egresados</Text>
-                        {/* Es un icono */}
-                        <FileUpload  size={72} color="#FFAA5A"/>
-                        <FileButton color='naranja'>
-                            {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
-                        </FileButton>
-                    </Flex>
-
-                </Dropzone>
+                <div>
+                    <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={open}>
+                        <Flex align="center" direction="column" position="center" gap="xl">
+                            <Text fw={700} tt="capitalize">Egresados</Text>
+                            {/* Es un icono */}
+                            <FileUpload  size={72} color="#FFAA5A"/>
+                            <FileButton color='naranja'>
+                                {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
+                            </FileButton>
+                        </Flex>
+                    </Dropzone>
+                    <Link to="/documents/Plantilla_Lista_Egresados.csv" target="_blank" download >
+                        <Button rightIcon={<Download />} styles="textDecoration: none;" variant='light' color='gris' fullWidth mt="10px">Descargar Plantilla</Button>
+                    </Link>
+                </div>
 
                 {/* Alumnos titulados */}
-                <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={open}>
-                    <Flex align="center" direction="column" position="center" gap="xl">
-                        <Text fw={700} tt="capitalize">Titulados</Text>
-                        {/* Es un icono */}
-                        <FileUpload  size={72} color="#FFAA5A"/>
-                        <FileButton color='naranja'>
-                            {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
-                        </FileButton>
-                    </Flex>
-
-                </Dropzone>
+                <div>
+                    <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={open}>
+                        <Flex align="center" direction="column" position="center" gap="xl">
+                            <Text fw={700} tt="capitalize">Titulados</Text>
+                            {/* Es un icono */}
+                            <FileUpload  size={72} color="#FFAA5A"/>
+                            <FileButton color='naranja'>
+                                {(props) => <Button color="naranja" leftIcon={<Upload />}>Subir Archivos</Button>}
+                            </FileButton>
+                        </Flex>
+                    </Dropzone>
+                    <Link to="/documents/Plantilla_Lista_Titulados.csv" target="_blank" download >
+                        <Button rightIcon={<Download />} styles="textDecoration: none;" variant='light' color='gris' fullWidth mt="10px">Descargar Plantilla</Button>
+                    </Link>
+                </div>
                 <ResultadosLog opened={opened} close={close} info={info}/>
             </Group>
         </Container>
