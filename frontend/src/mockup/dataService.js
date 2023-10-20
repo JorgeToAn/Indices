@@ -21,22 +21,22 @@ const tablaPermanencia = [
 
 const tablaDesercion = [
     ["Indices de rendimiento escolar cohorte generacional",],
-    ['Semestre', 'Periodo', 'Inscritos', 'Egresados','Desercion', 'Abandono','Tasa de desercion escolar', 'Tasa de abandono escolar'],
-    ['Semestre 1', '2015-1', 41,0,10,6,75.61],
-    ['Semestre 2', '2015-2', 31,0,5,5,23.2],
-    ['Semestre 3', '2016-1',  26 , 0 , 3 , 23 , 25, 25.2 ],
-    ['Semestre 4', '2016-2',  23 , 0 , 2 , 21 , 25, 25.2],
-    ['Semestre 5', '2017-1',  21 , 0 , 0 , 21 , 25, 25.2 ],
-    ['Semestre 6', '2017-2',  18 , 0 , 0 , 18 , 25, 25.2 ],
-    ['Semestre 7', '2018-1',  16 , 0 , 0 , 16 , 25, 25.2],
-    ['Semestre 8' , '2018-2',  16 , 0 , 0 , 5 , 25, 25.2 ],
-    ['Semestre 9', '2019-1',  16 , 1 , 2 , 6 , 25, 25.2 ],
-    ['Semestre 10', '2019-2',  13 , 5 , 0 , 8 , 25, 25.2 ],
-    ['Semestre 11', '2020-1',  8 , 2 , 0 , 7 , 25, 25.2 ],
-    ['Semestre 12', '2020-1',  8 , 2 , 0 ,  5, 25, 25.2 ],
-    ['Semestre 13', '2021-1',  2 , 2 , 0 , 0 , 25, 25.2 ],
-    ['Semestre 14', '2021-2',  2 , 2 , 0 , 0 , 25, 25.2 ],
-    ['Semestre 15', '2021-2',  2 , 2 , 0 , 0 , 25, 25.2 ],
+    ['Semestre', 'Periodo', 'Inscritos', 'Egresados','Desercion','Tasa de desercion escolar'],
+    ['Semestre 1', '2015-1', 41 ,0,1,75.61],
+    ['Semestre 2', '2015-2', 31,0,5,2.2],
+    ['Semestre 3', '2016-1',  26  , 3 , 5 , 25.2 ],
+    ['Semestre 4', '2016-2',  23 , 2 , 5 , 25.2],
+    ['Semestre 5', '2017-1',  21 , 0 , 4 , 25.2 ],
+    ['Semestre 6', '2017-2',  18, 0 , 6 , 25.2 ],
+    ['Semestre 7', '2018-1',  16, 0 , 9 , 25.2],
+    ['Semestre 8' , '2018-2',  16, 0 , 5, 25.2 ],
+    ['Semestre 9', '2019-1',  16 , 1  , 6 , 25.2 ],
+    ['Semestre 10', '2019-2',  13 , 5 , 8 , 25.2 ],
+    ['Semestre 11', '2020-1',  8 , 2 , 3 , 25.2 ],
+    ['Semestre 12', '2020-1',  8 , 2  ,  3, 25.2 ],
+    ['Semestre 13', '2021-1',  2 , 2 , 0 , 25.2 ],
+    ['Semestre 14', '2021-2',  2 , 2 , 0 , 25.2 ],
+    ['Semestre 15', '2021-2',  2 , 2 , 0 , 25.2 ],
 ];
 
 const tablaEgreso = [
@@ -97,6 +97,7 @@ function datosIndicesPermanencia(cohorte, numSemestres, carrera) {
     let matriculaInd = 0;
     let tasaInd = 0;
     let periodo = [];
+    let inscritos = 0;
     tabla.push(["Indices de rendimiento escolar cohorte generacional "+cohorte+" "+carrera]);
     tabla.push(tablaCopy[1]);
     for (const c in tabla[1]) {
@@ -121,14 +122,17 @@ function datosIndicesPermanencia(cohorte, numSemestres, carrera) {
     }
     numSemestres = Number(numSemestres)+2;
     for (let sem = 2; sem < numSemestres; sem++) {
+        tabla.push(tablaCopy[sem]);
         if (sem === 2){
             periodo = cohorte.split("-");
+            inscritos = tabla[sem][2];
         } else {
             periodo = anioPeriodo(periodo);
         }
-        tabla.push(tablaCopy[sem]);
+        tabla[sem][2] = inscritos;
         tabla[sem][1] = String(periodo[0])+"-"+String(periodo[1]);
         tabla[sem][matriculaInd] = tabla[sem][activoInd]-tabla[sem][desercionInd]-tabla[sem][egresoInd];
+        inscritos = tabla[sem][matriculaInd];
         tabla[sem][tasaInd] = String(((tabla[sem][matriculaInd]/tabla[sem][activoInd])*100).toFixed(2))+" %";
     }
     return tabla;
@@ -212,9 +216,10 @@ function datosIndicesDesercion(cohorte, numSemestres, carrera) {
     const tabla = [];
     let activoInd = 0;
     let desercionInd = 0;
-    let abandonoInd = 0;
+    let egresoInd = 0;
     let tasaInd = 0;
-    let tasaAbInd = 0;
+    let inscritos = 0;
+    let nuevoIngreso = 0;
     let periodo = [];
     tabla.push(["Indices de rendimiento escolar cohorte generacional "+cohorte+" "+carrera]);
     tabla.push(tablaCopy[1]);
@@ -226,32 +231,31 @@ function datosIndicesDesercion(cohorte, numSemestres, carrera) {
             case 'Desercion':
                 desercionInd = c;
                 break;
-            case 'Abandono':
-                abandonoInd = c;
+            case 'Egresados':
+                egresoInd = c;
                 break;
             case 'Tasa de desercion escolar':
                 tasaInd = c;
                 break;
-            case 'Tasa de abandono escolar':
-                tasaAbInd = c;
-                break;
+
             default: continue;
         }
     }
     numSemestres = Number(numSemestres)+2;
     for (let sem = 2; sem < numSemestres; sem++) {
+        tabla.push(tablaCopy[sem]);
         if (sem === 2){
             periodo = cohorte.split("-");
+            inscritos = tabla[sem][2];
+            nuevoIngreso = inscritos;
         } else {
             periodo = anioPeriodo(periodo);
         }
-
-        tabla.push(tablaCopy[sem]);
+        tabla[sem][2] = inscritos;
         tabla[sem][1] = String(periodo[0])+"-"+String(periodo[1]);
         // Tasa de desercion
-        tabla[sem][tasaInd] = String(((tabla[sem][desercionInd]/tabla[sem][activoInd])*100).toFixed(2))+" %";
-        // Tasa de abandono
-        tabla[sem][tasaAbInd] = String(((tabla[sem][abandonoInd]/tabla[sem][activoInd])*100).toFixed(2))+" %";
+        tabla[sem][tasaInd] = String(((tabla[sem][desercionInd]/nuevoIngreso)*100).toFixed(2))+" %";
+        inscritos = tabla[sem][activoInd] - tabla[sem][desercionInd] - tabla[sem][egresoInd];
     }
     return tabla;
 };

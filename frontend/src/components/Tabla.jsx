@@ -6,7 +6,7 @@ import './Tabla.css';
 function Tabla ({headers, content, colors, doubleHeader}) {
 
     return(
-        <ScrollArea w={1300} h="40vw" mah={500} type='always' >
+        <ScrollArea w={1200} h="40vw" mah={500} type='always' >
             <Table highlightOnHover withBorder withColumnBorders horizontalSpacing='xs' verticalSpacing='xs' className={colors+" tabla"}>
                 {/* Si la propiedad "doubleHeader" es true, entonces la primer celda del primer renglon
                 tendra una longitud de toda la tabla, si no, entonces solo habra un renglon en donde cada
