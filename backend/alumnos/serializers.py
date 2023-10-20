@@ -9,6 +9,6 @@ class AlumnoSerializer(serializers.ModelSerializer):
         validators = [
             UniqueTogetherValidator(
                 queryset = Alumno.objects.all(),
-                fields = ['no_control', 'personal']
+                fields = ['no_control', 'curp']
             )
         ]

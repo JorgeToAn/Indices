@@ -7,9 +7,9 @@ Project INDICES {
 
 // Las opciones de genero para alumnos y usuarios
 Enum generos {
-  0 [note: 'Hombre']
-  1 [note: 'Mujer']
-  2 [note: 'Otro']
+  H [note: 'Hombre']
+  M [note: 'Mujer']
+  X [note: 'Otro']
 }
 
 Enum tipos_ingresos {
@@ -31,7 +31,7 @@ Table personal {
   paterno varchar [not null]
   materno varchar
   fecha_nacimiento date [not null]
-  genero generos [not null, default: '2']
+  genero generos [not null, default: 'X']
   habla_lengua_indigena bool [not null]
   Note: 'Contiene la información personal del alumno'
 }
@@ -41,7 +41,6 @@ Table alumnos {
   no_control varchar(10) [not null]
   semestre_inicio int [not null]
   personal_id varchar(18) [not null]
-  carrera_id int [not null]
   plan_id int [not null]
   Note: 'Contiene la información asociada al número de control del alumno'
 }
@@ -58,6 +57,7 @@ Table planes {
   clave varchar [not null, unique]
   fecha_inicio date [not null]
   fecha_final date
+  carrera_id int [not null]
   Note: 'Plan de estudios, solo puede existir un plan de estudios activo a la vez'
 }
 
@@ -103,7 +103,7 @@ Table personal_discapacidades {
 Ref: discapacidades.id < personal_discapacidades.discapacidad_id
 Ref: personal.curp < personal_discapacidades.personal_id
 Ref: personal.curp < alumnos.personal_id
-Ref: carreras.id < alumnos.carrera_id
+Ref: carreras.id < planes.carrera_id
 Ref: planes.id < alumnos.plan_id
 Ref: alumnos.id < ingresos.alumno_id
 Ref: alumnos.id < egresos.alumno_id
