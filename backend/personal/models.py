@@ -4,10 +4,10 @@ from django.db import models
 import re
 
 class Personal(models.Model):
-    class Gender(models.IntegerChoices):
-        MALE = 0, _('Male')
-        FEMALE = 1, _('Female')
-        OTHER = 2, _('Other')
+    class Gender(models.TextChoices):
+        MALE = 'H', _('Hombre')
+        FEMALE = 'M', _('Mujer')
+        OTHER = 'X', _('Otro')
 
     def validate_curp(value):
         match = re.search(r'^[A-Z][AEIOU][A-Z]{2}\d{2}(((0[13578]|1[02])(0[1-9]|[1-2]\d|30|31))|((0[469]|11)(0[1-9]|[1-2]\d|30))|(02)(0[1-9]|[1-2]\d))(H|M)(AS|BC|BS|CC|CL|CM|CS|CH|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)([B-DF-HJ-NP-TV-Z]{3})[A-Z0-9]\d$', value.upper())
@@ -30,7 +30,7 @@ class Personal(models.Model):
     paterno = models.CharField(verbose_name=_('apellido paterno'), max_length=150, null=False, blank=False, validators=[validate_solo_letras])
     materno = models.CharField(verbose_name=_('apellido materno'), max_length=150, null=True, blank=True, validators=[validate_solo_letras])
     fecha_nacimiento = models.DateField(null=False, blank=False)
-    genero = models.IntegerField(choices=Gender.choices, default=Gender.OTHER, null=False)
+    genero = models.CharField(choices=Gender.choices, default=Gender.OTHER, max_length=1, null=False)
     discapacidades = models.ManyToManyField('discapacidades.Discapacidad', related_name='discapacidades', blank=True)
     habla_lengua_indigena = models.BooleanField(default=False)
 
