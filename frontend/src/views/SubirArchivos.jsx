@@ -44,7 +44,7 @@ const SubirArchivos = () => {
                             </FileButton>
                         </Flex>
                     </Dropzone>
-                    <Link to="/documents/Plantilla_Lista_Alumnos.csv" target="_blank" download >
+                    <Link to="/documents/Plantilla_Lista_Alumnos.xlsx" target="_blank" download >
                         <Button rightIcon={<Download />} styles="textDecoration: none;" variant='light' color='gris' fullWidth mt="10px">Descargar Plantilla</Button>
                     </Link>
                 </div>
@@ -61,7 +61,7 @@ const SubirArchivos = () => {
                             </FileButton>
                         </Flex>
                     </Dropzone>
-                    <Link to="/documents/Plantilla_Lista_Egresados.csv" target="_blank" download >
+                    <Link to="/documents/Plantilla_Lista_Egresados.xlsx" target="_blank" download >
                         <Button rightIcon={<Download />} styles="textDecoration: none;" variant='light' color='gris' fullWidth mt="10px">Descargar Plantilla</Button>
                     </Link>
                 </div>
@@ -78,11 +78,17 @@ const SubirArchivos = () => {
                             </FileButton>
                         </Flex>
                     </Dropzone>
-                    <Link to="/documents/Plantilla_Lista_Titulados.csv" target="_blank" download >
+                    <Link to="/documents/Plantilla_Lista_Titulados.xlsx" target="_blank" download >
                         <Button rightIcon={<Download />} styles="textDecoration: none;" variant='light' color='gris' fullWidth mt="10px">Descargar Plantilla</Button>
                     </Link>
                 </div>
                 <ResultadosLog opened={opened} close={close} info={info}/>
+            </Group>
+            <Group align='center' justify='center' size='md' >
+                <Text>Si tiene dudas sobre como usar el sistema, descargue el manual de usuario dando clic en el boton de abajo.</Text>
+                <Link to="" target='_blank' download>
+                    <Button rightIcon={<Download />} styles="textDecoration: none;" variant='light' color='gris'>Descargar Manual de Usuario</Button>
+                </Link>
             </Group>
         </Container>
     );
