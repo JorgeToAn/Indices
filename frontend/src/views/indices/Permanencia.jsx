@@ -1,8 +1,8 @@
-import { Checkbox, Flex, Group } from '@mantine/core';
+import { Button, Checkbox, Flex, Group } from '@mantine/core';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import Dropdown from './../../components/Dropdown';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import dataService from '../../mockup/dataService';
 import dropDownData from '../../mockup/dropDownData';
@@ -31,9 +31,6 @@ const IndicePermanencia = () => {
         setData(tabla);
     };
 
-    useEffect(() => {
-        handleTable();
-    });
 
 
     return(
@@ -55,6 +52,7 @@ const IndicePermanencia = () => {
                 <Group mt={0} mb={16} >
                     <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
                     <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
+                    <Button onClick={handleTable}>Filtrar</Button>
                 </Group>
                 <Tabla colors="tabla-toronja" doubleHeader  headers={heading} content={data} />
             </Flex>
