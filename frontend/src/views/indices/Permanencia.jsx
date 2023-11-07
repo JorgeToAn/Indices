@@ -6,6 +6,7 @@ import {  useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import dataService from '../../mockup/dataService';
 import dropDownData from '../../mockup/dropDownData';
+import "./Indices.css";
 
 const IndicePermanencia = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -40,20 +41,25 @@ const IndicePermanencia = () => {
         }}>
             <Header color="toronja" section="Indices" title="Permanencia por cohorte generacional" route="/" />
             <Flex direction="column">
-                <Group mt={0} mb={16}>
-                    <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera} data={dropDownData.carreras} />
-                    <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
-                    <Dropdown  label="Cálculo de semestres" color="#FF785A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
-                    <Dropdown  label="Exportar" color="#FF785A" data={[
-                        ['Excel','Excel'],
-                        ['PDF','PDF'],
-                    ]} />
-                </Group>
-                <Group mt={0} mb={16} >
-                    <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
-                    <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
-                    <Button onClick={handleTable}>Filtrar</Button>
-                </Group>
+                <fieldset className='filtros'>
+                    <legend>Filtros</legend>
+                    <Group mt={0} mb={16} color='gris'>
+                        <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera} data={dropDownData.carreras} />
+                        <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
+                        <Dropdown  label="Cálculo de semestres" color="#FF785A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
+                        <Dropdown  label="Exportar" color="#FF785A" data={[
+                            ['Excel','Excel'],
+                            ['PDF','PDF'],
+                        ]} />
+                    </Group>
+                    <Group mt={0} mb={16} >
+                        <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
+                        <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
+                    </Group>
+                    <Group justify="flex-end" >
+                        <Button onClick={handleTable}>Filtrar</Button>
+                    </Group>
+                </fieldset>
                 <Tabla colors="tabla-toronja" doubleHeader  headers={heading} content={data} />
             </Flex>
         </div>
