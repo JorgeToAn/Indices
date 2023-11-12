@@ -56,8 +56,8 @@ const IndicePermanencia = () => {
                         <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
                         <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                     </Group>
-                    <Group justify="flex-end" >
-                        <Button onClick={handleTable}>Filtrar</Button>
+                    <Group style={{ justifyContent: "flex-end" }} >
+                        <Button onClick={handleTable} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-toronja" doubleHeader  headers={heading} content={data} />
