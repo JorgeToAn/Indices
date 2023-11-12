@@ -181,7 +181,9 @@ const NavBar = () => {
 
                         <Menu.Dropdown>
                             <Menu.Item>HISTORIAL POR ALUMNO</Menu.Item>
-                            <Menu.Item >LISTA DE ALUMNOS</Menu.Item>
+                            <Menu.Item onClick={()=>{
+                                navigate('/alumnos/lista');
+                                }}>LISTA DE ALUMNOS</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
 

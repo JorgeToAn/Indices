@@ -1,4 +1,23 @@
 
+const tablaAlumnos = [
+    ["","", "", "", "SEM 1", "SEM 2", "SEM 3", "SEM 4", "SEM 5", "SEM 6", "SEM 7"],
+    ['Nombre', 'No. control', 'Carrera', 'Sexo','2016-1', '2016-2','2017-1', '2017-2', '2018-1', '2018-2', '2019-1'],
+    ['CASTILLO MARTINEZ LEMMUEL', '16490096', 'ING. INDUSTRIAL','H','IND','BAJA','BAJA', 'BAJA', 'BAJA', 'BAJA', 'BAJA'],
+    ['QUINTERO LEON DANIELA', '16490396', 'ING. INDUSTRIAL','M','IND','BAJA','BAJA', 'BAJA', 'BAJA', 'BAJA', 'BAJA'],
+    ['VILLANUEVA LOPEZ VICTOR', '16490393', 'ING. MECANICA','H','MEC','BAJA','MEC', 'MEC', 'MEC', 'BAJA', 'BAJA'],
+    ['CASTILLO TOLEDO BEJAMIN', '16490391', 'ING. QUIMICA','H','QUI','BAJA','QUI', 'BAJA', 'QUI', 'QUI', 'QUI'],
+    ['GOMEZ LOPEZ ISIDRO', '16490390', 'ING. INDUSTRIAL','H','IND','IND','IND', 'IND', 'IND', 'IND', 'EGR'],
+    ['ANGULO LEYVA OSCAR IVAN', '16490389', 'ING. MECATRONICA','H','MKT','MKT','BAJA', 'MKT', 'MKT', 'BAJA', 'MKT'],
+    ['SIMENTAL VIDRIOS SAMUEL', '16490398', 'ING. GESTION EMPRESARIAL','H','GEM','BAJA','GEM', 'BAJA', 'GEM', 'GEM', 'BAJA'],
+    ['RAMOS PERALTA JOSE', '16490387', 'ING. LOGISTICA','H','LOG','LOG','BAJA', 'LOG', 'LOG', 'LOG', 'LOG'],
+    ['VALDEZ RENDON JOSE', '16490385', 'CONTADOR PUBLICO','H','CP','BAJA','CP', 'CP', 'CP', 'CP', 'BAJA'],
+    ['MARQUEZ PERALTA MONICA', '16490383', 'ING. QUIMICA','M','QUI','QUI','BAJA', 'QUI', 'QUI', 'QUI', 'BAJA'],
+    ['SANCHEZ BALDERRAM OSCAR', '16490096', 'ING. MECATRONICA','H','MKT','BAJA','MKT', 'BAJA', 'MKT', 'MKT', 'MKT'],
+    ['BELTRAN MOLINA GABRIEL', '16490375', 'ING. SISTEMAS COMPUTACIONALES','H','SYC','SYC','SYC', 'SYC', 'SYC', 'SYC', 'EGR'],
+    ['GONZALEZ SANCHEZ JESUS JAVIER', '16490378', 'ING. MECANICA','H','MEC','MEC','BAJA', 'MEC', 'MEC', 'BAJA', 'BAJA'],
+    ['ARMAS YATES JORGE FERNANDO', '16490381', 'ING. ENERGIAS RENOVABLES','H','ENR','ENR','ENR', 'BAJA', 'ENR', 'BAJA', 'BAJA'],
+];
+
 const tablaPermanencia = [
     ["Indices de rendimiento escolar cohorte generacional",],
     ['Semestre', 'Periodo', 'Inscritos', 'Egresados','Desercion', 'Matricula final','Tasa de retencion'],
@@ -264,12 +283,17 @@ function datosIndicesDesercion(cohorte, numSemestres, carrera) {
     return tabla;
 };
 
+function datosListaAlumnos(cohorte, numSemestres, carrera){
+    const tablaCopy = [...tablaAlumnos];
+    return tablaCopy;
+}
 
 const dataService = {
     datosIndicesDesercion,
     datosIndicesPermanencia,
     datosIndicesEgreso,
     datosIndicesTitulacion,
+    datosListaAlumnos,
 };
 
 export default  dataService;
