@@ -4,18 +4,30 @@ import { CirclePlus } from 'tabler-icons-react';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import './Registro.css';
+import { getCarreras } from "../../utils/carreraHelpers";
+import { useEffect, useState } from "react";
 
 
 const RegistroCarreras = () => {
-    const tabla = [
-        ['ISIC', 'Sistemas Computacionales', 'ISIC-2010'],
-        ['ISIC', 'Sistemas Computacionales', 'ISIC-2011'],
-        ['QUI', 'Quimica', 'QUI-2008']
-    ];
-
+    // const tabla = [
+    //     ['ISIC', 'Sistemas Computacionales', 'ISIC-2010'],
+    //     ['ISIC', 'Sistemas Computacionales', 'ISIC-2011'],
+    //     ['QUI', 'Quimica', 'QUI-2008']
+    // ];
     const headers = [
         'CLAVE', 'NOMBRE', 'PLAN DE ESTUDIO'
     ];
+    const {carreras, setCarreras} = useState([]);
+
+    const obtenerCarreras = async() => {
+        const listaCarreras = await getCarreras();
+        setCarreras(Object.entries(listaCarreras));
+        console.log(carreras);
+    };
+
+    useEffect(() => {
+        obtenerCarreras();
+    });
     return(
         <div style={{
             width: '100vw',
@@ -50,7 +62,7 @@ const RegistroCarreras = () => {
                     </Flex>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >
-                    <Tabla headers={headers} content={tabla} colors="tabla-toronja" />
+                    <Tabla headers={headers} content={carreras} colors="tabla-toronja" />
                 </Flex>
             </Group>
         </div>
