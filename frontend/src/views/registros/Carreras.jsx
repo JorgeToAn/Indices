@@ -5,15 +5,15 @@ import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import './Registro.css';
 import { getCarreras } from "../../utils/carreraHelpers";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 const RegistroCarreras = () => {
-    let tabla = [
-        ['ISIC', 'Sistemas Computacionales', 'ISIC-2010'],
-        ['ISIC', 'Sistemas Computacionales', 'ISIC-2011'],
-        ['QUI', 'Quimica', 'QUI-2008']
-    ];
+    // const tabla = [
+    //     ['ISIC', 'Sistemas Computacionales', 'ISIC-2010'],
+    //     ['ISIC', 'Sistemas Computacionales', 'ISIC-2011'],
+    //     ['QUI', 'Quimica', 'QUI-2008']
+    // ];
     const headers = [
         'CLAVE', 'NOMBRE', 'PLAN DE ESTUDIO'
     ];
@@ -21,18 +21,16 @@ const RegistroCarreras = () => {
 
     const obtenerCarreras = async() => {
         const listaCarreras = await getCarreras();
-        setCarreras(Object.entries(listaCarreras));
-        // console.log(carreras);
-        // setCarreras(carreras.map((carrera) => Object.entries(carrera[1])));
-        tabla =  carreras.map((carrera) => Object.entries(carrera[1]));
-        console.log(tabla[0][1][1]);
-        // setCarreras(carreras.map((carrera) => Object.entries(carrera[1])));
-        // console.log(carreras);
+        let listaC = Object.entries(listaCarreras);
+        listaC = listaC.map((carrera) => Object.entries(carrera[1]));
+        setCarreras(listaC.map((carrera) => carrera.filter((dato, index)=> index > 0)));
+        console.log(carreras);
+
     };
 
-    // useEffect(() => {
-    //     obtenerCarreras();
-    // }, []);
+    useEffect(() => {
+        obtenerCarreras();
+    }, []);
     return(
         <div style={{
             width: '100vw',
@@ -67,7 +65,7 @@ const RegistroCarreras = () => {
                     </Flex>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >
-                    <Tabla headers={headers} content={tabla} colors="tabla-toronja" />
+                    <Tabla headers={headers} content={carreras} colors="tabla-toronja" />
                 </Flex>
             </Group>
         </div>
