@@ -4,16 +4,12 @@ import { CirclePlus } from 'tabler-icons-react';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import './Registro.css';
-import { getCarreras } from "../../utils/carreraHelpers";
+import { getCarreras } from "../../utils/helpers/carreraHelpers";
 import { useState, useEffect } from "react";
 
 
 const RegistroCarreras = () => {
-    // const tabla = [
-    //     ['ISIC', 'Sistemas Computacionales', 'ISIC-2010'],
-    //     ['ISIC', 'Sistemas Computacionales', 'ISIC-2011'],
-    //     ['QUI', 'Quimica', 'QUI-2008']
-    // ];
+
     const headers = [
         'CLAVE', 'NOMBRE', 'PLAN DE ESTUDIO'
     ];

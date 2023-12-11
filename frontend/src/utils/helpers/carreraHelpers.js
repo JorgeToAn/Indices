@@ -1,5 +1,5 @@
 // import { useAuthStore } from "../store/auth";
-import API from "./api";
+import API from "../api";
 
 
 export const getCarreras = async() =>{
