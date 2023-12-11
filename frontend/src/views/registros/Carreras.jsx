@@ -5,29 +5,34 @@ import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import './Registro.css';
 import { getCarreras } from "../../utils/carreraHelpers";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 const RegistroCarreras = () => {
-    // const tabla = [
-    //     ['ISIC', 'Sistemas Computacionales', 'ISIC-2010'],
-    //     ['ISIC', 'Sistemas Computacionales', 'ISIC-2011'],
-    //     ['QUI', 'Quimica', 'QUI-2008']
-    // ];
+    let tabla = [
+        ['ISIC', 'Sistemas Computacionales', 'ISIC-2010'],
+        ['ISIC', 'Sistemas Computacionales', 'ISIC-2011'],
+        ['QUI', 'Quimica', 'QUI-2008']
+    ];
     const headers = [
         'CLAVE', 'NOMBRE', 'PLAN DE ESTUDIO'
     ];
-    const {carreras, setCarreras} = useState([]);
+    const [carreras, setCarreras] = useState([]);
 
     const obtenerCarreras = async() => {
         const listaCarreras = await getCarreras();
         setCarreras(Object.entries(listaCarreras));
-        console.log(carreras);
+        // console.log(carreras);
+        // setCarreras(carreras.map((carrera) => Object.entries(carrera[1])));
+        tabla =  carreras.map((carrera) => Object.entries(carrera[1]));
+        console.log(tabla[0][1][1]);
+        // setCarreras(carreras.map((carrera) => Object.entries(carrera[1])));
+        // console.log(carreras);
     };
 
-    useEffect(() => {
-        obtenerCarreras();
-    });
+    // useEffect(() => {
+    //     obtenerCarreras();
+    // }, []);
     return(
         <div style={{
             width: '100vw',
@@ -52,7 +57,7 @@ const RegistroCarreras = () => {
                             />
                         </Group>
                         <Center>
-                            <Button type="submit" mt={16} leftIcon={<CirclePlus />}>Crear Carrera</Button>
+                            <Button type="button" mt={16} leftIcon={<CirclePlus />} onClick={obtenerCarreras}>Crear Carrera</Button>
                         </Center>
                     </form>
                     <Flex direction="column" justify="center" align="center" mt={16} p={10} style={{backgroundColor: '#EBEBEB', borderRadius: '20px'}}>
@@ -62,7 +67,7 @@ const RegistroCarreras = () => {
                     </Flex>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >
-                    <Tabla headers={headers} content={carreras} colors="tabla-toronja" />
+                    <Tabla headers={headers} content={tabla} colors="tabla-toronja" />
                 </Flex>
             </Group>
         </div>

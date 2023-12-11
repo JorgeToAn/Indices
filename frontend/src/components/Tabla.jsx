@@ -29,6 +29,12 @@ function Tabla ({headers, content, colors, doubleHeader}) {
                     { fila.map( (celda, i) => <td key={i}>{celda}</td>)}
                 </tr>) }
             </tbody>
+            {/* { <tbody>
+                {
+                    content.map((fila, index) => <tr key={index}>{ }</tr>)
+                }
+              </tbody>
+            } */}
         </Table>
     );
 };
