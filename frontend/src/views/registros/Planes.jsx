@@ -46,7 +46,7 @@ const RegistroPlanes = () => {
                         </Center>
                     </form>
                 </Flex>
-                <Flex direction="column" align="flex-start" justify="flex-start" >
+                <Flex direction="column" align="flex-start" justify="flex-start" w="50%" maw='40vw' >
                     <Tabla headers={headers} content={planes} colors="tabla-naranja" />
                 </Flex>
             </Group>

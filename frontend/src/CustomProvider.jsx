@@ -52,6 +52,18 @@ const indicesTheme = {
           "#6D6D6D",
           "#626262"
         ],
+        'rojo': [
+          "#ffebe7",
+          "#ffd5d0",
+          "#f9aaa3",
+          "#f37b70",
+          "#ef5446",
+          "#ec3b2b",
+          "#ec2e1c",
+          "#d22010",
+          "#bc180c",
+          "#a40c06"
+        ]
       },
       defaultRadius: 10,
       primaryShade: 5,

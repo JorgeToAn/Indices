@@ -1,3 +1,4 @@
+
 import { Button, Checkbox, Flex, Group } from '@mantine/core';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
@@ -37,7 +38,6 @@ const IndiceTitulacion = () => {
         }
         return false;
     };
-
     return(
         <div style={{
             width: '100vw',
