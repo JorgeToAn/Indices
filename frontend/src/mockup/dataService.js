@@ -17,7 +17,6 @@ const tablaAlumnos = [
     ['GONZALEZ SANCHEZ JESUS JAVIER', '16490378', 'ING. MECANICA','H','MEC','MEC','BAJA', 'MEC', 'MEC', 'BAJA', 'BAJA'],
     ['ARMAS YATES JORGE FERNANDO', '16490381', 'ING. ENERGIAS RENOVABLES','H','ENR','ENR','ENR', 'BAJA', 'ENR', 'BAJA', 'BAJA'],
 ];
-
 const tablaPermanencia = [
     ["Indices de rendimiento escolar cohorte generacional",],
     ['Semestre', 'Periodo', 'Inscritos', 'Egresados','Desercion', 'Matricula final','Tasa de retencion'],
@@ -287,13 +286,13 @@ function datosListaAlumnos(cohorte, numSemestres, carrera){
     const tablaCopy = [...tablaAlumnos];
     return tablaCopy;
 }
-
 const dataService = {
     datosIndicesDesercion,
     datosIndicesPermanencia,
     datosIndicesEgreso,
     datosIndicesTitulacion,
     datosListaAlumnos,
+
 };
 
 export default  dataService;

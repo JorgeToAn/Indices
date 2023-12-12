@@ -32,8 +32,12 @@ const IndicePermanencia = () => {
         setData(tabla);
     };
 
-
-
+    const checkFilters = () => {
+        if (cohorte === "" || carrera === "" || numSemestres === 0) {
+            return true;
+        }
+        return false;
+    };
     return(
         <div style={{
             width: '100vw',
@@ -56,8 +60,8 @@ const IndicePermanencia = () => {
                         <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
                         <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                     </Group>
-                    <Group justify="flex-end" >
-                        <Button onClick={handleTable}>Filtrar</Button>
+                    <Group style={{ justifyContent: "flex-end" }} >
+                        <Button onClick={handleTable} disabled={checkFilters} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-toronja" doubleHeader  headers={heading} content={data} />

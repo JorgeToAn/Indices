@@ -1,8 +1,9 @@
-import { Checkbox, Flex, Group } from '@mantine/core';
+
+import { Button, Checkbox, Flex, Group } from '@mantine/core';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import Dropdown from './../../components/Dropdown';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import dataService from '../../mockup/dataService';
 import dropDownData from '../../mockup/dropDownData';
@@ -31,9 +32,12 @@ const IndiceTitulacion = () => {
         setData(tabla);
     };
 
-    useEffect(() => {
-        handleTable();
-    });
+    const checkFilters = () => {
+        if (cohorte === "" || carrera === "" || numSemestres === 0) {
+            return true;
+        }
+        return false;
+    };
     return(
         <div style={{
             width: '100vw',
@@ -41,19 +45,25 @@ const IndiceTitulacion = () => {
         }}>
             <Header color="toronja" section="Indices" title="Titulación por cohorte generacional" route="/" />
             <Flex direction="column">
-                <Group mt={0} mb={16}>
-                    <Dropdown  label="Programa educativo" color="#FF785A" data={dropDownData.carreras} handleChangeFn={setCarrera} />
-                    <Dropdown  label="Cohorte generacional" color="#FF785A" data={dropDownData.cohortes} handleChangeFn={setCohorte} />
-                    <Dropdown  label="Cálculo de semestres" color="#FF785A" data={dropDownData.numSemestres} handleChangeFn={setNumSemestre} />
-                    <Dropdown  label="Exportar" color="#FF785A" data={[
-                        ['Excel','Excel'],
-                        ['PDF','PDF'],
-                    ]} />
-                </Group>
-                <Group mt={0} mb={16} >
-                    <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
-                    <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
-                </Group>
+            <fieldset className='filtros'>
+                    <legend>Filtros</legend>
+                    <Group mt={0} mb={16} color='gris'>
+                        <Dropdown  label="Programa educativo" color="#FF785A" data={dropDownData.carreras} handleChangeFn={setCarrera} />
+                        <Dropdown  label="Cohorte generacional" color="#FF785A" data={dropDownData.cohortes} handleChangeFn={setCohorte} />
+                        <Dropdown  label="Cálculo de semestres" color="#FF785A" data={dropDownData.numSemestres} handleChangeFn={setNumSemestre} />
+                        <Dropdown  label="Exportar" color="#FF785A" data={[
+                            ['Excel','Excel'],
+                            ['PDF','PDF'],
+                        ]} />
+                    </Group>
+                    <Group mt={0} mb={16} >
+                        <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
+                        <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
+                    </Group>
+                    <Group style={{ justifyContent: "flex-end" }} >
+                        <Button onClick={handleTable} color='negro' disabled={checkFilters} >Filtrar</Button>
+                    </Group>
+                </fieldset>
                 <Tabla doubleHeader colors="tabla-toronja"  headers={heading} content={data} />
             </Flex>
         </div>
