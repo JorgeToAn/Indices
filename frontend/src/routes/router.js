@@ -22,10 +22,7 @@ const router = createBrowserRouter([
         path: '/mi-perfil',
         element: MiPerfil,
     },
-    {
-        path: '/subir-archivos',
-        element: SubirArchivos,
-    },
+
 ]);
 
 export default router;

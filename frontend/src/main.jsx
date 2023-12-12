@@ -24,6 +24,7 @@ import TablaCrecimiento from './views/tablas/Crecimiento';
 import SeleccionIndices from "./views/indices/Seleccion";
 import SeleccionTablas from './views/tablas/Seleccion';
 import SeleccionRegistros from "./views/registros/Seleccion";
+import CedulaCacei from "./views/cedulas/Cacei";
 
 const router = createBrowserRouter([
   {
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
       {
         path: '/tablas/crecimiento',
         element: <TablaCrecimiento />,
+      },
+      {
+        path: '/cedulas/cacei',
+        element: <CedulaCacei />,
       },
     ]
   },
