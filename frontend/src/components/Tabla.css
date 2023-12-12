@@ -7,11 +7,13 @@
 th {
     color: white !important;
     text-transform: uppercase;
+    width: auto;
+    /* max-width: 150px !important; */
 }
 
 .tabla tr > td {
     max-width: 150px !important;
 }
-.tabla {
+/* .tabla {
     width: 85vw;
-}
+} */

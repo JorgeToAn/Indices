@@ -45,7 +45,7 @@ const TablaPoblacion = () => {
                         ['QUI','Quimica'],
                         ['IND','Industrial'],
                     ]} />
-                    <Dropdown label="Periodo de inicio" color="#FF785A" data={[
+                    <Dropdown label="Cohorte generacional" color="#FF785A" data={[
                         ['2023-2','2023-2'],
                         ['2023-1','2023-1'],
                         ['2022-2','2022-2'],
@@ -56,16 +56,14 @@ const TablaPoblacion = () => {
                         ['2020-1','2020-1'],
                         ['2019-2','2019-2'],
                         ]}/>
-                    <Dropdown label="Periodo de finalización" color="#FF785A" data={[
-                        ['2023-2','2023-2'],
-                        ['2023-1','2023-1'],
-                        ['2022-2','2022-2'],
-                        ['2022-1','2022-1'],
-                        ['2021-2','2021-2'],
-                        ['2021-1','2021-1'],
-                        ['2020-2','2020-2'],
-                        ['2020-1','2020-1'],
-                        ['2019-2','2019-2'],
+                    <Dropdown label="Ultimo semestre" color="#FF785A" data={[
+                        ['9','9 semestres'],
+                        ['10','10 semestres'],
+                        ['11','11 semestres'],
+                        ['12','12 semestres'],
+                        ['13','13 semestres'],
+                        ['14','14 semestres'],
+                        ['15','15 semestres'],
                         ]}/>
                     <Dropdown  label="Exportar" color="#FF785A" data={[
                         ['Excel','Excel'],
