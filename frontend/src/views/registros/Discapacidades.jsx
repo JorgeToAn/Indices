@@ -8,12 +8,6 @@ import { useEffect, useState } from "react";
 
 
 const RegistroDiscapacidades = () => {
-    // const tabla = [
-    //     ['Discapacidad física', 'Es la secuela de una afección en cualquier órgano o sistema corporal.'],
-    //     ['Discapacidad intelectual', 'Se caracteriza por limitaciones significativas tanto en funcionamiento intelectual como en conducta adaptativa.'],
-    //     ['Discapacidad psicosocial', 'Restricción causada por el entorno social y centrada en una deficiencia temporal o permanente de la psique']
-    // ];
-
     const headers = [
         'NOMBRE', 'DESCRIPCION'
     ];
