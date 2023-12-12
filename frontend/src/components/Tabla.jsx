@@ -23,15 +23,19 @@ function Tabla ({headers, content, colors, doubleHeader}) {
                             { headers.map( (head, index) =><th key={index}>{head}</th>) }
                         </tr>
                     </thead>
-
+            }
+            <tbody>
+                { content.map( (fila, index) => <tr key={index}>
+                    { fila.map( (celda, i) => <td key={i}>{celda[1]}</td>)}
+                </tr>) }
+            </tbody>
+            {/* { <tbody>
+                {
+                    content.map((fila, index) => <tr key={index}>{ }</tr>)
                 }
-                <tbody>
-                    { content.map( (fila, index) => <tr key={index}>
-                        { fila.map( (celda, i) => <td key={i}>{celda}</td>)}
-                    </tr>) }
-                </tbody>
-            </Table>
-        </ScrollArea>
+              </tbody>
+            } */}
+        </Table>
     );
 };
 

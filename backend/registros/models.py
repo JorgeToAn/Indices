@@ -21,7 +21,7 @@ class BaseRegistro(models.Model):
             )
 
     periodo = models.CharField(max_length=5, null=False, blank=False, validators=[validate_registro])
-    alumno = models.OneToOneField('alumnos.Alumno', on_delete=models.CASCADE, verbose_name='alumno')
+    alumno = models.ForeignKey('alumnos.Alumno', on_delete=models.CASCADE, verbose_name='alumno')
 
     def __str__(self):
         return f'[{self.pk}] {self.alumno.no_control} en {self.periodo}'

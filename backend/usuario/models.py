@@ -5,10 +5,10 @@ from django.db import models
 import re
 
 class Usuario(AbstractUser):
-    class Gender(models.IntegerChoices):
-        MALE = 0, _('Male')
-        FEMALE = 1, _('Female')
-        OTHER = 2, _('Other')
+    class Gender(models.TextChoices):
+        MALE = 'H', _('Hombre')
+        FEMALE = 'M', _('Mujer')
+        OTHER = 'X', _('Otro')
 
     def validate_name(value):
         match = re.search(r'^[A-ZÁÉÍÓÚÑÄËÏÖÜ ]+$', value.upper())
@@ -22,7 +22,7 @@ class Usuario(AbstractUser):
     paternal_surname = models.CharField(max_length=150, null=False, blank=False, validators=[validate_name])
     maternal_surname = models.CharField(max_length=150, null=True, blank=False, validators=[validate_name])
     email = models.EmailField(null=False, blank=False, unique=True)
-    gender = models.IntegerField(choices=Gender.choices, default=Gender.OTHER, null=False)
+    gender = models.CharField(choices=Gender.choices, default=Gender.OTHER, max_length=1, null=False)
 
     REQUIRED_FIELDS = [
         'first_name',
