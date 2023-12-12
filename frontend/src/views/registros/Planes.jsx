@@ -4,17 +4,29 @@ import { DateInput } from "@mantine/dates";
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import './Registro.css';
+import { getPlanes } from "../../utils/helpers/planesHelper";
+import { useEffect, useState } from "react";
 
 const RegistroPlanes = () => {
-    const tabla = [
-        ['ISIC', 'Sistemas Computacionales', 'ISIC-2010'],
-        ['ISIC', 'Sistemas Computacionales', 'ISIC-2011'],
-        ['QUI', 'Quimica', 'QUI-2008']
-    ];
 
     const headers = [
-        'CLAVE', 'NOMBRE', 'PLAN DE ESTUDIO'
+        'CLAVE', 'FECHA DE INICIO', 'FECHA DE TERMINACION'
     ];
+
+    const [planes, setPlanes] = useState([]);
+
+    const obtenerPlanes = async() => {
+        const listaPlanes = await getPlanes();
+        let listaP = Object.entries(listaPlanes);
+        listaP = listaP.map((plan) => Object.entries(plan[1]));
+        setPlanes(listaP.map((plan) => plan.filter((dato, index)=> index > 0 && index < 4)));
+        console.log(planes);
+
+    };
+
+    useEffect(() => {
+        obtenerPlanes();
+    }, []);
     return(
         <div style={{
             width: '100vw',
@@ -30,12 +42,12 @@ const RegistroPlanes = () => {
                             <DateInput label="Fecha de terminación" width="45%" />
                         </Group>
                         <Center>
-                            <Button type="submit" mt={16} leftIcon={<CirclePlus />} color="naranja">Crear Plan</Button>
+                            <Button type="button" mt={16} leftIcon={<CirclePlus />} onClick={obtenerPlanes} color="naranja">Crear Plan</Button>
                         </Center>
                     </form>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >
-                    <Tabla headers={headers} content={tabla} colors="tabla-naranja" />
+                    <Tabla headers={headers} content={planes} colors="tabla-naranja" />
                 </Flex>
             </Group>
         </div>

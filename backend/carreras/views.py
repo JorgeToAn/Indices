@@ -13,3 +13,4 @@ class CarreraDetail(RetrieveUpdateDestroyAPIView):
     queryset = Carrera.objects.all()
     serializer_class = CarreraSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
+
