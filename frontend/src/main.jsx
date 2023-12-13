@@ -25,6 +25,7 @@ import SeleccionIndices from "./views/indices/Seleccion";
 import SeleccionTablas from './views/tablas/Seleccion';
 import SeleccionRegistros from "./views/registros/Seleccion";
 import AlumnosLista from "./views/alumnos/AlumnosLista";
+import AlumnosHistorial from "./views/alumnos/AlumnosHistorial";
 
 const router = createBrowserRouter([
   {
@@ -93,6 +94,10 @@ const router = createBrowserRouter([
       {
         path: '/alumnos/lista',
         element: <AlumnosLista />,
+      },
+      {
+        path: '/alumnos/historial',
+        element: <AlumnosHistorial />,
       },
     ]
   },

@@ -43,10 +43,28 @@ const numSemestres = [
     ['15','15 semestres'],
 ];
 
+const semestres = [
+    ['1','1ro'],
+    ['2','2do'],
+    ['3','3ro'],
+    ['4','4to'],
+    ['5','5to'],
+    ['6','6to'],
+    ['7','7mo'],
+    ['8','8bo'],
+    ['9','9no'],
+    ['10','10mo'],
+    ['11','11vo'],
+    ['12','12vo'],
+    ['13','13vo'],
+    ['14','14vo'],
+    ['15','15vo'],
+];
 const dropDownData = {
     carreras,
     cohortes,
     numSemestres,
+    semestres,
 };
 
 export default dropDownData;
