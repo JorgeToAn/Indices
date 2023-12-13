@@ -1,17 +1,21 @@
+
 import { Select } from "@mantine/core";
 import { PropTypes } from 'prop-types';
 import { Selector } from "tabler-icons-react";
 
-function Dropdown ({label, color, data}) {
+function Dropdown ({label, color, data, handleChangeFn}) {
     return(
         <Select
         searchable
+        onChange={handleChangeFn}
+        name={label}
         label={label}
             placeholder={label}
             data={ data.map((fila) => ({"value":fila[0], "label":fila[1]})) }
             rightSection={
                 <Selector color={'#FFF'}/>
             }
+            id={label}
             styles={(theme) => ({
                 input: {
                     '&:focus-within': {
@@ -27,6 +31,13 @@ function Dropdown ({label, color, data}) {
                     color: theme.white,
                     borderRadius: "md",
                     fontWeight: "bold",
+                },
+                dropdown: {
+                    option : {
+                        '&:focus-within': {
+                            backgroundColor: color,
+                        }
+                    },
                 },
                 label: {
                     visibility: "hidden",
@@ -48,6 +59,7 @@ function Dropdown ({label, color, data}) {
 Dropdown.propTypes = {
     label: PropTypes.string,
     color: PropTypes.string,
-    data: PropTypes.array
+    data: PropTypes.array,
+    handleChangeFn: PropTypes.func,
 };
 export default Dropdown;

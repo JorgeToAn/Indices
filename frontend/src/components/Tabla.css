@@ -4,14 +4,30 @@
 .tabla-naranja > thead{
     background-color: #FFAA5A;
 }
+
+.tabla-negra > thead {
+    background-color: #191919;
+}
 th {
     color: white !important;
     text-transform: uppercase;
+    width: auto;
+    /* max-width: 150px !important; */
 }
 
 .tabla tr > td {
     max-width: 150px !important;
 }
-.tabla {
-    width: 85vw;
+.especial {
+    text-align: center;
 }
+.celda-nombre {
+    width: 250px !important;
+}
+.doble-encabezado {
+    border: none !important;
+    border-bottom: 0.0625rem solid #dee2e6 !important;
+}
+/* .tabla {
+    width: 85vw;
+} */

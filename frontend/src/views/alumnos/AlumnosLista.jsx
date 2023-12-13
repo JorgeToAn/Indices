@@ -1,14 +1,15 @@
-
-import { Button, Checkbox, Flex, Group } from '@mantine/core';
-import Header from './../../components/header';
-import Tabla from './../../components/Tabla';
-import Dropdown from './../../components/Dropdown';
-import { useState } from 'react';
-import { useInputState } from '@mantine/hooks';
-import dataService from './../../mockup/dataService';
+import "../indices/Indices.css";
+import { Button, Flex, Group } from "@mantine/core";
+import Header from "../../components/header";
+import Dropdown from "../../components/Dropdown";
+import Tabla from "../../components/Tabla";
 import dropDownData from '../../mockup/dropDownData';
+import { useInputState } from "@mantine/hooks";
+import { useState } from "react";
+import dataService from "../../mockup/dataService";
 
-const IndiceDesercion = () => {
+
+const AlumnosLista = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
     const [heading, setHeading] = useState([]);
     const [data, setData] = useState([]);
@@ -22,8 +23,7 @@ const IndiceDesercion = () => {
         const headers = [];
         let tablaCompleta = [];
 
-
-        tablaCompleta = dataService.datosIndicesDesercion(cohorte, numSemestres, carrera);
+        tablaCompleta = dataService.datosListaAlumnos(cohorte, numSemestres, carrera);
         headers.push(tablaCompleta[0]);
         headers.push(tablaCompleta[1]);
         for (let fila = 2; fila < tablaCompleta.length; fila++) {
@@ -32,20 +32,12 @@ const IndiceDesercion = () => {
         setHeading(headers);
         setData(tabla);
     };
-
-    const checkFilters = () => {
-        if (cohorte === "" || carrera === "" || numSemestres === 0) {
-            return true;
-        }
-        return false;
-    };
-
     return(
         <div style={{
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="naranja" section="Indices" title="Deserción por cohorte generacional" route="/" />
+            <Header color="naranja" section="Alumnos" title="Lista" route="/" />
             <Flex direction="column">
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
@@ -58,18 +50,14 @@ const IndiceDesercion = () => {
                             ['PDF','PDF'],
                         ]} />
                     </Group>
-                    <Group mt={0} mb={16} >
-                        <Checkbox labelPosition='left' color='naranja' label='Examen y Convalidación' radius='sm' />
-                        <Checkbox labelPosition='left' color='naranja' label='Traslado y Equivalencia' radius='sm' />
-                    </Group>
-                    <Group style={{ justifyContent: "flex-end" }} >
-                        <Button onClick={handleTable} color='negro' disabled={checkFilters()} >Filtrar</Button>
+                    <Group style={{ justifyContent: "flex-end"}} >
+                        <Button onClick={handleTable} color="negro">Filtrar</Button>
                     </Group>
                 </fieldset>
-                <Tabla doubleHeader colors="tabla-naranja"  headers={heading} content={data} />
+                <Tabla colors="tabla-naranja" doubleHeader headers={heading} content={data} />
             </Flex>
         </div>
     );
-};
 
-export default IndiceDesercion;
+};
+export default AlumnosLista;
