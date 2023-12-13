@@ -15,7 +15,7 @@ function Tabla ({headers, content, colors, doubleHeader}) {
                 columna es un encabezado */}
                 {doubleHeader ?
                     <thead>
-                        { headers.map( (fila, index) => index === 0 ? fila[4] === "" ? <tr key={index}><th colSpan={headers[index+1].length}>{fila[0]}</th></tr> :
+                        { headers.map( (fila, index) => index === 0 ? (fila[4] === "" || fila[0] !== "") ? <tr key={index}><th colSpan={headers[index+1].length}>{fila[0]}</th></tr> :
                         <tr key={index}>
                             { fila.map( (celda, i) => <th key={i} className='doble-encabezado'>{celda}</th>)}
                         </tr> :
@@ -33,10 +33,10 @@ function Tabla ({headers, content, colors, doubleHeader}) {
              {
                 <tbody>
                     { content.map( (fila, index) => <tr key={index}>
-                        { fila.map( (celda, i) => celda[1] === 'BAJA' ? <td key={i} className='especial' ><Badge variant='filled' color='rojo'>{celda[1]}</Badge></td> : celda[1] === 'EGR' ? <td key={i} className='especial'> <Badge variant='filled' color='verde'>{celda[1]}</Badge></td>: <td key={i}>{celda[1]}</td>)}
+                        { fila.map( (celda, i) => celda === 'BAJA' ? <td key={i} className='especial' ><Badge variant='filled' color='rojo'>{celda}</Badge></td> : celda === 'EGR' ? <td key={i} className='especial'> <Badge variant='filled' color='verde'>{celda}</Badge></td>: <td key={i}>{celda}</td>)}
                     </tr>) }
-                </tbody> 
-}
+                </tbody>
+            }
             </Table>
         </ScrollArea>
     );

@@ -51,7 +51,7 @@ const AlumnosLista = () => {
                         ]} />
                     </Group>
                     <Group style={{ justifyContent: "flex-end"}} >
-                        <Button onClick={handleTable} color="negro">Filtrar</Button>
+                        <Button onClick={handleTable} disabled={!cohorte || !carrera || !numSemestres} color="negro">Filtrar</Button>
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-naranja" doubleHeader headers={heading} content={data} />

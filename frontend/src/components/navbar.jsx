@@ -165,8 +165,12 @@ const NavBar = () => {
                         </Menu.Target>
 
                         <Menu.Dropdown>
-                            <Menu.Item>CACECA</Menu.Item>
-                            <Menu.Item >CACEI</Menu.Item>
+                            <Menu.Item onClick={()=>{
+                                navigate('/cedulas/caceca');
+                                }}>CACECA</Menu.Item>
+                            <Menu.Item onClick={()=>{
+                                navigate('/cedulas/cacei');
+                                }}>CACEI</Menu.Item>
                         </Menu.Dropdown>
                     </Menu>
 

@@ -8,22 +8,18 @@ import { useEffect, useState } from "react";
 
 
 const RegistroDiscapacidades = () => {
-    // const tabla = [
-    //     ['Discapacidad física', 'Es la secuela de una afección en cualquier órgano o sistema corporal.'],
-    //     ['Discapacidad intelectual', 'Se caracteriza por limitaciones significativas tanto en funcionamiento intelectual como en conducta adaptativa.'],
-    //     ['Discapacidad psicosocial', 'Restricción causada por el entorno social y centrada en una deficiencia temporal o permanente de la psique']
-    // ];
-
     const headers = [
         'NOMBRE', 'DESCRIPCION'
     ];
 
     const [discapacidades, setDiscapacidades] = useState([]);
     const obtenerDiscapacidades = async() => {
-        const listaPlanes = await getDiscapacidades();
-        let listaP = Object.entries(listaPlanes);
-        listaP = listaP.map((discapacidad) => Object.entries(discapacidad[1]));
-        setDiscapacidades(listaP.map((discapacidad) => discapacidad.filter((dato, index)=> index > 0)));
+        const listaDisc = await getDiscapacidades();
+        let listaD = Object.entries(listaDisc);
+        listaD = listaD.map((disc) => Object.entries(disc[1]));
+        listaD = listaD.map((disc) => disc.filter((dato, index)=> index > 0));
+        listaD = listaD.map((disc) => disc.map((c) => c.filter((dato, index) => index > 0)));
+        setDiscapacidades(listaD);
         console.log(discapacidades);
 
     };
