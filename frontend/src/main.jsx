@@ -26,6 +26,7 @@ import SeleccionTablas from './views/tablas/Seleccion';
 import SeleccionRegistros from "./views/registros/Seleccion";
 import CedulaCacei from "./views/cedulas/Cacei";
 import AlumnosLista from "./views/alumnos/AlumnosLista";
+import CedulaCaceca from "./views/cedulas/Caceca";
 
 const router = createBrowserRouter([
   {
@@ -98,6 +99,10 @@ const router = createBrowserRouter([
       {
         path: '/cedulas/cacei',
         element: <CedulaCacei />,
+      },
+      {
+        path: '/cedulas/caceca',
+        element: <CedulaCaceca />,
       },
     ]
   },

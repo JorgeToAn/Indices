@@ -19,7 +19,9 @@ const RegistroCarreras = () => {
         const listaCarreras = await getCarreras();
         let listaC = Object.entries(listaCarreras);
         listaC = listaC.map((carrera) => Object.entries(carrera[1]));
-        setCarreras(listaC.map((carrera) => carrera.filter((dato, index)=> index > 0)));
+        listaC = listaC.map((carrera) => carrera.filter((dato, index)=> index > 0));
+        listaC = listaC.map((carrera) => carrera.map((c) => c.filter((dato, index) => index > 0)));
+        setCarreras(listaC);
         console.log(carreras);
 
     };

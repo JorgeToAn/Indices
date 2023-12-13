@@ -14,10 +14,12 @@ const RegistroDiscapacidades = () => {
 
     const [discapacidades, setDiscapacidades] = useState([]);
     const obtenerDiscapacidades = async() => {
-        const listaPlanes = await getDiscapacidades();
-        let listaP = Object.entries(listaPlanes);
-        listaP = listaP.map((discapacidad) => Object.entries(discapacidad[1]));
-        setDiscapacidades(listaP.map((discapacidad) => discapacidad.filter((dato, index)=> index > 0)));
+        const listaDisc = await getDiscapacidades();
+        let listaD = Object.entries(listaDisc);
+        listaD = listaD.map((disc) => Object.entries(disc[1]));
+        listaD = listaD.map((disc) => disc.filter((dato, index)=> index > 0));
+        listaD = listaD.map((disc) => disc.map((c) => c.filter((dato, index) => index > 0)));
+        setDiscapacidades(listaD);
         console.log(discapacidades);
 
     };

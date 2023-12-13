@@ -1,13 +1,13 @@
 import { Button, Checkbox, Flex, Group } from '@mantine/core';
-import Header from './../../components/header';
-import Tabla from './../../components/Tabla';
-import Dropdown from './../../components/Dropdown';
+import Header from '../../components/header';
+import Tabla from '../../components/Tabla';
+import Dropdown from '../../components/Dropdown';
 import {  useEffect, useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
 
-const CedulaCacei = () => {
+const CedulaCaceca = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
     const [heading, setHeading] = useState([]);
     const [data, setData] = useState([]);
@@ -17,7 +17,7 @@ const CedulaCacei = () => {
 
     useEffect(() => {
         const header = [
-            'Cohortes equivalentes a 5 años', 'Periodo de cohorte', 'Número de estudiantes en el cohorte', 'Número de estudiantes que pertenecen al PE', 'Porcentaje de estudiantes que pertenecen al PE', 'Número de egresados del cohorte', 'Eficiencia terminal', 'Porcentaje de titulacion'
+            'Generaciones', 'Ingreso', 'Deserción', 'Indice de deserción', 'Reprobación', 'Indice de reprobación', 'Egreso', 'Titulación', 'Indice de titulación', 'Eficiencia terminal'
         ];
         setHeading(header);
         setData([
@@ -30,14 +30,14 @@ const CedulaCacei = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="toronja" section="Cédulas" title="CACEI" route="/" />
+            <Header color="naranja" section="Cédulas" title="CACECA" route="/" />
             <Flex direction="column">
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera}  data={dropDownData.carreras}/>
-                        <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes}/>
-                        <Dropdown  label="Exportar" color="#FF785A" data={[
+                        <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera}  data={dropDownData.carreras}/>
+                        <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes}/>
+                        <Dropdown  label="Exportar" color="#FFAA5A" data={[
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />
@@ -50,10 +50,10 @@ const CedulaCacei = () => {
                         <Button disabled={!cohorte || !carrera} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
-                <Tabla colors="tabla-toronja" headers={heading} content={data} />
+                <Tabla colors="tabla-naranja" headers={heading} content={data} />
             </Flex>
         </div>
     );
 };
 
-export default CedulaCacei;
+export default CedulaCaceca;
