@@ -8,6 +8,7 @@ class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
         fields = '__all__'
+        depth = 1
 
     def validate(self, data):
         """
