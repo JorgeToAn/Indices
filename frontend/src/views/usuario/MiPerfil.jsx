@@ -8,9 +8,9 @@ import {
     TextInput
 } from "@mantine/core";
 import { DeviceFloppy, Edit } from "tabler-icons-react";
-import Header from "../components/header.jsx";
-import Permisos from "../components/Permisos";
-import { useAuthStore } from "../store/auth";
+import Header from "../../components/header.jsx";
+import Permisos from "../../components/Permisos.jsx";
+import { useAuthStore } from "../../store/auth.js";
 
 
 const MiPerfil = () => {
@@ -57,7 +57,7 @@ const MiPerfil = () => {
             align: "left",
             padding: "2vw"
         }}>
-            <Header color="toronja" route="/principal" section="Usuario" title="Perfil de Usuario" />
+            <Header color="toronja" route="/" section="Usuario" title="Perfil de Usuario" />
             <Group align="flex-start" mt={20} spacing="xl" >
                 <Flex direction="column">
                     <form>

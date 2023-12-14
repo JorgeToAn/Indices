@@ -8,7 +8,7 @@ import indicesTheme from "./CustomProvider";
 
 import Login from './views/Login';
 import Inicio from './views/Inicio';
-import MiPerfil from "./views/MiPerfil";
+import MiPerfil from "./views/usuario/MiPerfil";
 
 import SubirArchivos from "./views/SubirArchivos";
 
@@ -28,6 +28,7 @@ import CedulaCacei from "./views/cedulas/Cacei";
 import AlumnosLista from "./views/alumnos/AlumnosLista";
 import AlumnosHistorial from "./views/alumnos/AlumnosHistorial";
 import CedulaCaceca from "./views/cedulas/Caceca";
+import CambioContrasena from "./views/usuario/CambioContrasena";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: '/mi-perfil',
         element: <MiPerfil />,
+      },
+      {
+        path: '/cambio-contrasena',
+        element: <CambioContrasena />,
       },
       {
         path: '/subir-archivos',

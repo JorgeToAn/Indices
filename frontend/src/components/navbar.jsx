@@ -322,7 +322,9 @@ const NavBar = () => {
 
                     <Menu.Dropdown>
                         <Menu.Item onClick={handleMiPerfil}>MI PERFIL</Menu.Item>
-                        <Menu.Item >CAMBIO DE CONTRASEÑA</Menu.Item>
+                        <Menu.Item onClick={()=>{
+                                navigate('/cambio-contrasena');
+                                }}>CAMBIO DE CONTRASEÑA</Menu.Item>
                         <Menu.Item onClick={open} >CERRAR SESION</Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
