@@ -19,7 +19,9 @@ const RegistroPlanes = () => {
         const listaPlanes = await getPlanes();
         let listaP = Object.entries(listaPlanes);
         listaP = listaP.map((plan) => Object.entries(plan[1]));
-        setPlanes(listaP.map((plan) => plan.filter((dato, index)=> index > 0 && index < 4)));
+        listaP = listaP.map((plan) => plan.filter((dato, index)=> index > 0 && index < 4));
+        listaP = listaP.map((plan) => plan.map((c) => c.filter((dato, index) => index > 0)));
+        setPlanes(listaP);
         console.log(planes);
 
     };

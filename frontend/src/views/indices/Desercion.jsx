@@ -32,14 +32,6 @@ const IndiceDesercion = () => {
         setHeading(headers);
         setData(tabla);
     };
-
-    const checkFilters = () => {
-        if (cohorte === "" || carrera === "" || numSemestres === 0) {
-            return true;
-        }
-        return false;
-    };
-
     return(
         <div style={{
             width: '100vw',
@@ -63,7 +55,7 @@ const IndiceDesercion = () => {
                         <Checkbox labelPosition='left' color='naranja' label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
-                        <Button onClick={handleTable} color='negro' disabled={checkFilters()} >Filtrar</Button>
+                        <Button onClick={handleTable} color='negro' disabled={!cohorte || !carrera || !numSemestres} >Filtrar</Button>
                     </Group>
                 </fieldset>
                 <Tabla doubleHeader colors="tabla-naranja"  headers={heading} content={data} />
