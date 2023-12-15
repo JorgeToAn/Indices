@@ -28,6 +28,7 @@ import CedulaCacei from "./views/cedulas/Cacei";
 import AlumnosLista from "./views/alumnos/AlumnosLista";
 import AlumnosHistorial from "./views/alumnos/AlumnosHistorial";
 import CedulaCaceca from "./views/cedulas/Caceca";
+import UsuariosLista from "./views/UsuariosLista";
 
 const router = createBrowserRouter([
   {
@@ -108,6 +109,10 @@ const router = createBrowserRouter([
       {
         path: '/cedulas/caceca',
         element: <CedulaCaceca />,
+      },
+      {
+        path: '/usuarios/lista',
+        element: <UsuariosLista />,
       },
     ]
   },
