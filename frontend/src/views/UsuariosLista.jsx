@@ -14,8 +14,11 @@ const UsuariosLista = () => {
 
     const handleTable = async() => {
         const usuarios = await getListaUsuarios();
-        console.log(usuarios);
-        setLista([]);
+        let listaU = Object.entries(usuarios);
+        listaU = listaU.map((lista) => Object.entries(lista[1]));
+        listaU = listaU.map((disc) => disc.filter((u, index) => index === 0 || index === 4 || index === 12));
+        listaU = listaU.map((disc) => disc.map((c) => c.filter((dato, index) => index > 0)));
+        setLista(listaU);
     };
 
     useEffect(() => {
@@ -28,7 +31,7 @@ const UsuariosLista = () => {
         }}>
             <Header color="naranja" section="Usuarios" title="Lista de usuarios" route="/" />
             <Flex direction="column">
-                <Group w="50%">
+                <Group w="50%" mb={15}>
                     <TextInput label="Buscar"  icon={<Search width={20} />} />
                     <Button type="button" mt={16} leftIcon={<Edit />}>Editar</Button>
                 </Group>

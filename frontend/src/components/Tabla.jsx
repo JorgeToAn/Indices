@@ -1,11 +1,11 @@
 
-import { Badge, ScrollArea, Table } from '@mantine/core';
-
+import { Badge, Checkbox, ScrollArea, Table } from '@mantine/core';
 import { PropTypes } from 'prop-types';
 import './Tabla.css';
+import { useState } from 'react';
 
-function Tabla ({headers, content, colors, doubleHeader}) {
-
+function Tabla ({headers, content, colors, doubleHeader, select}) {
+    const [selectedRow, setSelectedRow] = useState([]);
     return(
 
         <ScrollArea w={1200} h="50vh" mah={500} type='always' >
@@ -33,7 +33,13 @@ function Tabla ({headers, content, colors, doubleHeader}) {
              {
                 <tbody>
                     { content.map( (fila, index) => <tr key={index}>
-                        { fila.map( (celda, i) => celda === 'BAJA' ? <td key={i} className='especial' ><Badge variant='filled' color='rojo'>{celda}</Badge></td> : celda === 'EGR' ? <td key={i} className='especial'> <Badge variant='filled' color='verde'>{celda}</Badge></td>: <td key={i}>{celda}</td>)}
+                        {
+                            select ?<td><Checkbox  checked={selectedRow.includes(fila.position)} onChange={(event) =>{
+                                setSelectedRow(event.currentTarget.checked ? [...selectedRow, fila.position]: selectedRow.filter((position) => position !== element.position))
+                            }} /></td> : null }
+                            {
+                        fila.map( (celda, i) => celda === 'BAJA' ? <td key={i} className='especial' ><Badge variant='filled' color='rojo'>{celda}</Badge></td> : celda === 'EGR' ? <td key={i} className='especial'> <Badge variant='filled' color='verde'>{celda}</Badge></td>: <td key={i}>{celda}</td>)}
+                            }
                     </tr>) }
                 </tbody>
             }
@@ -47,5 +53,6 @@ Tabla.propTypes = {
     content : PropTypes.array,
     colors: PropTypes.string,
     doubleHeader: PropTypes.bool,
+    select: PropTypes.bool,
 };
 export default Tabla;
