@@ -34,13 +34,13 @@ function Tabla ({headers, content, colors, doubleHeader, select}) {
                 <tbody>
                     { content.map( (fila, index) => <tr key={index}>
                         {
-                            select ?<td><Checkbox  checked={selectedRow.includes(fila.position)} onChange={(event) =>{
-                                setSelectedRow(event.currentTarget.checked ? [...selectedRow, fila.position]: selectedRow.filter((position) => position !== element.position))
-                            }} /></td> : null }
-                            {
-                        fila.map( (celda, i) => celda === 'BAJA' ? <td key={i} className='especial' ><Badge variant='filled' color='rojo'>{celda}</Badge></td> : celda === 'EGR' ? <td key={i} className='especial'> <Badge variant='filled' color='verde'>{celda}</Badge></td>: <td key={i}>{celda}</td>)}
-                            }
-                    </tr>) }
+                            select ? <td><Checkbox  checked={selectedRow.includes(fila.position)} /></td> : null
+                        }
+                        {
+                            fila.map( (celda, i) => celda === 'BAJA' ? <td key={i} className='especial' ><Badge variant='filled' color='rojo'>{celda}</Badge></td> : celda === 'EGR' ? <td key={i} className='especial'> <Badge variant='filled' color='verde'>{celda}</Badge></td>: <td key={i}>{celda}</td>)
+                        }
+                        </tr>
+                    )}
                 </tbody>
             }
             </Table>
