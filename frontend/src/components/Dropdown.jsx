@@ -9,6 +9,7 @@ function Dropdown ({label, color, data, handleChangeFn}) {
         searchable
         onChange={handleChangeFn}
         name={label}
+        dropdownOpened={true}
         label={label}
             placeholder={label}
             data={ data.map((fila) => ({"value":fila[0], "label":fila[1]})) }
@@ -33,11 +34,16 @@ function Dropdown ({label, color, data, handleChangeFn}) {
                     fontWeight: "bold",
                 },
                 dropdown: {
-                    option : {
-                        '&:focus-within': {
-                            backgroundColor: color,
-                        }
+                    option: {
+                        backgroundColor: color,
                     },
+                },
+                required: {
+                    color: color,
+                },
+                option: {
+                    backgroundColor: color,
+                    fontWeight: "bold",
                 },
                 label: {
                     visibility: "hidden",
