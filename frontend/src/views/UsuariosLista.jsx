@@ -5,17 +5,24 @@ import { Group } from '@mantine/core';
 import Tabla from '../components/Tabla';
 import { getListaUsuarios } from '../utils/helpers/adminHelpers';
 import { useEffect, useState } from 'react';
+import { useDisclosure } from '@mantine/hooks';
+import ModalEditarUsuario from './ModalEditarUsuario';
 
 const UsuariosLista = () => {
+    const [opened, { open, close }] = useDisclosure(false);
+
     const heading = [
         'Id de usuario', 'Nombre de usuario', 'Correo electrónico', 'Permisos'
     ];
+
     const [lista, setLista] = useState([]);
     const [filaSelect, setFilaSelect] = useState([]);
     const seleccion = (data) => {
         setFilaSelect(data);
-        console.log(filaSelect);
+        const fila = data;
+        console.log(fila);
     };
+
     const handleTable = async() => {
         const usuarios = await getListaUsuarios();
         let listaU = Object.entries(usuarios);
@@ -37,10 +44,11 @@ const UsuariosLista = () => {
             <Flex direction="column">
                 <Group w="50%" mb={15}>
                     <TextInput label="Buscar"  icon={<Search width={20} />} />
-                    <Button type="button" mt={16} leftIcon={<Edit />}>Editar</Button>
+                    <Button type="button" onClick={open} disabled={!(filaSelect.length >= 3)} mt={16} leftIcon={<Edit />} >Editar</Button>
                 </Group>
                 <Tabla colors="tabla-toronja" select row={seleccion} headers={heading} content={lista} />
             </Flex>
+            <ModalEditarUsuario opened={opened} close={close} info={filaSelect} />
         </div>
     );
 };

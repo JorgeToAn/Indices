@@ -6,7 +6,6 @@ import { useState } from 'react';
 
 function Tabla ({headers, content, colors, doubleHeader, select, row}) {
     const [selectedRow, setSelectedRow] = useState([]);
-    // row = selectedRow;
     return(
 
         <ScrollArea w={1200} h="50vh" mah={500} type='always' >
@@ -39,9 +38,14 @@ function Tabla ({headers, content, colors, doubleHeader, select, row}) {
                     { content.map( (fila, index) => <tr key={index} style={{backgroundColor: selectedRow === fila ? '#F1F3F5' : '#FFFFFF'}}>
                         {
                             select ? <td><Checkbox checked={selectedRow === fila} radius='sm' onChange={(event) => {
-                                setSelectedRow(event.currentTarget.checked ? fila: []);
-                                row(event.currentTarget.checked ? fila: []);
-                            }} /></td> : null
+                                if (event.target.checked) {
+                                    row(fila);
+                                    setSelectedRow(fila);
+                                } else {
+                                    row([]);
+                                    setSelectedRow([]);
+                                }
+                            }}/></td> : null
                         }
                         {
                             fila.map( (celda, i) => celda === 'BAJA' ? <td key={i} className='especial' ><Badge variant='filled' color='rojo'>{celda}</Badge></td> : celda === 'EGR' ? <td key={i} className='especial'> <Badge variant='filled' color='verde'>{celda}</Badge></td>: <td key={i}>{celda}</td>)

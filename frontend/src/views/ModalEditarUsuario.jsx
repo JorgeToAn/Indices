@@ -25,9 +25,9 @@ function ModalEditarUsuario ({opened, close, info}) {
                     <Flex direction="row">
                         <Flex direction="column">
                             <Text>Datos de usuario</Text>
-                            <TextInput label="Id de usuario" />
-                            <TextInput label="Nombre de usuario" />
-                            <TextInput label="Correo electrónico" />
+                            <TextInput label="Id de usuario" disabled value={info[0]}/>
+                            <TextInput label="Nombre de usuario" disabled value={info[1]}/>
+                            <TextInput label="Correo electrónico" disabled value={info[2]}/>
                         </Flex>
                         <Flex direction="column">
                             <Text>Permisos</Text>
