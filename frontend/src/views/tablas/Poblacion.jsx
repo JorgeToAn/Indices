@@ -32,7 +32,7 @@ const TablaPoblacion = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="toronja" section="Tablas" title="Población" route="/" />
+            <Header color="toronja" section="Tablas" title="Población" route="/tablas" />
             <Flex direction="column">
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>

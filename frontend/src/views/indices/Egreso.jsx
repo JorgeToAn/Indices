@@ -45,7 +45,7 @@ const IndiceEgreso = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="naranja" section="Indices" title="Egreso por cohorte generacional" route="/" />
+            <Header color="naranja" section="Indices" title="Egreso por cohorte generacional" route="/indices" />
             <Flex direction="column">
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>

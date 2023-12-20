@@ -30,7 +30,7 @@ const CedulaCacei = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="toronja" section="Cédulas" title="CACEI" route="/" />
+            <Header color="toronja" section="Cédulas" title="CACEI" route="/cedulas" />
             <Flex direction="column">
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>

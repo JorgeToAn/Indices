@@ -37,7 +37,7 @@ const IndicePermanencia = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="toronja" section="Indices" title="Permanencia por cohorte generacional" route="/" />
+            <Header color="toronja" section="Indices" title="Permanencia por cohorte generacional" route="/indices" />
             <Flex direction="column">
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>

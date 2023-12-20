@@ -29,6 +29,9 @@ import AlumnosLista from "./views/alumnos/AlumnosLista";
 import AlumnosHistorial from "./views/alumnos/AlumnosHistorial";
 import CedulaCaceca from "./views/cedulas/Caceca";
 import CambioContrasena from "./views/usuario/CambioContrasena";
+import SeleccionAlumnos from "./views/alumnos/Seleccion";
+import SeleccionCedulas from "./views/cedulas/Seleccion";
+import Error404 from "./views/errores/Error404";
 
 const router = createBrowserRouter([
   {
@@ -99,6 +102,10 @@ const router = createBrowserRouter([
         element: <TablaCrecimiento />,
       },
       {
+        path: '/alumnos',
+        element: <SeleccionAlumnos />,
+      },
+      {
         path: '/alumnos/lista',
         element: <AlumnosLista />,
       },
@@ -107,12 +114,20 @@ const router = createBrowserRouter([
         element: <AlumnosHistorial />,
       },
       {
+        path: '/cedulas',
+        element: <SeleccionCedulas />,
+      },
+      {
         path: '/cedulas/cacei',
         element: <CedulaCacei />,
       },
       {
         path: '/cedulas/caceca',
         element: <CedulaCaceca />,
+      },
+      {
+        path: '/404',
+        element: <Error404 />,
       },
     ]
   },
