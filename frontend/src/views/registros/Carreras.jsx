@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 const RegistroCarreras = () => {
 
     const headers = [
-        'CLAVE', 'NOMBRE', 'PLAN DE ESTUDIO'
+        'CLAVE', 'NOMBRE'
     ];
     const [carreras, setCarreras] = useState([]);
 

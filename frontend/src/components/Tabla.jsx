@@ -28,6 +28,7 @@ function Tabla ({headers, content, colors, doubleHeader, select, row}) {
                 :
                     <thead>
                         <tr>
+
                         { select ? <td></td> : null}
                             { headers.map( (head, index) => head === "Nombre" ? <th key={index} className='celda-nombre'>{head}</th> : <th key={index}>{head}</th>) }
                         </tr>
