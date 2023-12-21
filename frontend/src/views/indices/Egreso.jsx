@@ -32,14 +32,6 @@ const IndiceEgreso = () => {
         setData(tabla);
     };
 
-    // const checkFilters = () => {
-    //     if (cohorte === "" || carrera === "" || numSemestres === 0) {
-    //         console.log("Hola");
-    //         return true;
-    //     }
-    //     return false;
-    // };
-
     return(
         <div style={{
             width: '100vw',

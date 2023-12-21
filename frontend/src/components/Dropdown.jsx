@@ -11,6 +11,7 @@ function Dropdown ({label, color, data, handleChangeFn}) {
         name={label}
         dropdownOpened={true}
         label={label}
+        fontWeight: "400",
             placeholder={label}
             data={ data.map((fila) => ({"value":fila[0], "label":fila[1]})) }
             rightSection={
@@ -49,17 +50,36 @@ function Dropdown ({label, color, data, handleChangeFn}) {
                     visibility: "hidden",
                     fontWeight: "bold",
                 },
-                root: {
+                '&::placeholder': {
                     color: theme.white,
+                },
+                backgroundColor: color,
+                color: theme.white,
+                borderRadius: "md",
+                fontWeight: "bold",
+            },
+            dropdown: {
+                option : {
                     '&:focus-within': {
-                        label: {
-                            visibility: "visible",
-                        }
+                        backgroundColor: color,
+                    }
+                },
+            },
+            label: {
+                visibility: "hidden",
+                fontWeight: "bold",
+            },
+            root: {
+                color: theme.white,
+                '&:focus-within': {
+                    label: {
+                        visibility: "visible",
                     }
                 }
+            }
 
-            })}
-            />
+        })}
+        />
     );
 };
 Dropdown.propTypes = {
