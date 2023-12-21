@@ -38,7 +38,7 @@ const Principal = () => {
                 </div>
 
                 <div className="block" onClick={() => {
-                                navigate('/404');
+                                navigate('/reportes');
                             }}>
                     <h3 color="toronja">Reportes</h3>
                     <img src="/img/reportes.svg" alt="Icono Reportes" />

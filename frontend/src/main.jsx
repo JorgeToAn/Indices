@@ -32,6 +32,8 @@ import CambioContrasena from "./views/usuario/CambioContrasena";
 import SeleccionAlumnos from "./views/alumnos/Seleccion";
 import SeleccionCedulas from "./views/cedulas/Seleccion";
 import Error404 from "./views/errores/Error404";
+import Error500 from "./views/errores/Error500";
+import SeleccionReportes from "./views/reportes/Seleccion";
 
 const router = createBrowserRouter([
   {
@@ -126,7 +128,15 @@ const router = createBrowserRouter([
         element: <CedulaCaceca />,
       },
       {
-        path: '/404',
+        path: '/reportes',
+        element: <SeleccionReportes />,
+      },
+      {
+        path: '/500',
+        element: <Error500 />,
+      },
+      {
+        path: '*',
         element: <Error404 />,
       },
     ]
