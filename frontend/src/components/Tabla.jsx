@@ -19,7 +19,7 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                             { headers[0].filter((cell, index) => cell !== '').map((cell, index) => headers[2][headers[0].indexOf(cell)] === '' ? <th key={index} rowSpan="3">{ cell }</th> : headers[0][index+4] === '' ?  <th key={index} colSpan="5">{ cell }</th> : headers[0][index+2] === '' && headers[0][index+1] === '' ? <th key={index} colSpan="3">{ cell }</th> : <th key={index}>{ cell }</th>)}
                         </tr>
                         <tr>
-                            { headers[1].filter((cell, index) => cell !== '').map((cell, index) => <th key={index}>{ cell }</th>)}
+                            { headers[1].filter((cell, index) => cell !== '').map((cell, index) => headers[2][headers[1].indexOf(cell)] === '' ? <th key={index} rowSpan="2">{ cell }</th> : <th key={index}>{ cell }</th>)}
                         </tr>
                         <tr>
                             { headers[2].filter((cell, index) => cell !== '').map((cell, index) => <th key={index}>{ cell }</th>)}

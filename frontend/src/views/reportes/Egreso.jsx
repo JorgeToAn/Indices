@@ -8,11 +8,11 @@ import dataService from '../../mockup/dataService';
 import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
 
-const ReportesTitulacion = () => {
+const ReportesEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
     // const [heading, setHeading] = useState([]);
     const heading = [
-        ['Carrera', 'Nuevo Ingreso', 'Año de titulación', '', '', '', '', 'Eficiencia de titulación', 'Año de titulacion', '', '', 'Eficiencia de titulación'],
+        ['Carrera', 'Nuevo Ingreso', 'Año de egreso', '', '', '', '', 'Eficiencia de egreso', 'Año de egreso', '', '', 'Eficiencia de egreso'],
         ['', '','2019-1','2019-2','2020-1', '2020-2', 'Total', '', '2021-1', '2021-2', 'Total', ''],
         ['', '', '9', '10', '11', '12', '', '', '13', '14', '', '']
     ];
@@ -42,15 +42,15 @@ const ReportesTitulacion = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="naranja" section="Reportes" title="Titulación" route="/reportes" />
+            <Header color="toronja" section="Reportes" title="Egreso" route="/reportes" />
             <Flex direction="column">
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={dropDownData.carreras} />
-                        <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
-                        <Dropdown  label="Cálculo de semestres" color="#FFAA5A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
-                        <Dropdown  label="Exportar" color="#FFAA5A" data={[
+                        <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera} data={dropDownData.carreras} />
+                        <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
+                        <Dropdown  label="Cálculo de semestres" color="#FF785A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
+                        <Dropdown  label="Exportar" color="#FF785A" data={[
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />
@@ -63,10 +63,10 @@ const ReportesTitulacion = () => {
                         <Button onClick={handleTable} disabled={!cohorte || !carrera || !numSemestres} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
-                <Tabla colors="tabla-naranja" tripleHeader  headers={heading} content={data} />
+                <Tabla colors="tabla-toronja" tripleHeader  headers={heading} content={data} />
             </Flex>
         </div>
     );
 };
 
-export default ReportesTitulacion;
+export default ReportesEgreso;
