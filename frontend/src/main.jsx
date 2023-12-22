@@ -37,6 +37,7 @@ import SeleccionCedulas from "./views/cedulas/Seleccion";
 import Error404 from "./views/errores/Error404";
 import Error500 from "./views/errores/Error500";
 import SeleccionReportes from "./views/reportes/Seleccion";
+import ReportesTitulacion from "./views/reportes/Titulacion";
 
 
 const router = createBrowserRouter([
@@ -134,6 +135,10 @@ const router = createBrowserRouter([
       {
         path: '/reportes',
         element: <SeleccionReportes />,
+      },
+      {
+        path: '/reportes/titulacion',
+        element: <ReportesTitulacion />,
       },
       {
         path: '/usuarios/lista',

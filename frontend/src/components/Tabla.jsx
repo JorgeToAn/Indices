@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import './Tabla.css';
 import { useState } from 'react';
 
-function Tabla ({headers, content, colors, doubleHeader, select, row}) {
+function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, row}) {
     const [selectedRow, setSelectedRow] = useState([]);
     return(
 
@@ -13,7 +13,20 @@ function Tabla ({headers, content, colors, doubleHeader, select, row}) {
                 {/* Si la propiedad "doubleHeader" es true, entonces la primer celda del primer renglon
                 tendra una longitud de toda la tabla, si no, entonces solo habra un renglon en donde cada
                 columna es un encabezado */}
-                {doubleHeader ?
+                {tripleHeader ?
+                    <thead>
+                        <tr>
+                            { headers[0].filter((cell, index) => cell !== '').map((cell, index) => headers[2][index] === '' ? <th key={index} rowSpan="3">{ cell }</th> : headers[0][index+4] === '' ?  <th key={index} colSpan="5">{ cell }</th> : headers[0][index+2] === '' && headers[0][index+1] === '' ? <th key={index} colSpan="3">{ cell }</th> : <th key={index}>{ cell }</th>)}
+                        </tr>
+                        <tr>
+                            { headers[1].filter((cell, index) => cell !== '').map((cell, index) => <th key={index}>{ cell }</th>)}
+                        </tr>
+                        <tr>
+                            { headers[2].filter((cell, index) => cell !== '').map((cell, index) => <th key={index}>{ cell }</th>)}
+                        </tr>
+                    </thead>
+                :
+                doubleHeader ?
                     <thead>
                         { headers.map( (fila, index) => index === 0 ? (fila[4] === "" || fila[0] !== "") ? <tr key={index}><th colSpan={headers[index+1].length}>{fila[0]}</th></tr> :
                         <tr key={index}>
@@ -33,8 +46,8 @@ function Tabla ({headers, content, colors, doubleHeader, select, row}) {
                             { headers.map( (head, index) => head === "Nombre" ? <th key={index} className='celda-nombre'>{head}</th> : <th key={index}>{head}</th>) }
                         </tr>
                     </thead>
-            }
-             {
+                }
+                {
                 <tbody>
                     { content.map( (fila, index) => <tr key={index} style={{backgroundColor: selectedRow === fila ? '#F1F3F5' : '#FFFFFF'}}>
                         {
@@ -65,6 +78,7 @@ Tabla.propTypes = {
     content : PropTypes.array,
     colors: PropTypes.string,
     doubleHeader: PropTypes.bool,
+    tripleHeader: PropTypes.bool,
     select: PropTypes.bool,
     row: PropTypes.func,
 };
