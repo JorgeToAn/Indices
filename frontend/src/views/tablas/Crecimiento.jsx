@@ -33,7 +33,7 @@ const TablaCrecimiento = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="naranja" section="Tablas" title="Crecimiento" route="/" />
+            <Header color="naranja" section="Tablas" title="Crecimiento" route="/tablas" />
             <Flex direction="column">
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>

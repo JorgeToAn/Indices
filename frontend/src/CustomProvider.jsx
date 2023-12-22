@@ -63,7 +63,19 @@ const indicesTheme = {
           "#d22010",
           "#bc180c",
           "#a40c06"
-        ]
+        ],
+        'mango': [
+          "#fff9e1",
+          "#fff2cc",
+          "#ffe49b",
+          "#ffd564",
+          "#ffc838",
+          "#ffc01c",
+          "#ffbc09",
+          "#e3a500",
+          "#ca9300",
+          "#af7d00"
+        ],
       },
       defaultRadius: 10,
       primaryShade: 5,

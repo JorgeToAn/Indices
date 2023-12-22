@@ -23,27 +23,37 @@ const Principal = () => {
             </Group>
             <Title order={2} mb={ 16 } align="center">Bienvenido, {toTitle(user().first_name)}</Title>
             <Group position="center" align="center" style={{width: '100vw'}}>
-                <div className="block">
+                <div className="block" onClick={() => {
+                                navigate('/tablas');
+                            }}>
                     <h3>Tablas</h3>
                     <img src="/img/tablas.svg" alt="Icono Tablas" />
                 </div>
 
-                <a className="block" href="/indices">
+                <div className="block" onClick={() => {
+                                navigate('/indices');
+                            }}>
                     <h3>Indices</h3>
                     <img src="/img/indices.svg" alt="Icono Indices" />
-                </a>
+                </div>
 
-                <div className="block">
+                <div className="block" onClick={() => {
+                                navigate('/reportes');
+                            }}>
                     <h3 color="toronja">Reportes</h3>
                     <img src="/img/reportes.svg" alt="Icono Reportes" />
                 </div>
 
-                <div className="block">
+                <div className="block" onClick={() => {
+                                navigate('/cedulas');
+                            }}>
                     <h3>Cédulas</h3>
                     <img src="/img/cedulas.svg" alt="Icono Cedulas" />
                 </div>
 
-                <div className="block">
+                <div className="block" onClick={() => {
+                                navigate('/alumnos');
+                            }}>
                     <h3>Alumnos</h3>
                     <img src="/img/alumnos.svg" alt="Icono Alumnos" />
                 </div>

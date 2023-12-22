@@ -37,7 +37,7 @@ const AlumnosLista = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="naranja" section="Alumnos" title="Lista" route="/" />
+            <Header color="naranja" section="Alumnos" title="Lista" route="/alumnos" />
             <Flex direction="column">
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>

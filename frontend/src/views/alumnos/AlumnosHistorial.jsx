@@ -25,7 +25,7 @@ const AlumnosHistorial = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="toronja" section="Alumnos" title="Historial" route="/" />
+            <Header color="toronja" section="Alumnos" title="Historial" route="/alumnos" />
             <Group align="flex-start" spacing="3vw">
                 <Flex direction="column">
                     <form>
