@@ -12,7 +12,8 @@ th {
     color: white !important;
     text-transform: uppercase;
     /* width: 2rem; */
-    width: min-content  !important;
+    width: -moz-fit-content  !important;
+    width: fit-content  !important;
     /* max-width: 200px !important; */
     /* max-width: 150px !important; */
 }

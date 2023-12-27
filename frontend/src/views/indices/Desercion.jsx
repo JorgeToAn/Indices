@@ -1,12 +1,11 @@
-
 import { Button, Checkbox, Flex, Group } from '@mantine/core';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import Dropdown from './../../components/Dropdown';
 import { useState } from 'react';
 import { useInputState } from '@mantine/hooks';
-import dataService from './../../mockup/dataService';
 import dropDownData from '../../mockup/dropDownData';
+import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 
 const IndiceDesercion = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -19,16 +18,13 @@ const IndiceDesercion = () => {
 
     const handleTable = () => {
         const tabla = [];
-        const headers = [];
-        let tablaCompleta = [];
-
-
-        tablaCompleta = dataService.datosIndicesDesercion(cohorte, numSemestres, carrera);
-        headers.push(tablaCompleta[0]);
-        headers.push(tablaCompleta[1]);
-        for (let fila = 2; fila < tablaCompleta.length; fila++) {
-            tabla.push(tablaCompleta[fila]);
-        }
+        const headers = getIndicesHeaders(2, cohorte, carrera);
+        // tablaCompleta = dataService.datosIndicesDesercion(cohorte, numSemestres, carrera);
+        // headers.push(tablaCompleta[0]);
+        // headers.push(tablaCompleta[1]);
+        // for (let fila = 2; fila < tablaCompleta.length; fila++) {
+        //     tabla.push(tablaCompleta[fila]);
+        // }
         setHeading(headers);
         setData(tabla);
     };

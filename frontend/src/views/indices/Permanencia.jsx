@@ -4,9 +4,10 @@ import Tabla from './../../components/Tabla';
 import Dropdown from './../../components/Dropdown';
 import {  useState } from 'react';
 import { useInputState } from '@mantine/hooks';
-import dataService from '../../mockup/dataService';
+// import dataService from '../../mockup/dataService';
 import dropDownData from '../../mockup/dropDownData';
 import "./Indices.css";
+import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 
 const IndicePermanencia = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -19,17 +20,20 @@ const IndicePermanencia = () => {
 
     const handleTable = () => {
         const tabla = [];
-        const headers = [];
-        let tablaCompleta = [];
 
-        tablaCompleta = dataService.datosIndicesPermanencia(cohorte, numSemestres, carrera);
-        headers.push(tablaCompleta[0]);
-        headers.push(tablaCompleta[1]);
-        for (let fila = 2; fila < tablaCompleta.length; fila++) {
-            tabla.push(tablaCompleta[fila]);
-        }
+        // let tablaCompleta = [];
+
+        const headers = getIndicesHeaders(1, cohorte, carrera);
+        // console.log(headers);
+        // tablaCompleta = dataService.datosIndicesPermanencia(cohorte, numSemestres, carrera);
+        // headers.push(tablaCompleta[0]);
+        // headers.push(tablaCompleta[1]);
+        // for (let fila = 2; fila < tablaCompleta.length; fila++) {
+        //     tabla.push(tablaCompleta[fila]);
+        // }
         setHeading(headers);
         setData(tabla);
+        console.log(heading);
     };
 
     return(

@@ -5,8 +5,8 @@ import Tabla from './../../components/Tabla';
 import Dropdown from './../../components/Dropdown';
 import { useState } from 'react';
 import { useInputState } from '@mantine/hooks';
-import dataService from '../../mockup/dataService';
 import dropDownData from '../../mockup/dropDownData';
+import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 
 const IndiceTitulacion = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -19,15 +19,13 @@ const IndiceTitulacion = () => {
 
     const handleTable = () => {
         const tabla = [];
-        const headers = [];
-        let tablaCompleta = [];
-
-        tablaCompleta = dataService.datosIndicesTitulacion(cohorte, numSemestres, carrera);
-        headers.push(tablaCompleta[0]);
-        headers.push(tablaCompleta[1]);
-        for (let fila = 2; fila < tablaCompleta.length; fila++) {
-            tabla.push(tablaCompleta[fila]);
-        }
+        const headers = getIndicesHeaders(3, cohorte, carrera);
+        // tablaCompleta = dataService.datosIndicesTitulacion(cohorte, numSemestres, carrera);
+        // headers.push(tablaCompleta[0]);
+        // headers.push(tablaCompleta[1]);
+        // for (let fila = 2; fila < tablaCompleta.length; fila++) {
+        //     tabla.push(tablaCompleta[fila]);
+        // }
         setHeading(headers);
         setData(tabla);
     };
