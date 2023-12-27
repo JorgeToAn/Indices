@@ -20,3 +20,26 @@ export function getIndicesHeaders(tipo, cohorte, carrera) {
     }
     return tabla;
 }
+
+export function getTablasHeaders(cohorte, numSemestres) {
+    const tabla = [];
+    tabla.push('Carrera', '', cohorte);
+    let periodo = cohorte.split("-");
+    for (let i = 0; i < numSemestres; i++) {
+        periodo = anioPeriodo(periodo);
+        tabla.push(periodo[0]+"-"+periodo[1]);
+    }
+    return tabla;
+}
+
+function anioPeriodo(periodoAnterior) {
+    if (periodoAnterior[1] === '2') {
+        periodoAnterior[0] = String(Number(periodoAnterior[0]) + 1);
+        periodoAnterior[1] = '1';
+    } else if (periodoAnterior[1] === '1') {
+        periodoAnterior[1] = String(Number(periodoAnterior[1])+ 1);
+    }
+    return periodoAnterior;
+}
+
+export function getReportesHeaders(){}
