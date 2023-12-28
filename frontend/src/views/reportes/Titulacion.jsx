@@ -10,12 +10,6 @@ import { getReportesHeaders } from '../../utils/helpers/headerHelpers';
 
 const ReportesTitulacion = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
-    // const [heading, setHeading] = useState([]);
-    // const heading = [
-    //     ['Carrera', 'Nuevo Ingreso', 'Año de titulación', '', '', '', '', 'Eficiencia de titulación', 'Año de titulacion', '', '', 'Eficiencia de titulación'],
-    //     ['', '','2019-1','2019-2','2020-1', '2020-2', 'Total', '', '2021-1', '2021-2', 'Total', ''],
-    //     ['', '', '9', '10', '11', '12', '', '', '13', '14', '', '']
-    // ];
     const [data, setData] = useState([]);
     const [heading, setHeading] = useState([[], [], []]);
     // Cohorte, carrera y numSemestres son los datos de los Select
@@ -26,11 +20,8 @@ const ReportesTitulacion = () => {
     const handleTable = () => {
         const tabla = [];
         const headers = getReportesHeaders(1, cohorte, numSemestres);
-        console.log(headers);
         setHeading(headers);
         setData(tabla);
-        console.log(heading);
-        console.log(data);
     };
 
     return(
