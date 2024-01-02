@@ -11,6 +11,7 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
             if(headers[0][i] !== '')
                 return (i-index+1) > 5 ? 5 : (i-index+1);
         }
+        return index > 0 ? headers[1].length-1 : headers[1].length;
     };
     return(
 
@@ -35,7 +36,15 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                 :
                 doubleHeader ?
                     <thead>
-                        { headers.map( (fila, index) => index === 0 ? (fila[4] === "" || fila[0] !== "") ? <tr key={index}><th colSpan={headers[index+1].length}>{fila[0]}</th></tr> :
+                        <tr>
+                            { select ? <td></td> : null}
+                            { headers[0].filter((cell, i) => cell !== '').map((cell, index) => headers[1][headers[0].indexOf(cell)] === '' ? <th key={index} rowSpan="2">{cell}</th> : <th key={index} colSpan={getBlankSpaces(headers[0].indexOf(cell))}>{ cell }</th>) }
+                        </tr>
+                        <tr>
+                            { select ? <td></td> : null}
+                            { headers[1].filter((cell, i) => cell !== '').map((cell, index) => cell === 'Nombre' ? <th key={index} className='celda-nombre'>{cell}</th> : <th key={index}>{cell}</th>) }
+                        </tr>
+                        {/* { headers.map( (fila, index) => index === 0 ? (fila[4] === "" || fila[0] !== "") ? <tr key={index}><th colSpan={headers[index+1].length}>{fila[0]}</th></tr> :
                         <tr key={index}>
                             { select ? <td></td> : null}
                             { fila.map( (celda, i) => <th key={i} className='doble-encabezado'>{celda}</th>)}
@@ -43,7 +52,7 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                         <tr key={index}>
                             { select ? <td></td> : null}
                             { fila.map( (celda, i) => celda === 'Nombre' ? <th key={i} className='celda-nombre'>{celda}</th> : <th key={i}>{celda}</th>)}
-                        </tr> )}
+                        </tr> )} */}
                     </thead>
                 :
                     <thead>

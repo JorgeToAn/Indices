@@ -10,7 +10,7 @@ import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 
 const IndiceEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
-    const [heading, setHeading] = useState([]);
+    const [heading, setHeading] = useState([[],[]]);
     const [data, setData] = useState([]);
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');

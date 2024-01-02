@@ -103,56 +103,16 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
     tabla.push(secondRow);
     tabla.push(thirdRow);
     return tabla;
-    // First row
-    /*
-    Add "Carrera", "Nuevo ingreso", "Ano de titulacion or egreso"
-    if numSemestres <= 12
-        Add as many spaces as (numSemestres - 9)(inclusive)
-        Add "Eficiencia de titulacion"
-    if numSemestres > 12
-        Add 4 spaces after "Año de titulacion or egreso"
-        Add "Eficiencia de titulacion"
-        Add as many spaces as (numSemestres - 12)
-    */
-   // Second row
-   /*
-   Add 2 blank spaces
-   Call anioperiodo 8 times
-   if numSemestres <= 12
-        As many times as (numSemestres - 9) (inclusive)
-            Add periodo
-            Call anioperiodo
-        Add "Total"
-        Add blank space
-    if numSemestres > 12
-        Do 5 times
-            Add periodo
-            Call anioperiodo
-        Add total
-        Add "blank space"
-        As many times as (numSemestres - 12)
-            Add periodo
-            Call anioperiodo
-        Add "Total"
-        Add blank space
-   */
-  // Third row
-   /*
-   Add 2 blank spaces
-   Var num = 9
-   if numSemestres <= 12
-        As many times as (numSemestres - 9) (inclusive)
-            Add num
-            num++
-        Add 2 blank spaces
-    if numSemestres > 12
-        Do 5 times
-            Add num
-            num++
-        Add 2 blank spaces
-        As many times as (numSemestres - 12)
-            Add num
-            num++
-        Add 2 blank spaces
-   */
+}
+
+export function getNuevoIngresoHeaders(cohorte, numSemestres){
+    const tabla = [];
+    tabla.push(['Carrera', 'Nuevo Ingreso']);
+    tabla.push(['']);
+    let periodo = cohorte.split("-");
+    for (let i = 0; i < numSemestres; i++) {
+        tabla[1].push(periodo[0]+"-"+periodo[1]);
+        periodo = anioPeriodo(periodo);
+    }
+    return tabla;
 }

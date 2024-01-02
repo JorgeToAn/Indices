@@ -39,6 +39,7 @@ import Error500 from "./views/errores/Error500";
 import SeleccionReportes from "./views/reportes/Seleccion";
 import ReportesTitulacion from "./views/reportes/Titulacion";
 import ReportesEgreso from "./views/reportes/Egreso";
+import ReportesNuevoIngreso from "./views/reportes/NuevoIngreso";
 
 
 const router = createBrowserRouter([
@@ -144,6 +145,10 @@ const router = createBrowserRouter([
       {
         path: '/reportes/egreso',
         element: <ReportesEgreso />,
+      },
+      {
+        path: '/reportes/nuevo-ingreso',
+        element: <ReportesNuevoIngreso />,
       },
       {
         path: '/usuarios/lista',
