@@ -32,14 +32,14 @@ const ReportesNuevoIngreso = () => {
             width: '100vw',
             padding: '3vw',
         }}>
-            <Header color="toronja" section="Reportes" title="Nuevo Ingreso" route="/reportes" />
+            <Header color="naranja" section="Reportes" title="Nuevo Ingreso" route="/reportes" />
             <Flex direction="column">
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
-                        <Dropdown  label="Cálculo de semestres" color="#FF785A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
-                        <Dropdown  label="Exportar" color="#FF785A" data={[
+                        <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
+                        <Dropdown  label="Cálculo de semestres" color="#FFAA5A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
+                        <Dropdown  label="Exportar" color="#FFAA5A" data={[
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />
@@ -52,7 +52,7 @@ const ReportesNuevoIngreso = () => {
                         <Button onClick={handleTable} disabled={!cohorte || !numSemestres} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
-                <Tabla colors="tabla-toronja" doubleHeader  headers={heading} content={data} />
+                <Tabla colors="tabla-naranja" doubleHeader  headers={heading} content={data} />
             </Flex>
         </div>
     );
