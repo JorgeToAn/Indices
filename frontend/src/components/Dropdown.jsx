@@ -6,12 +6,11 @@ import { Selector } from "tabler-icons-react";
 function Dropdown ({label, color, data, handleChangeFn}) {
     return(
         <Select
-        searchable
-        onChange={handleChangeFn}
-        name={label}
-        dropdownOpened={true}
-        label={label}
-        fontWeight: "400",
+            searchable
+            onChange={handleChangeFn}
+            name={label}
+            dropdownOpened={true}
+            label={label}
             placeholder={label}
             data={ data.map((fila) => ({"value":fila[0], "label":fila[1]})) }
             rightSection={
@@ -53,32 +52,15 @@ function Dropdown ({label, color, data, handleChangeFn}) {
                 '&::placeholder': {
                     color: theme.white,
                 },
-                backgroundColor: color,
-                color: theme.white,
-                borderRadius: "md",
-                fontWeight: "bold",
-            },
-            dropdown: {
-                option : {
+                root: {
+                    color: theme.white,
                     '&:focus-within': {
-                        backgroundColor: color,
-                    }
-                },
-            },
-            label: {
-                visibility: "hidden",
-                fontWeight: "bold",
-            },
-            root: {
-                color: theme.white,
-                '&:focus-within': {
-                    label: {
-                        visibility: "visible",
+                        label: {
+                            visibility: "visible",
+                        }
                     }
                 }
-            }
-
-        })}
+            })}
         />
     );
 };
