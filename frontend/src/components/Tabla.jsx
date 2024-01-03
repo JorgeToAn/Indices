@@ -9,7 +9,7 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
     const getBlankSpaces = (index) => {
         for (let i = index+1; i < headers[0].length; i++) {
             if(headers[0][i] !== '')
-                return (i-index+1) > 5 ? 5 : (i-index+1);
+                return (i-index+1) > 5 ? 5 : i === index+1 ? 1 : (i-index+1);
         }
         return index > 0 ? headers[1].length-1 : headers[1].length;
     };

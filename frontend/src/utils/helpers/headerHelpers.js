@@ -105,12 +105,25 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
     return tabla;
 }
 
-export function getNuevoIngresoHeaders(cohorte, numSemestres){
+export function getNuevoIngresoHeaders(cohorte, numSemestres) {
     const tabla = [];
     tabla.push(['Carrera', 'Nuevo Ingreso']);
     tabla.push(['']);
     let periodo = cohorte.split("-");
     for (let i = 0; i < numSemestres; i++) {
+        tabla[1].push(periodo[0]+"-"+periodo[1]);
+        periodo = anioPeriodo(periodo);
+    }
+    return tabla;
+}
+
+export function getListaAlumnosHeaders(cohorte, numSemestres) {
+    const tabla = [];
+    tabla.push([' ', '', '']);
+    tabla.push(['Nombre', 'No. control', 'Carrera', 'Sexo']);
+    let periodo = cohorte.split("-");
+    for (let i = 1; i <= numSemestres; i++) {
+        tabla[0].push(`SEM ${i}`);
         tabla[1].push(periodo[0]+"-"+periodo[1]);
         periodo = anioPeriodo(periodo);
     }
