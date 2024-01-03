@@ -1,6 +1,6 @@
 
 const tablaAlumnos = [
-    ["","", "", "", "SEM 1", "SEM 2", "SEM 3", "SEM 4", "SEM 5", "SEM 6", "SEM 7"],
+    [" ","", "", "", "SEM 1", "SEM 2", "SEM 3", "SEM 4", "SEM 5", "SEM 6", "SEM 7"],
     ['Nombre', 'No. control', 'Carrera', 'Sexo','2016-1', '2016-2','2017-1', '2017-2', '2018-1', '2018-2', '2019-1'],
     ['CASTILLO MARTINEZ LEMMUEL', '16490096', 'ING. INDUSTRIAL','H','IND','BAJA','BAJA', 'BAJA', 'BAJA', 'BAJA', 'BAJA'],
     ['QUINTERO LEON DANIELA', '16490396', 'ING. INDUSTRIAL','M','IND','BAJA','BAJA', 'BAJA', 'BAJA', 'BAJA', 'BAJA'],
