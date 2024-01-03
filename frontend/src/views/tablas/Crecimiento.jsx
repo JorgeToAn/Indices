@@ -4,8 +4,11 @@ import Dropdown from "../../components/Dropdown";
 import Tabla from "../../components/Tabla";
 import dropDownData from "../../mockup/dropDownData";
 import { useInputState } from "@mantine/hooks";
+import { useState } from "react";
+import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
 
 const TablaCrecimiento = () => {
+    const [heading, setHeading] = useState([]);
     const tabla = [
         ['Contador Público', 'CP', '14','16','25','30','27'],
         ['Ingeniería Electrica', 'ELE', '14','16','25','30','27'],
@@ -20,13 +23,13 @@ const TablaCrecimiento = () => {
         ['Ingeniería en Logistica','LOG', '14','16','25','30','27']
     ];
 
-    const headers = [
-        "Carrera", "", "2015-1","2015-2", "2016-1", "2016-2", "2017-1"
-     ];
-
+    const handleTable = () => {
+        const header = getTablasHeaders(cohorte, numSemestres);
+        setHeading(header);
+    };
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
-    const [carrera, setCarrera] = useInputState('');
+    // const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
     return(
         <div style={{
@@ -38,7 +41,7 @@ const TablaCrecimiento = () => {
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={dropDownData.carreras} />
+                        {/* <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={dropDownData.carreras} /> */}
                         <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
                         <Dropdown  label="Cálculo de semestres" color="#FFAA5A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
                         <Dropdown  label="Exportar" color="#FFAA5A" data={[
@@ -51,10 +54,10 @@ const TablaCrecimiento = () => {
                         <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
-                        <Button  disabled={!cohorte || !carrera || !numSemestres} color='negro'>Filtrar</Button>
+                        <Button  disabled={!cohorte || !numSemestres} onClick={handleTable} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
-                <Tabla headers={headers} content={tabla} colors="tabla-naranja" />
+                <Tabla headers={heading} content={tabla} colors="tabla-naranja" />
             </Flex>
         </div>
     );

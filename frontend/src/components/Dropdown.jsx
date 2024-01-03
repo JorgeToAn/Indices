@@ -61,6 +61,7 @@ function Dropdown ({label, color, data, handleChangeFn}) {
                     }
                 }
             })}
+
         />
     );
 };

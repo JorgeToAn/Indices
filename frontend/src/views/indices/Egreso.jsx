@@ -6,11 +6,11 @@ import Dropdown from './../../components/Dropdown';
 import dropDownData from '../../mockup/dropDownData';
 import { useState } from 'react';
 import { useInputState } from '@mantine/hooks';
-import dataService from '../../mockup/dataService';
+import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 
 const IndiceEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
-    const [heading, setHeading] = useState([]);
+    const [heading, setHeading] = useState([[],[]]);
     const [data, setData] = useState([]);
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
@@ -19,15 +19,13 @@ const IndiceEgreso = () => {
 
     const handleTable = () => {
         const tabla = [];
-        const headers = [];
-        let tablaCompleta = [];
-
-        tablaCompleta = dataService.datosIndicesEgreso(cohorte, numSemestres, carrera);
-        headers.push(tablaCompleta[0]);
-        headers.push(tablaCompleta[1]);
-        for (let fila = 2; fila < tablaCompleta.length; fila++) {
-            tabla.push(tablaCompleta[fila]);
-        }
+        const headers = getIndicesHeaders(4, cohorte, carrera);
+        // tablaCompleta = dataService.datosIndicesEgreso(cohorte, numSemestres, carrera);
+        // headers.push(tablaCompleta[0]);
+        // headers.push(tablaCompleta[1]);
+        // for (let fila = 2; fila < tablaCompleta.length; fila++) {
+        //     tabla.push(tablaCompleta[fila]);
+        // }
         setHeading(headers);
         setData(tabla);
     };
