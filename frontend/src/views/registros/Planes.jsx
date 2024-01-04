@@ -25,8 +25,6 @@ const RegistroPlanes = () => {
         listaP = listaP.map((plan) => plan.map((c, index) => index > 2 ? c.map((p) => p.filter((dato, i) => i > 0)) : c));
         listaP = listaP.map((plan) => plan.map((c, index) => index > 2 ? c.filter((p, i) => i > 0) : c));
         setPlanes(listaP);
-        console.log(planes);
-
     };
 
     useEffect(() => {
