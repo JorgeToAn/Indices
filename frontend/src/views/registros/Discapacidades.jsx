@@ -20,8 +20,6 @@ const RegistroDiscapacidades = () => {
         listaD = listaD.map((disc) => disc.filter((dato, index)=> index > 0));
         listaD = listaD.map((disc) => disc.map((c) => c.filter((dato, index) => index > 0)));
         setDiscapacidades(listaD);
-        console.log(discapacidades);
-
     };
 
     useEffect(() => {

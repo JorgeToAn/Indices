@@ -22,8 +22,6 @@ const RegistroCarreras = () => {
         listaC = listaC.map((carrera) => carrera.filter((dato, index)=> index > 0));
         listaC = listaC.map((carrera) => carrera.map((c) => c.filter((dato, index) => index > 0)));
         setCarreras(listaC);
-        console.log(carreras);
-
     };
 
     useEffect(() => {
