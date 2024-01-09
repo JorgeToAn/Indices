@@ -150,7 +150,7 @@ const NavBar = () => {
 
                         <Menu.Dropdown>
                             <Menu.Item onClick={() => {
-                                navigate('/reportes/nuevo-ingreso');
+                                navigate('/vista/pdf');
                             }}>NUEVO INGRESO</Menu.Item>
                             <Menu.Item onClick={() => {
                                 navigate('/reportes/egreso');

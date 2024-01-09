@@ -40,6 +40,7 @@ import SeleccionReportes from "./views/reportes/Seleccion";
 import ReportesTitulacion from "./views/reportes/Titulacion";
 import ReportesEgreso from "./views/reportes/Egreso";
 import ReportesNuevoIngreso from "./views/reportes/NuevoIngreso";
+import PlantillaReportePDF from "./views/exportar/PlantillaReportePDF";
 
 
 const router = createBrowserRouter([
@@ -153,6 +154,10 @@ const router = createBrowserRouter([
       {
         path: '/usuarios/lista',
         element: <UsuariosLista />,
+      },
+      {
+        path: '/vista/pdf',
+        element: <PlantillaReportePDF />,
       },
       {
         path: '/500',

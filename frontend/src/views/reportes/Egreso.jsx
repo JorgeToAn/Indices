@@ -7,6 +7,7 @@ import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
 import { getReportesHeaders } from '../../utils/helpers/headerHelpers';
+import { useNavigate } from "react-router-dom";
 
 const ReportesEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -14,14 +15,19 @@ const ReportesEgreso = () => {
     const [heading, setHeading] = useState([[], [], []]);
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
+    const [exportar, setExportar] = useInputState('');
     // const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
+    const navigate = useNavigate();
 
     const handleTable = () => {
         const tabla = [];
         const headers = getReportesHeaders(2, cohorte, numSemestres);
         setHeading(headers);
         setData(tabla);
+        if (exportar === 'PDF') {
+            navigate(`pdf/${}`);
+        }
     };
 
     return(
@@ -36,7 +42,7 @@ const ReportesEgreso = () => {
                     <Group mt={0} mb={16} color='gris'>
                         <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
                         <Dropdown  label="Cálculo de semestres" color="#FF785A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
-                        <Dropdown  label="Exportar" color="#FF785A" data={[
+                        <Dropdown  label="Exportar" color="#FF785A" handleChangeFn={setExportar} data={[
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />
