@@ -6,6 +6,7 @@ import { useInputState } from "@mantine/hooks";
 import dropDownData from "../../mockup/dropDownData";
 import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
 import { useState } from "react";
+import { generatePDF } from "../../utils/helpers/pdfHelpers";
 
 const TablaPoblacion = () => {
     const [heading, setHeading] = useState([]);
@@ -22,15 +23,19 @@ const TablaPoblacion = () => {
         ['Ingeniería Quimica','QUI','14','16','25','30','27'],
         ['Ingeniería en Logistica','LOG', '14','16','25','30','27']
     ];
-
-    const handleTable = () => {
-        const header = getTablasHeaders(cohorte, numSemestres);
-        setHeading(header);
-    };
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
     // const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
+    const [exportar, setExportar] = useInputState('');
+
+    const handleTable = () => {
+        const header = getTablasHeaders(cohorte, numSemestres);
+        setHeading(header);
+        if (exportar === 'PDF') {
+            console.log(generatePDF('Poblacion', cohorte));
+        }
+    };
     return(
         <div style={{
             width: '100vw',
@@ -44,7 +49,7 @@ const TablaPoblacion = () => {
                         {/* <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera} data={dropDownData.carreras} /> */}
                         <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
                         <Dropdown  label="Cálculo de semestres" color="#FF785A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
-                        <Dropdown  label="Exportar" color="#FF785A" data={[
+                        <Dropdown  label="Exportar" color="#FF785A" handleChangeFn={setExportar} data={[
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />

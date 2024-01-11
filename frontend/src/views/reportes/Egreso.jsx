@@ -26,7 +26,7 @@ const ReportesEgreso = () => {
         setHeading(headers);
         setData(tabla);
         if (exportar === 'PDF') {
-            navigate(`pdf/${}`);
+            navigate('/vista/pdf');
         }
     };
 
