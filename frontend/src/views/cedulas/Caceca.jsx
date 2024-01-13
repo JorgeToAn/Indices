@@ -6,6 +6,8 @@ import {  useEffect, useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
+import { generatePDF } from '../../utils/helpers/pdfHelpers';
+import { Printer } from 'tabler-icons-react';
 
 const CedulaCaceca = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -14,6 +16,7 @@ const CedulaCaceca = () => {
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
     const [carrera, setCarrera] = useInputState('');
+    const [exportar, setExportar] = useInputState('');
 
     useEffect(() => {
         const header = [
@@ -25,6 +28,11 @@ const CedulaCaceca = () => {
         ]);
     }, []);
 
+    const handlePrint = () => {
+        if (exportar === 'PDF') {
+            generatePDF('Cédula CACECA', cohorte, '15', carrera);
+        }
+    };
     return(
         <div style={{
             width: '100vw',
@@ -37,7 +45,7 @@ const CedulaCaceca = () => {
                     <Group mt={0} mb={16} color='gris'>
                         <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera}  data={dropDownData.carreras}/>
                         <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes}/>
-                        <Dropdown  label="Exportar" color="#FFAA5A" data={[
+                        <Dropdown  label="Exportar" color="#FFAA5A" handleChangeFn={setExportar} data={[
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />
@@ -47,6 +55,7 @@ const CedulaCaceca = () => {
                         <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
+                        <Button  disabled={!cohorte || !carrera || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
                         <Button disabled={!cohorte || !carrera} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
