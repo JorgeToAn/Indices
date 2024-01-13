@@ -6,6 +6,8 @@ import dropDownData from "../../mockup/dropDownData";
 import { useInputState } from "@mantine/hooks";
 import { useState } from "react";
 import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
+import { Printer } from "tabler-icons-react";
+import { generatePDF } from "../../utils/helpers/pdfHelpers";
 
 const TablaCrecimiento = () => {
     const [heading, setHeading] = useState([]);
@@ -27,10 +29,17 @@ const TablaCrecimiento = () => {
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
     };
+    const handlePrint = () => {
+        if (exportar === 'PDF') {
+            generatePDF('Crecimiento', cohorte, numSemestres);
+        }
+    };
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
     // const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
+    const [exportar, setExportar] = useInputState('');
+
     return(
         <div style={{
             width: '100vw',
@@ -44,7 +53,7 @@ const TablaCrecimiento = () => {
                         {/* <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={dropDownData.carreras} /> */}
                         <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
                         <Dropdown  label="Cálculo de semestres" color="#FFAA5A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
-                        <Dropdown  label="Exportar" color="#FFAA5A" data={[
+                        <Dropdown  label="Exportar" color="#FFAA5A" handleChangeFn={setExportar} data={[
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />
@@ -54,6 +63,7 @@ const TablaCrecimiento = () => {
                         <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
+                        <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
                         <Button  disabled={!cohorte || !numSemestres} onClick={handleTable} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>

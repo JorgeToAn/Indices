@@ -8,6 +8,8 @@ import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "./Indices.css";
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
+import { generatePDF } from '../../utils/helpers/pdfHelpers';
+import { Printer } from 'tabler-icons-react';
 
 const IndicePermanencia = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -17,23 +19,19 @@ const IndicePermanencia = () => {
     const [cohorte, setCohorte] = useInputState('');
     const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
+    const [exportar, setExportar] = useInputState('');
 
     const handleTable = () => {
         const tabla = [];
-
-        // let tablaCompleta = [];
-
         const headers = getIndicesHeaders(1, cohorte, carrera);
-        // console.log(headers);
-        // tablaCompleta = dataService.datosIndicesPermanencia(cohorte, numSemestres, carrera);
-        // headers.push(tablaCompleta[0]);
-        // headers.push(tablaCompleta[1]);
-        // for (let fila = 2; fila < tablaCompleta.length; fila++) {
-        //     tabla.push(tablaCompleta[fila]);
-        // }
         setHeading(headers);
         setData(tabla);
-        console.log(heading);
+    };
+
+    const handlePrint = () => {
+        if (exportar === 'PDF') {
+            generatePDF('Indice de permanencia', cohorte, numSemestres, carrera);
+        }
     };
 
     return(
@@ -49,7 +47,7 @@ const IndicePermanencia = () => {
                         <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera} data={dropDownData.carreras} />
                         <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
                         <Dropdown  label="Cálculo de semestres" color="#FF785A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
-                        <Dropdown  label="Exportar" color="#FF785A" data={[
+                        <Dropdown  label="Exportar" color="#FF785A" handleChangeFn={setExportar} data={[
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />
@@ -59,6 +57,7 @@ const IndicePermanencia = () => {
                         <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
+                        <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
                         <Button onClick={handleTable} disabled={!cohorte || !carrera || !numSemestres} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>

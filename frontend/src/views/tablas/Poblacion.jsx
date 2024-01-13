@@ -7,6 +7,7 @@ import dropDownData from "../../mockup/dropDownData";
 import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
 import { useState } from "react";
 import { generatePDF } from "../../utils/helpers/pdfHelpers";
+import { Printer } from "tabler-icons-react";
 
 const TablaPoblacion = () => {
     const [heading, setHeading] = useState([]);
@@ -25,15 +26,17 @@ const TablaPoblacion = () => {
     ];
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
-    // const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
     const [exportar, setExportar] = useInputState('');
 
     const handleTable = () => {
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
+    };
+
+    const handlePrint = () => {
         if (exportar === 'PDF') {
-            console.log(generatePDF('Poblacion', cohorte));
+            generatePDF('Poblacion', cohorte, numSemestres);
         }
     };
     return(
@@ -59,6 +62,7 @@ const TablaPoblacion = () => {
                         <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
+                        <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
                         <Button  disabled={!cohorte || !numSemestres} onClick={handleTable} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>

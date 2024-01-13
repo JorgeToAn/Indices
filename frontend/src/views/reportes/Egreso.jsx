@@ -7,7 +7,8 @@ import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
 import { getReportesHeaders } from '../../utils/helpers/headerHelpers';
-import { useNavigate } from "react-router-dom";
+import { generatePDF } from '../../utils/helpers/pdfHelpers';
+import { Printer } from 'tabler-icons-react';
 
 const ReportesEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -18,18 +19,19 @@ const ReportesEgreso = () => {
     const [exportar, setExportar] = useInputState('');
     // const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
-    const navigate = useNavigate();
 
     const handleTable = () => {
         const tabla = [];
         const headers = getReportesHeaders(2, cohorte, numSemestres);
         setHeading(headers);
         setData(tabla);
-        if (exportar === 'PDF') {
-            navigate('/vista/pdf');
-        }
     };
 
+    const handlePrint = () => {
+        if (exportar === 'PDF') {
+            generatePDF('Egreso', cohorte, numSemestres);
+        }
+    };
     return(
         <div style={{
             width: '100vw',
@@ -52,6 +54,7 @@ const ReportesEgreso = () => {
                         <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
+                        <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
                         <Button onClick={handleTable} disabled={!cohorte || !numSemestres} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>

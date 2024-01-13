@@ -7,6 +7,8 @@ import dropDownData from '../../mockup/dropDownData';
 import { useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
+import { Printer } from 'tabler-icons-react';
+import { generatePDF } from '../../utils/helpers/pdfHelpers';
 
 const IndiceEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -16,18 +18,19 @@ const IndiceEgreso = () => {
     const [cohorte, setCohorte] = useInputState('');
     const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
+    const [exportar, setExportar] = useInputState('');
 
     const handleTable = () => {
         const tabla = [];
         const headers = getIndicesHeaders(4, cohorte, carrera);
-        // tablaCompleta = dataService.datosIndicesEgreso(cohorte, numSemestres, carrera);
-        // headers.push(tablaCompleta[0]);
-        // headers.push(tablaCompleta[1]);
-        // for (let fila = 2; fila < tablaCompleta.length; fila++) {
-        //     tabla.push(tablaCompleta[fila]);
-        // }
         setHeading(headers);
         setData(tabla);
+    };
+
+    const handlePrint = () => {
+        if (exportar === 'PDF') {
+            generatePDF('Indice de egreso', cohorte, numSemestres, carrera);
+        }
     };
 
     return(
@@ -43,7 +46,7 @@ const IndiceEgreso = () => {
                         <Dropdown  label="Programa educativo" color="#FFAA5A" data={dropDownData.carreras} handleChangeFn={setCarrera} />
                         <Dropdown  label="Cohorte generacional" color="#FFAA5A" data={dropDownData.cohortes} handleChangeFn={setCohorte} />
                         <Dropdown  label="Cálculo de semestres" color="#FFAA5A" data={dropDownData.numSemestres} handleChangeFn={setNumSemestre} />
-                        <Dropdown  label="Exportar" color="#FFAA5A" data={[
+                        <Dropdown  label="Exportar" color="#FFAA5A" handleChangeFn={setExportar} data={[
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />
@@ -53,6 +56,7 @@ const IndiceEgreso = () => {
                         <Checkbox labelPosition='left' color='naranja' label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
+                        <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
                         <Button onClick={handleTable} color='negro' disabled={!cohorte || !carrera || !numSemestres} >Filtrar</Button>
                     </Group>
                 </fieldset>
