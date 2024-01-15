@@ -20,6 +20,8 @@
     "@mantine/notifications": "^6.0.17",
     "axios": "^1.4.0",
     "dayjs": "^1.11.9",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",

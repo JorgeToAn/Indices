@@ -8,6 +8,7 @@ import dropDownData from '../../mockup/dropDownData';
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 import { Printer } from 'tabler-icons-react';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
+import { generateExcel } from '../../utils/helpers/excelHelpers';
 
 const IndiceDesercion = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -26,9 +27,12 @@ const IndiceDesercion = () => {
         setHeading(headers);
         setData(tabla);
     };
-    const handlePrint = () => {
+
+    const handlePrint = async() => {
         if (exportar === 'PDF') {
-            generatePDF('Indice de deserción', cohorte, numSemestres, carrera);
+            generatePDF('Poblacion', cohorte, numSemestres);
+        } else if (exportar === 'Excel') {
+             await generateExcel(heading, data);
         }
     };
 

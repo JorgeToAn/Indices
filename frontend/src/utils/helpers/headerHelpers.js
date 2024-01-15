@@ -42,12 +42,6 @@ function anioPeriodo(periodoAnterior) {
     return periodoAnterior;
 }
 
-// const heading = [
-//     ['Carrera', 'Nuevo Ingreso', 'Año de titulación', '', '', '', '', 'Eficiencia de titulación', 'Año de titulacion', '', '', 'Eficiencia de titulación'],
-//     ['', '','2019-1','2019-2','2020-1', '2020-2', 'Total', '', '2021-1', '2021-2', 'Total', ''],
-//     ['', '', '9', '10', '11', '12', '', '', '13', '14', '', '']
-// ];
-
 export function getReportesHeaders(tipo, cohorte, numSemestres){
     const tabla = [];
     const firstRow = ['Carrera', 'Nuevo Ingreso', `Año de ${tipo === 1 ? 'titulación' : 'egreso'}`];
