@@ -9,6 +9,7 @@ import dropDownData from '../../mockup/dropDownData';
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
+import { generateExcel } from '../../utils/helpers/excelHelpers';
 
 const IndiceTitulacion = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -27,9 +28,11 @@ const IndiceTitulacion = () => {
         setData(tabla);
     };
 
-    const handlePrint = () => {
+    const handlePrint = async() => {
         if (exportar === 'PDF') {
-            generatePDF('Indice de titulación', cohorte, numSemestres, carrera);
+            generatePDF('Titulación', cohorte, numSemestres);
+        } else if (exportar === 'Excel') {
+            await generateExcel(heading, data, `Titulación ${carrera} - ${cohorte}`);
         }
     };
 

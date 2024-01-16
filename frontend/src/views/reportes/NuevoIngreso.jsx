@@ -9,6 +9,7 @@ import "../indices/Indices.css";
 import { getNuevoIngresoHeaders } from '../../utils/helpers/headerHelpers';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
+import { generateExcel } from '../../utils/helpers/excelHelpers';
 // import { getReportesHeaders } from '../../utils/helpers/headerHelpers';
 
 const ReportesNuevoIngreso = () => {
@@ -30,9 +31,11 @@ const ReportesNuevoIngreso = () => {
         setData(tabla);
     };
 
-    const handlePrint = () => {
+    const handlePrint = async() => {
         if (exportar === 'PDF') {
             generatePDF('Nuevo Ingreso', cohorte, numSemestres);
+        } else if (exportar === 'Excel') {
+            await generateExcel(heading, data, `Nuevo Ingreso - ${cohorte}`);
         }
     };
     return(

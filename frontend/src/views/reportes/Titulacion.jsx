@@ -9,6 +9,7 @@ import "../indices/Indices.css";
 import { getReportesHeaders } from '../../utils/helpers/headerHelpers';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
+import { generateExcel } from '../../utils/helpers/excelHelpers';
 
 const ReportesTitulacion = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -27,9 +28,11 @@ const ReportesTitulacion = () => {
         setData(tabla);
     };
 
-    const handlePrint = () => {
+    const handlePrint = async() => {
         if (exportar === 'PDF') {
             generatePDF('Titulación', cohorte, numSemestres);
+        } else if (exportar === 'Excel') {
+            await generateExcel(heading, data, `Titulacion - ${cohorte}`);
         }
     };
 

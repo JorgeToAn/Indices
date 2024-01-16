@@ -8,6 +8,7 @@ import { useState } from "react";
 import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
 import { Printer } from "tabler-icons-react";
 import { generatePDF } from "../../utils/helpers/pdfHelpers";
+import { generateExcel } from "../../utils/helpers/excelHelpers";
 
 const TablaCrecimiento = () => {
     const [heading, setHeading] = useState([]);
@@ -29,9 +30,11 @@ const TablaCrecimiento = () => {
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
     };
-    const handlePrint = () => {
+    const handlePrint = async() => {
         if (exportar === 'PDF') {
-            generatePDF('Crecimiento', cohorte, numSemestres);
+            generatePDF('Poblacion', cohorte, numSemestres);
+        } else if (exportar === 'Excel') {
+             await generateExcel(heading, tabla, `Crecimiento ${cohorte}`);
         }
     };
     // Cohorte, carrera y numSemestres son los datos de los Select

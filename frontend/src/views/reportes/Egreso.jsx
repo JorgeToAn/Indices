@@ -9,6 +9,7 @@ import "../indices/Indices.css";
 import { getReportesHeaders } from '../../utils/helpers/headerHelpers';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
+import { generateExcel } from '../../utils/helpers/excelHelpers';
 
 const ReportesEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -27,9 +28,11 @@ const ReportesEgreso = () => {
         setData(tabla);
     };
 
-    const handlePrint = () => {
+    const handlePrint = async() => {
         if (exportar === 'PDF') {
             generatePDF('Egreso', cohorte, numSemestres);
+        } else if (exportar === 'Excel') {
+            await generateExcel(heading, data, `Egreso - ${cohorte}`);
         }
     };
     return(

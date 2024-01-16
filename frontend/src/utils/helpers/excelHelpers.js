@@ -1,33 +1,56 @@
 import ExcelJS from 'exceljs';
 import FileSaver from 'file-saver';
 
-export async function generateExcel(header, data) {
+export async function generateExcel(header, data, titulo) {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("Reporte");
     if (header.length <= 3){
-        // for(const fila in header) {
-        //     sheet.addRow(fila, 'color: #110000');
-        // }
         const rows = sheet.addRows(header);
-        rows.fill = {
-            type: 'pattern',
-            pattern: 'darkVertical',
-            fgColor: {
-                argb: 'FFFF0000'
-            }
-        };
+        rows.forEach((row) => {
+            row.eachCell((cell) => {
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: {
+                        argb: 'ffff785a'
+                    }
+                };
+                cell.font = {
+                    name: 'Arial',
+                    bold: true,
+                    color: {
+                        argb: 'ffffffff'
+                    }
+                };
+            });
+        });
 
     } else {
         const row = sheet.addRow(header);
-        row.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: {
-                argb: 'FFFF0000'
-            }
-        };
+        row.eachCell((cell) => {
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: {
+                    argb: 'ffff785a'
+                }
+            };
+            cell.font = {
+                name: 'Arial',
+                bold: true,
+                color: {
+                    argb: 'ffffffff'
+                }
+            };
+        });
     }
     sheet.addRows(data);
+    const column = sheet.getColumn('A');
+    column.eachCell((cell) => {
+        if(cell.value === "Carrera" || cell.value === "Nombre"){
+            column.width = 38;
+        }
+    });
     const buffer = await workbook.xlsx.writeBuffer();
-    FileSaver.saveAs(new Blob([buffer]), `Reporte.xlsx`);
+    FileSaver.saveAs(new Blob([buffer]), `Reporte-${titulo}.xlsx`);
 }

@@ -30,9 +30,9 @@ const IndiceDesercion = () => {
 
     const handlePrint = async() => {
         if (exportar === 'PDF') {
-            generatePDF('Poblacion', cohorte, numSemestres);
+            generatePDF('Deserción', cohorte, numSemestres);
         } else if (exportar === 'Excel') {
-             await generateExcel(heading, data);
+            await generateExcel(heading, data, `Desercion ${carrera} - ${cohorte}`);
         }
     };
 

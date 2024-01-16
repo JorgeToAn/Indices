@@ -9,6 +9,7 @@ import { useInputState } from '@mantine/hooks';
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 import { Printer } from 'tabler-icons-react';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
+import { generateExcel } from '../../utils/helpers/excelHelpers';
 
 const IndiceEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -27,9 +28,11 @@ const IndiceEgreso = () => {
         setData(tabla);
     };
 
-    const handlePrint = () => {
+    const handlePrint = async() => {
         if (exportar === 'PDF') {
-            generatePDF('Indice de egreso', cohorte, numSemestres, carrera);
+            generatePDF('Egreso', cohorte, numSemestres, carrera);
+        } else if (exportar === 'Excel') {
+            await generateExcel(heading, data, `Egreso ${carrera} - ${cohorte}`);
         }
     };
 

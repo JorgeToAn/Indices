@@ -10,6 +10,7 @@ import "./Indices.css";
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
+import { generateExcel } from '../../utils/helpers/excelHelpers';
 
 const IndicePermanencia = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -28,9 +29,11 @@ const IndicePermanencia = () => {
         setData(tabla);
     };
 
-    const handlePrint = () => {
+    const handlePrint = async() => {
         if (exportar === 'PDF') {
-            generatePDF('Indice de permanencia', cohorte, numSemestres, carrera);
+            generatePDF('Permanencia', cohorte, numSemestres);
+        } else if (exportar === 'Excel') {
+            await generateExcel(heading, data, `Permanencia ${carrera} - ${cohorte}`);
         }
     };
 

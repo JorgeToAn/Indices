@@ -8,6 +8,7 @@ import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
+import { generateExcel } from '../../utils/helpers/excelHelpers';
 
 const CedulaCacei = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -28,12 +29,13 @@ const CedulaCacei = () => {
         ]);
     }, []);
 
-    const handlePrint = () => {
+    const handlePrint = async() => {
         if (exportar === 'PDF') {
-            generatePDF('Cédula CACEI', cohorte, '15', carrera);
+            generatePDF('Poblacion', cohorte, '15', carrera);
+        } else if (exportar === 'Excel') {
+             await generateExcel(heading, data, `CACEI ${cohorte}`);
         }
     };
-
     return(
         <div style={{
             width: '100vw',
