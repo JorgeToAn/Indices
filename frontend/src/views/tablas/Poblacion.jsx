@@ -6,6 +6,8 @@ import { useInputState } from "@mantine/hooks";
 import dropDownData from "../../mockup/dropDownData";
 import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
 import { useState } from "react";
+import { generatePDF } from "../../utils/helpers/pdfHelpers";
+import { Printer } from "tabler-icons-react";
 
 const TablaPoblacion = () => {
     const [heading, setHeading] = useState([]);
@@ -22,15 +24,21 @@ const TablaPoblacion = () => {
         ['Ingeniería Quimica','QUI','14','16','25','30','27'],
         ['Ingeniería en Logistica','LOG', '14','16','25','30','27']
     ];
+    // Cohorte, carrera y numSemestres son los datos de los Select
+    const [cohorte, setCohorte] = useInputState('');
+    const [numSemestres, setNumSemestre] = useInputState(0);
+    const [exportar, setExportar] = useInputState('');
 
     const handleTable = () => {
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
     };
-    // Cohorte, carrera y numSemestres son los datos de los Select
-    const [cohorte, setCohorte] = useInputState('');
-    // const [carrera, setCarrera] = useInputState('');
-    const [numSemestres, setNumSemestre] = useInputState(0);
+
+    const handlePrint = () => {
+        if (exportar === 'PDF') {
+            generatePDF('Poblacion', cohorte, numSemestres);
+        }
+    };
     return(
         <div style={{
             width: '100vw',
@@ -44,7 +52,7 @@ const TablaPoblacion = () => {
                         {/* <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera} data={dropDownData.carreras} /> */}
                         <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
                         <Dropdown  label="Cálculo de semestres" color="#FF785A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
-                        <Dropdown  label="Exportar" color="#FF785A" data={[
+                        <Dropdown  label="Exportar" color="#FF785A" handleChangeFn={setExportar} data={[
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />
@@ -54,6 +62,7 @@ const TablaPoblacion = () => {
                         <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
+                        <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
                         <Button  disabled={!cohorte || !numSemestres} onClick={handleTable} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>

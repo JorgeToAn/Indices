@@ -41,7 +41,6 @@ import ReportesTitulacion from "./views/reportes/Titulacion";
 import ReportesEgreso from "./views/reportes/Egreso";
 import ReportesNuevoIngreso from "./views/reportes/NuevoIngreso";
 
-
 const router = createBrowserRouter([
   {
     element: <MainLayout />,
