@@ -39,7 +39,7 @@ const TablaPoblacion = () => {
         if (exportar === 'PDF') {
             generatePDF('Poblacion', cohorte, numSemestres);
         } else if (exportar === 'Excel') {
-             await generateExcel(heading, tabla, `Poblacion ${cohorte}`);
+             await generateExcel(heading, tabla, 'Poblacion', cohorte, numSemestres);
         }
     };
     return(

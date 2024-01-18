@@ -1,9 +1,10 @@
 import ExcelJS from 'exceljs';
 import FileSaver from 'file-saver';
 
-export async function generateExcel(header, data, titulo) {
+export async function generateExcel(header, data, titulo, cohorte, numSemestres, carrera="") {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("Reporte");
+    sheet.addRow([`Reporte de ${titulo} ${carrera} - Cohorte generacional ${cohorte} a ${numSemestres} semestres`]);
     if (header.length <= 3){
         const rows = sheet.addRows(header);
         rows.forEach((row) => {
@@ -52,5 +53,5 @@ export async function generateExcel(header, data, titulo) {
         }
     });
     const buffer = await workbook.xlsx.writeBuffer();
-    FileSaver.saveAs(new Blob([buffer]), `Reporte-${titulo}.xlsx`);
+    FileSaver.saveAs(new Blob([buffer]), `Reporte_${titulo}-Cohorte_${cohorte}.xlsx`);
 }

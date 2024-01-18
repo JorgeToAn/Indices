@@ -34,7 +34,7 @@ const TablaCrecimiento = () => {
         if (exportar === 'PDF') {
             generatePDF('Poblacion', cohorte, numSemestres);
         } else if (exportar === 'Excel') {
-             await generateExcel(heading, tabla, `Crecimiento ${cohorte}`);
+             await generateExcel(heading, tabla, 'Crecimiento', cohorte, numSemestres);
         }
     };
     // Cohorte, carrera y numSemestres son los datos de los Select
