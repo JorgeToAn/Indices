@@ -1,10 +1,26 @@
 import ExcelJS from 'exceljs';
 import FileSaver from 'file-saver';
 
-export async function generateExcel(header, data, titulo, cohorte, numSemestres, carrera="") {
+export async function generateExcel(header, data, titulo, cohorte, numSemestres, tipoAlumnos, carrera="") {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("Reporte");
     sheet.addRow([`Reporte de ${titulo} ${carrera} - Cohorte generacional ${cohorte} a ${numSemestres} semestres`]);
+    let filtroAlumnos = "Examen, convalidación, traslado y equivalencia";
+    switch (tipoAlumnos){
+        case 1:
+            filtroAlumnos = "Examen, convalidación, traslado y equivalencia";
+            break;
+        case 2:
+            filtroAlumnos = "Examen y convalidación";
+            break;
+        case 3:
+            filtroAlumnos = "Traslado y equivalencia";
+            break;
+        default:
+            filtroAlumnos = "Examen, convalidación, traslado y equivalencia";
+    }
+    sheet.addRow([`Se incluyen alumnos de ${filtroAlumnos}`]);
+
     if (header.length <= 3){
         const rows = sheet.addRows(header);
         rows.forEach((row) => {

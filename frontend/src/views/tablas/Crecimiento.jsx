@@ -31,10 +31,11 @@ const TablaCrecimiento = () => {
         setHeading(header);
     };
     const handlePrint = async() => {
+        const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
             generatePDF('Poblacion', cohorte, numSemestres);
         } else if (exportar === 'Excel') {
-             await generateExcel(heading, tabla, 'Crecimiento', cohorte, numSemestres);
+             await generateExcel(heading, tabla, 'Crecimiento', cohorte, numSemestres, tipoAlumno);
         }
     };
     // Cohorte, carrera y numSemestres son los datos de los Select
@@ -42,6 +43,8 @@ const TablaCrecimiento = () => {
     // const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
     const [exportar, setExportar] = useInputState('');
+    const [examenYConv, setExamenYConv] = useState(true);
+    const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
     return(
         <div style={{
@@ -62,8 +65,8 @@ const TablaCrecimiento = () => {
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >
-                        <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
-                        <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
+                        <Checkbox labelPosition='left' checked={examenYConv} color="naranja" onChange={(event) => setExamenYConv(event.currentTarget.examenYConv)} label='Examen y Convalidación' radius='sm' />
+                        <Checkbox labelPosition='left' checked={trasladoYEquiv} color="naranja" onChange={(event) => setTrasladoYEquiv(event.currentTarget.trasladoYEquiv)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
                         <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>

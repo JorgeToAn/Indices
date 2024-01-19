@@ -20,6 +20,8 @@ const IndiceEgreso = () => {
     const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
     const [exportar, setExportar] = useInputState('');
+    const [examenYConv, setExamenYConv] = useState(true);
+    const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
     const handleTable = () => {
         const tabla = [];
@@ -29,10 +31,11 @@ const IndiceEgreso = () => {
     };
 
     const handlePrint = async() => {
+        const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
             generatePDF('Egreso', cohorte, numSemestres, carrera);
         } else if (exportar === 'Excel') {
-            await generateExcel(heading, data, `Egreso ${carrera} - ${cohorte}`);
+            await generateExcel(heading, data, 'Indice Egreso', cohorte, numSemestres, tipoAlumno);
         }
     };
 
@@ -55,8 +58,8 @@ const IndiceEgreso = () => {
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >
-                        <Checkbox labelPosition='left' color='naranja' label='Examen y Convalidación' radius='sm' />
-                        <Checkbox labelPosition='left' color='naranja' label='Traslado y Equivalencia' radius='sm' />
+                        <Checkbox labelPosition='left' checked={examenYConv} onChange={(event) => setExamenYConv(event.currentTarget.examenYConv)} label='Examen y Convalidación' radius='sm' />
+                        <Checkbox labelPosition='left' checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.trasladoYEquiv)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
                         <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
