@@ -17,9 +17,10 @@ export async function generateExcel(header, data, titulo, cohorte, numSemestres,
             filtroAlumnos = "Traslado y equivalencia";
             break;
         default:
-            filtroAlumnos = "Examen, convalidación, traslado y equivalencia";
+            filtroAlumnos = "Sin filtro";
     }
-    sheet.addRow([`Se incluyen alumnos de ${filtroAlumnos}`]);
+    if (filtroAlumnos !== "Sin filtro")
+        sheet.addRow([`Se incluyen alumnos de ${filtroAlumnos}`]);
 
     if (header.length <= 3){
         const rows = sheet.addRows(header);

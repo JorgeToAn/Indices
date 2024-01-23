@@ -7,6 +7,9 @@ import dropDownData from '../../mockup/dropDownData';
 import { useInputState } from "@mantine/hooks";
 import { useState } from "react";
 import { getListaAlumnosHeaders } from "../../utils/helpers/headerHelpers";
+import { generatePDF } from "../../utils/helpers/pdfHelpers";
+import { generateExcel } from "../../utils/helpers/excelHelpers";
+import { Printer } from "tabler-icons-react";
 
 
 const AlumnosLista = () => {
@@ -17,12 +20,27 @@ const AlumnosLista = () => {
     const [cohorte, setCohorte] = useInputState('');
     const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
+    const [exportar, setExportar] = useInputState('');
 
     const handleTable = () => {
         const tabla = [];
         const headers = getListaAlumnosHeaders(cohorte, numSemestres);
         setHeading(headers);
         setData(tabla);
+    };
+    const reorderHeading = () => {
+        const header = [...heading];
+        const firstRow = ['', ...header[0]];
+        header[0] = firstRow;
+        return header;
+    };
+
+    const handlePrint = async() => {
+        if (exportar === 'PDF') {
+            generatePDF('Lista de Alumnos', cohorte, numSemestres, carrera);
+        } else if (exportar === 'Excel') {
+            await generateExcel(reorderHeading(), data, 'Lista de Alumnos', cohorte, numSemestres, 0, carrera);
+        }
     };
     return(
         <div style={{
@@ -37,12 +55,13 @@ const AlumnosLista = () => {
                         <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={dropDownData.carreras} />
                         <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
                         <Dropdown  label="Cálculo de semestres" color="#FFAA5A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
-                        <Dropdown  label="Exportar" color="#FFAA5A" data={[
+                        <Dropdown  label="Exportar" color="#FFAA5A" handleChangeFn={setExportar} data={[
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />
                     </Group>
                     <Group style={{ justifyContent: "flex-end"}} >
+                        <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
                         <Button onClick={handleTable} disabled={!cohorte || !carrera || !numSemestres} color="negro">Filtrar</Button>
                     </Group>
                 </fieldset>
