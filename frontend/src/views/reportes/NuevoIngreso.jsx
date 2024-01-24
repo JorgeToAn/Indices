@@ -9,6 +9,7 @@ import "../indices/Indices.css";
 import { getNuevoIngresoHeaders } from '../../utils/helpers/headerHelpers';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
+import { generateExcel } from '../../utils/helpers/excelHelpers';
 // import { getReportesHeaders } from '../../utils/helpers/headerHelpers';
 
 const ReportesNuevoIngreso = () => {
@@ -20,6 +21,8 @@ const ReportesNuevoIngreso = () => {
     // const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
     const [exportar, setExportar] = useInputState('');
+    const [examenYConv, setExamenYConv] = useState(true);
+    const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
     const handleTable = () => {
         const tabla = [];
@@ -30,9 +33,12 @@ const ReportesNuevoIngreso = () => {
         setData(tabla);
     };
 
-    const handlePrint = () => {
+    const handlePrint = async() => {
+        const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
             generatePDF('Nuevo Ingreso', cohorte, numSemestres);
+        } else if (exportar === 'Excel') {
+            await generateExcel(heading, data, 'Nuevo Ingreso', cohorte, numSemestres, tipoAlumno);
         }
     };
     return(
@@ -53,12 +59,12 @@ const ReportesNuevoIngreso = () => {
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >
-                        <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
-                        <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
+                        <Checkbox labelPosition='left' checked={examenYConv} onChange={(event) => setExamenYConv(event.currentTarget.checked)} label='Examen y Convalidación' radius='sm' />
+                        <Checkbox labelPosition='left' checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
-                        <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
-                        <Button onClick={handleTable} disabled={!cohorte || !numSemestres} color='negro'>Filtrar</Button>
+                        <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
+                        <Button onClick={handleTable} disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-naranja" doubleHeader  headers={heading} content={data} />

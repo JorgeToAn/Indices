@@ -8,6 +8,7 @@ import { useState } from "react";
 import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
 import { Printer } from "tabler-icons-react";
 import { generatePDF } from "../../utils/helpers/pdfHelpers";
+import { generateExcel } from "../../utils/helpers/excelHelpers";
 
 const TablaCrecimiento = () => {
     const [heading, setHeading] = useState([]);
@@ -29,9 +30,12 @@ const TablaCrecimiento = () => {
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
     };
-    const handlePrint = () => {
+    const handlePrint = async() => {
+        const tipoAlumno = (examenYConv && trasladoYEquiv) ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Crecimiento', cohorte, numSemestres);
+            generatePDF('Poblacion', cohorte, numSemestres);
+        } else if (exportar === 'Excel') {
+             await generateExcel(heading, tabla, 'Crecimiento', cohorte, numSemestres, tipoAlumno);
         }
     };
     // Cohorte, carrera y numSemestres son los datos de los Select
@@ -39,6 +43,8 @@ const TablaCrecimiento = () => {
     // const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
     const [exportar, setExportar] = useInputState('');
+    const [examenYConv, setExamenYConv] = useState(true);
+    const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
     return(
         <div style={{
@@ -59,12 +65,12 @@ const TablaCrecimiento = () => {
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >
-                        <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
-                        <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
+                        <Checkbox labelPosition='left' checked={examenYConv} color="naranja" onChange={(event) => setExamenYConv(event.currentTarget.checked)} label='Examen y Convalidación' radius='sm' />
+                        <Checkbox labelPosition='left' checked={trasladoYEquiv} color="naranja" onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
-                        <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
-                        <Button  disabled={!cohorte || !numSemestres} onClick={handleTable} color='negro'>Filtrar</Button>
+                        <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
+                        <Button  disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)} onClick={handleTable} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
                 <Tabla headers={heading} content={tabla} colors="tabla-naranja" />

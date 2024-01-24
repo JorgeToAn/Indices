@@ -8,6 +8,7 @@ import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
+import { generateExcel } from '../../utils/helpers/excelHelpers';
 
 const CedulaCacei = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -17,6 +18,8 @@ const CedulaCacei = () => {
     const [cohorte, setCohorte] = useInputState('');
     const [carrera, setCarrera] = useInputState('');
     const [exportar, setExportar] = useInputState('');
+    const [examenYConv, setExamenYConv] = useState(true);
+    const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
     useEffect(() => {
         const header = [
@@ -28,12 +31,14 @@ const CedulaCacei = () => {
         ]);
     }, []);
 
-    const handlePrint = () => {
+    const handlePrint = async() => {
+        const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Cédula CACEI', cohorte, '15', carrera);
+            generatePDF('Poblacion', cohorte, '15', carrera);
+        } else if (exportar === 'Excel') {
+             await generateExcel(heading, data, 'CACEI', cohorte, '15', tipoAlumno, carrera);
         }
     };
-
     return(
         <div style={{
             width: '100vw',
@@ -52,12 +57,12 @@ const CedulaCacei = () => {
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >
-                        <Checkbox labelPosition='left' label='Examen y Convalidación' radius='sm' />
-                        <Checkbox labelPosition='left' label='Traslado y Equivalencia' radius='sm' />
+                        <Checkbox labelPosition='left' checked={examenYConv} onChange={(event) => setExamenYConv(event.currentTarget.checked)} label='Examen y Convalidación' radius='sm' />
+                        <Checkbox labelPosition='left' checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
-                        <Button  disabled={!cohorte || !carrera || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
-                        <Button disabled={!cohorte || !carrera} color='negro'>Filtrar</Button>
+                        <Button  disabled={!cohorte || !carrera || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
+                        <Button disabled={!cohorte || !carrera || !(examenYConv || trasladoYEquiv)} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-toronja" headers={heading} content={data} />
