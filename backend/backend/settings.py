@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'planes',
     'carreras',
     'registros',
+    'tablas',
 ]
 
 MIDDLEWARE = [
