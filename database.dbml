@@ -17,6 +17,7 @@ Enum tipos_ingresos {
   EQ [note: 'Equivalencia']
   TR [note: 'Traslado']
   CO [note: 'Convalidación']
+  RE [note: 'Reingreso']
 }
 
 Enum tipos_titulaciones {
@@ -37,24 +38,20 @@ Table personal {
 }
 
 Table alumnos {
-  id int [pk, increment]
-  no_control varchar(10) [not null]
-  semestre_inicio int [not null]
-  personal_id varchar(18) [not null]
+  no_control varchar(9) [pk, not null]
+  curp varchar(18) [not null]
   plan_id int [not null]
   Note: 'Contiene la información asociada al número de control del alumno'
 }
 
 Table carreras {
-  id int [pk, increment]
-  clave varchar [not null, unique]
+  clave varchar [pk, not null]
   nombre varchar [not null]
   Note: 'Información general de una carrera'
 }
 
 Table planes {
-  id int [pk, increment]
-  clave varchar [not null, unique]
+  clave varchar [pk, not null]
   fecha_inicio date [not null]
   fecha_final date
   carrera_id int [not null]
@@ -102,10 +99,10 @@ Table personal_discapacidades {
 
 Ref: discapacidades.id < personal_discapacidades.discapacidad_id
 Ref: personal.curp < personal_discapacidades.personal_id
-Ref: personal.curp < alumnos.personal_id
-Ref: carreras.id < planes.carrera_id
-Ref: planes.id < alumnos.plan_id
-Ref: alumnos.id < ingresos.alumno_id
-Ref: alumnos.id < egresos.alumno_id
-Ref: alumnos.id < titulaciones.alumno_id
-Ref: alumnos.id < liberacioningles.alumno_id
+Ref: personal.curp < alumnos.curp
+Ref: carreras.clave < planes.carrera_id
+Ref: planes.clave < alumnos.plan_id
+Ref: alumnos.no_control < ingresos.alumno_id
+Ref: alumnos.no_control < egresos.alumno_id
+Ref: alumnos.no_control < titulaciones.alumno_id
+Ref: alumnos.no_control < liberacioningles.alumno_id
