@@ -33,11 +33,11 @@ export function getTablasHeaders(cohorte, numSemestres) {
 }
 
 function anioPeriodo(periodoAnterior) {
-    if (periodoAnterior[1] === '2') {
+    if (periodoAnterior[1] === '3') {
         periodoAnterior[0] = String(Number(periodoAnterior[0]) + 1);
         periodoAnterior[1] = '1';
     } else if (periodoAnterior[1] === '1') {
-        periodoAnterior[1] = String(Number(periodoAnterior[1])+ 1);
+        periodoAnterior[1] = String(Number(periodoAnterior[1])+ 2);
     }
     return periodoAnterior;
 }

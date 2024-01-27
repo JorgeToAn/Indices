@@ -9,7 +9,6 @@ function Dropdown ({label, color, data, handleChangeFn}) {
             searchable
             onChange={handleChangeFn}
             name={label}
-            dropdownOpened={true}
             label={label}
             placeholder={label}
             data={ data.map((fila) => ({"value":fila[0], "label":fila[1]})) }
@@ -41,9 +40,15 @@ function Dropdown ({label, color, data, handleChangeFn}) {
                 required: {
                     color: color,
                 },
-                option: {
-                    backgroundColor: color,
-                    fontWeight: "bold",
+                item: {
+                    '&[data-selected="true"]':{
+                        backgroundColor: color,
+                        fontWeight: "bold",
+                    },
+                    '&[data-selected="true"]:hover':{
+                        backgroundColor: color,
+                        fontWeight: "bold",
+                    },
                 },
                 label: {
                     visibility: "hidden",
