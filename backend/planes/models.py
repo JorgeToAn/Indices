@@ -2,7 +2,7 @@ from django.db import models
 
 class Plan(models.Model):
 
-    clave = models.CharField(max_length=150, unique=True, null=False, blank=False)
+    clave = models.CharField(max_length=150, primary_key=True, blank=False)
     fecha_inicio = models.DateField(null=False, blank=False)
     fecha_final = models.DateField(null=True, blank=True)
     carrera = models.ForeignKey('carreras.Carrera', on_delete=models.PROTECT, verbose_name='carrera')

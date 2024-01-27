@@ -35,6 +35,7 @@ class Ingreso(BaseRegistro):
         EQUIVALENCIA = 'EQ', 'Equivalencia'
         TRASLADO = 'TR', 'Traslado'
         CONVALIDACION = 'CO', 'Convalidación'
+        REINGRESO = 'RE', 'Reingreso'
 
     tipo = models.CharField(max_length=2, choices=TiposIngresos.choices, default=TiposIngresos.EXAMEN, null=False, blank=False)
 
