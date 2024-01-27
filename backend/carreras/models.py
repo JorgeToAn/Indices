@@ -12,7 +12,7 @@ class Carrera(models.Model):
                 params={'value': value},
             )
 
-    clave = models.CharField(max_length=50, unique=True, null=False, blank=False)
+    clave = models.CharField(max_length=50, primary_key=True, blank=False)
     nombre = models.CharField(max_length=150, null=False, blank=False, validators=[validate_nombre])
 
     def __str__(self):
