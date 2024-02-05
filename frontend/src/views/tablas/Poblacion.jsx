@@ -9,6 +9,7 @@ import { useState } from "react";
 import { generatePDF } from "../../utils/helpers/pdfHelpers";
 import { Printer } from "tabler-icons-react";
 import { generateExcel } from "../../utils/helpers/excelHelpers";
+import { buildTable, getTablasPoblacion } from "../../utils/helpers/tablasHelpers";
 
 const TablaPoblacion = () => {
     const [heading, setHeading] = useState([]);
@@ -32,9 +33,19 @@ const TablaPoblacion = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
-    const handleTable = () => {
+    const handleTable = async() => {
+        const tabla =  await getTable();
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
+        console.log(tabla);
+    };
+
+    const getTable = async() => {
+        const cohort = cohorte.replace('-','');
+        const tabla = await getTablasPoblacion(examenYConv, trasladoYEquiv, cohort, numSemestres);
+        const table = buildTable(tabla);
+        console.log(table);
+        return tabla;
     };
 
     const handlePrint = async() => {

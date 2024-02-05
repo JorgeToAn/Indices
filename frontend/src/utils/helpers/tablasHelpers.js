@@ -9,6 +9,33 @@ import API from "../api";
 
 export const getTablasPoblacion = async(nuevoIngreso, trasladoEquiv, cohorte, numSemestres) => {
 
-    const response =  await API.get('/poblacion',{'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte, 'semestres': numSemestres});
+    const response =  await API.get('tablas/poblacion', {
+        params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte, 'semestres': numSemestres.toString()}
+    });
     return response.data;
+};
+
+const baseTable = [
+    ['Contador Público', 'CP', ],
+    ['Ingeniería Electrica', 'ELE',],
+    ['Ingeniería Electronica', 'ELN', ],
+    ['Ingeniería Mecatronica', 'MKT',],
+    ['Ingeniería Industrial', 'IND',],
+    ['Ingeniería Mecanica', 'MEC',],
+    ['Ingeniería en Energias Renovables','ENR', ],
+    ['Ingeniería en Gestion Empresarial','GEM', ],
+    ['Ingeniería en Sistemas Computacionales','SYC',],
+    ['Ingeniería Quimica','QUI'],
+    ['Ingeniería en Logistica','LOG',]
+];
+
+export const buildTable = (data) => {
+    const datos = Object.values(data);
+    const table = [...baseTable];
+    table.forEach((row, index) => {
+        datos.forEach((column) => {
+            row.push(column[index]);
+        });
+    });
+    return table;
 };
