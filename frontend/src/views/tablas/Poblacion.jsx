@@ -13,6 +13,7 @@ import { buildTable, getTablasPoblacion } from "../../utils/helpers/tablasHelper
 
 const TablaPoblacion = () => {
     const [heading, setHeading] = useState([]);
+    const [data, setData] = useState([]);
     const tabla = [
         ['Contador Público', 'CP', '14','16','25','30','27'],
         ['Ingeniería Electrica', 'ELE', '14','16','25','30','27'],
@@ -37,15 +38,15 @@ const TablaPoblacion = () => {
         const tabla =  await getTable();
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
-        console.log(tabla);
+        setData(tabla);
     };
 
     const getTable = async() => {
         const cohort = cohorte.replace('-','');
         const tabla = await getTablasPoblacion(examenYConv, trasladoYEquiv, cohort, numSemestres);
         const table = buildTable(tabla);
-        console.log(table);
-        return tabla;
+        // console.log(table);
+        return table;
     };
 
     const handlePrint = async() => {
@@ -83,7 +84,7 @@ const TablaPoblacion = () => {
                         <Button  disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)} onClick={handleTable} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
-                <Tabla headers={heading} content={tabla} colors="tabla-toronja" />
+                <Tabla headers={heading} content={data} colors="tabla-toronja" />
             </Flex>
         </div>
     );

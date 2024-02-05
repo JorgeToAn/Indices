@@ -31,7 +31,8 @@ const baseTable = [
 
 export const buildTable = (data) => {
     const datos = Object.values(data);
-    const table = [...baseTable];
+    const table = JSON.parse(JSON.stringify(baseTable));
+    console.log(table);
     table.forEach((row, index) => {
         datos.forEach((column) => {
             row.push(column[index]);
