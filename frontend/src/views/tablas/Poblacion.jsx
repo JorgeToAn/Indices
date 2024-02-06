@@ -39,12 +39,13 @@ const TablaPoblacion = () => {
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
         setData(tabla);
+        console.log(data);
     };
 
     const getTable = async() => {
         const cohort = cohorte.replace('-','');
         const tabla = await getTablasPoblacion(examenYConv, trasladoYEquiv, cohort, numSemestres);
-        const table = buildTable(tabla);
+        const table = await buildTable(tabla);
         // console.log(table);
         return table;
     };
@@ -84,7 +85,7 @@ const TablaPoblacion = () => {
                         <Button  disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)} onClick={handleTable} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
-                <Tabla headers={heading} content={data} colors="tabla-toronja" />
+                <Tabla headers={heading} content={tabla} colors="tabla-toronja" />
             </Flex>
         </div>
     );

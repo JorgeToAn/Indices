@@ -1,4 +1,5 @@
 import API from "../api";
+import { getCarreras } from "./carreraHelpers";
 
 /*
 * @param {Boolean} nuevoIngreso - "true" si se incluyen alumnos que entraron por examen o convalidacion.
@@ -15,28 +16,33 @@ export const getTablasPoblacion = async(nuevoIngreso, trasladoEquiv, cohorte, nu
     return response.data;
 };
 
-const baseTable = [
-    ['Contador Público', 'CP', ],
-    ['Ingeniería Electrica', 'ELE',],
-    ['Ingeniería Electronica', 'ELN', ],
-    ['Ingeniería Mecatronica', 'MKT',],
-    ['Ingeniería Industrial', 'IND',],
-    ['Ingeniería Mecanica', 'MEC',],
-    ['Ingeniería en Energias Renovables','ENR', ],
-    ['Ingeniería en Gestion Empresarial','GEM', ],
-    ['Ingeniería en Sistemas Computacionales','SYC',],
-    ['Ingeniería Quimica','QUI'],
-    ['Ingeniería en Logistica','LOG',]
-];
+const getAllCarreras = async() => {
+    const listaCarreras = await getCarreras();
+    let listaC = Object.entries(listaCarreras);
+    listaC = listaC.map((carrera) => Object.entries(carrera[1]));
+    // listaC = listaC.map((carrera) => carrera.filter((dato, index)=> index > 0));
+    listaC = listaC.map((carrera) => carrera.map((c) => c.filter((dato, index) => index > 0)));
+    listaC.sort();
+    return listaC;
+};
 
-export const buildTable = (data) => {
+export const buildTable = async(data) => {
     const datos = Object.values(data);
-    const table = JSON.parse(JSON.stringify(baseTable));
-    console.log(table);
-    table.forEach((row, index) => {
-        datos.forEach((column) => {
-            row.push(column[index]);
-        });
-    });
+    let datosIncompletos = datos.map((cohorte) => Object.entries(cohorte));
+    datosIncompletos = datosIncompletos.map((periodo)=> periodo.map((carrera) => carrera.filter((dato, index)=> index > 0)));
+    datosIncompletos = datosIncompletos.map((periodo)=> periodo.map((carrera) => carrera.filter((dato, index)=> dato['poblacion'])));
+    // datosIncompletos = datosIncompletos.map(((cohorte)=> (carrera) => Object.entries(carrera[1])));
+    console.log(datosIncompletos);
+    // listaC = listaC.map((carrera) => carrera.filter((dato, index)=> index > 0));
+    // const datos = Object.values(data);
+    // const table = await JSON.parse(JSON.stringify(getAllCarreras()));
+    const table = await getAllCarreras();
+    // console.log(table);
+
+    // table.forEach((row, index) => {
+    //     datos.forEach((column) => {
+    //         row.push(column[index]);
+    //     });
+    // });
     return table;
 };
