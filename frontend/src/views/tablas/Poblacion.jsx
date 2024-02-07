@@ -43,10 +43,8 @@ const TablaPoblacion = () => {
     };
 
     const getTable = async() => {
-        const cohort = cohorte.replace('-','');
-        const tabla = await getTablasPoblacion(examenYConv, trasladoYEquiv, cohort, numSemestres);
+        const tabla = await getTablasPoblacion(examenYConv, trasladoYEquiv, cohorte, numSemestres);
         const table = await buildTable(tabla);
-        // console.log(table);
         return table;
     };
 

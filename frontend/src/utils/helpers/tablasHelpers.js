@@ -11,35 +11,44 @@ import { getCarreras } from "./carreraHelpers";
 export const getTablasPoblacion = async(nuevoIngreso, trasladoEquiv, cohorte, numSemestres) => {
 
     const response =  await API.get('tablas/poblacion', {
-        params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte, 'semestres': numSemestres.toString()}
+        params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': numSemestres.toString()}
     });
     return response.data;
 };
 
+/*
+* Regresa una lista de las carreras y sus claves
+ */
 const getAllCarreras = async() => {
     const listaCarreras = await getCarreras();
     let listaC = Object.entries(listaCarreras);
     listaC = listaC.map((carrera) => Object.entries(carrera[1]));
-    // listaC = listaC.map((carrera) => carrera.filter((dato, index)=> index > 0));
     listaC = listaC.map((carrera) => carrera.map((c) => c.filter((dato, index) => index > 0)));
     listaC.sort();
     return listaC;
 };
 
+/*
+* Regresa un arreglo de datos con el campo solicitado a partir de un arreglo de objets.
+ */
+const getDatoFromObjectArray = (array, dato) => {
+    let datosPoblacionInc = array.map((cohorte) => Object.entries(cohorte));
+    datosPoblacionInc = datosPoblacionInc.map((periodo)=> periodo.map((carrera) => carrera.filter((dato, index)=> index > 0)));
+    datosPoblacionInc = datosPoblacionInc.map((periodo)=> periodo.map((carrera) => carrera.map((campo, index)=> campo[dato])));
+    return datosPoblacionInc;
+};
+
+/*
+* Regresa la tabla de poblacion juntando los datos de las carreras y los datos poblacionales.
+*/
 export const buildTable = async(data) => {
     const datos = Object.values(data);
-    let datosIncompletos = datos.map((cohorte) => Object.entries(cohorte));
-    datosIncompletos = datosIncompletos.map((periodo)=> periodo.map((carrera) => carrera.filter((dato, index)=> index > 0)));
-    datosIncompletos = datosIncompletos.map((periodo)=> periodo.map((carrera) => carrera.map((dato, index)=> dato['poblacion'])));
-    const datosCompletos = datosIncompletos;
-
+    const datosPoblacion = getDatoFromObjectArray(datos,'poblacion');
     const table = await getAllCarreras();
-
     table.forEach((row, index) => {
-        datosCompletos.forEach((column) => {
+        datosPoblacion.forEach((column) => {
             row.push(column[index]);
         });
     });
-    console.log(table);
     return table;
 };
