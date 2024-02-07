@@ -85,7 +85,7 @@ const TablaPoblacion = () => {
                         <Button  disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)} onClick={handleTable} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
-                <Tabla headers={heading} content={tabla} colors="tabla-toronja" />
+                <Tabla headers={heading} content={data} colors="tabla-toronja" />
             </Flex>
         </div>
     );

@@ -30,19 +30,16 @@ export const buildTable = async(data) => {
     const datos = Object.values(data);
     let datosIncompletos = datos.map((cohorte) => Object.entries(cohorte));
     datosIncompletos = datosIncompletos.map((periodo)=> periodo.map((carrera) => carrera.filter((dato, index)=> index > 0)));
-    datosIncompletos = datosIncompletos.map((periodo)=> periodo.map((carrera) => carrera.filter((dato, index)=> dato['poblacion'])));
-    // datosIncompletos = datosIncompletos.map(((cohorte)=> (carrera) => Object.entries(carrera[1])));
-    console.log(datosIncompletos);
-    // listaC = listaC.map((carrera) => carrera.filter((dato, index)=> index > 0));
-    // const datos = Object.values(data);
-    // const table = await JSON.parse(JSON.stringify(getAllCarreras()));
-    const table = await getAllCarreras();
-    // console.log(table);
+    datosIncompletos = datosIncompletos.map((periodo)=> periodo.map((carrera) => carrera.map((dato, index)=> dato['poblacion'])));
+    const datosCompletos = datosIncompletos;
 
-    // table.forEach((row, index) => {
-    //     datos.forEach((column) => {
-    //         row.push(column[index]);
-    //     });
-    // });
+    const table = await getAllCarreras();
+
+    table.forEach((row, index) => {
+        datosCompletos.forEach((column) => {
+            row.push(column[index]);
+        });
+    });
+    console.log(table);
     return table;
 };
