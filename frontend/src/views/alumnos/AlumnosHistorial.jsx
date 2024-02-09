@@ -4,9 +4,13 @@ import { DeviceFloppy, Edit, FileExport, Search } from "tabler-icons-react";
 import dropDownData from "../../mockup/dropDownData";
 import Tabla from "../../components/Tabla";
 import { useEffect, useState } from "react";
+import { useInputState } from "@mantine/hooks";
+import { getAlumnoInfo } from "../../utils/helpers/alumnoHelpers";
 
 const AlumnosHistorial = () => {
     const [editar, setEditar] = useState('');
+    const [buscar, setBuscar] = useInputState('');
+    const [alumno, setAlumno] = useState({});
     const headers = [
         'Semestre', 'Periodo', 'Estatus'
     ];
@@ -17,8 +21,19 @@ const AlumnosHistorial = () => {
     const handleEdit = () => {
         editar ? setEditar(false) : setEditar(true);
     };
+
+    const handleSearch = async(event) => {
+        if(event.key === 'Enter') {
+            console.log(buscar);
+            const alumnoData = await getAlumnoInfo(buscar);
+            setAlumno(alumnoData);
+        }
+    };
     useEffect(() => {
         handleEdit();
+        alumno['nombre'] = '';
+        alumno['control'] = '';
+        alumno['genero'] = '';
     },[]);
     return(
         <div style={{
@@ -29,11 +44,11 @@ const AlumnosHistorial = () => {
             <Group align="flex-start" spacing="3vw">
                 <Flex direction="column">
                     <form>
-                        <TextInput label="Buscar"  icon={<Search width={20} />} />
-                        <TextInput label="Nombre" disabled={!editar} withAsterisk/>
-                        <TextInput label="No. de control" disabled={!editar} withAsterisk/>
+                        <TextInput label="Buscar" value={buscar} onChange={setBuscar} onKeyUp={handleSearch}  icon={<Search width={20} />} />
+                        <TextInput label="Nombre" value={`${alumno.nombre} ${alumno.paterno} ${alumno.materno}`} disabled={!editar} withAsterisk/>
+                        <TextInput label="No. de control" value={alumno.control} disabled={!editar} withAsterisk/>
                         <Group className="input-group">
-                            <TextInput label="Sexo" disabled={!editar} withAsterisk width="45%"/>
+                            <TextInput label="Sexo" value={alumno.genero} disabled={!editar} withAsterisk width="45%"/>
                             <TextInput label="Edad" disabled={!editar} withAsterisk width="45%"/>
                         </Group>
                         <Group className="input-group">
