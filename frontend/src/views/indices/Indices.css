@@ -12,7 +12,7 @@
 .filtros > legend {
     color: black;
     font-weight: bold;
-    background-color: white;
+    /* background-color: white; */
     padding: 5px;
 }
 
