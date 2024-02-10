@@ -1,3 +1,4 @@
+from django.utils.timezone import now
 import math
 
 # Calcula el periodo correspondiente a un cohorte tras una cantidad de semestres
@@ -29,3 +30,11 @@ def calcularPeriodos(cohorte: str, semestres: int):
         periodo = calcularPeriodo(cohorte, i+1)
         periodos.append(periodo)
     return periodos
+
+# Devuelve el periodo correspondiente a la fecha actual
+# Ene-Jul ----> XXXX1
+# Ago-Dic ----> XXXX3
+def getPeriodoActual():
+    date = now().today()
+    semestre = 1 if date.month < 6 else 3
+    return f"{date.year}{semestre}"
