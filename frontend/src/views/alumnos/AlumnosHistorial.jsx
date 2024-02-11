@@ -6,17 +6,20 @@ import Tabla from "../../components/Tabla";
 import { useEffect, useState } from "react";
 import { useInputState } from "@mantine/hooks";
 import { getAlumnoInfo } from "../../utils/helpers/alumnoHelpers";
+import { ordenarRegistros } from "../../utils/helpers/historialHelpers";
 
 const AlumnosHistorial = () => {
-    const [editar, setEditar] = useState('');
+    const [editar, setEditar] = useState(false);
     const [buscar, setBuscar] = useInputState('');
     const [alumno, setAlumno] = useState({});
+    const [lenguaInd, setLenguaInd] = useState(false);
+    const [registros, setRegistros] = useState([]);
     const headers = [
         'Semestre', 'Periodo', 'Estatus'
     ];
-    const content = [
-        ['Semestre 1', '2018-1', 'QUI']
-    ];
+    // const content = [
+    //     ['Semestre 1', '2018-1', 'QUI']
+    // ];
 
     const handleEdit = () => {
         editar ? setEditar(false) : setEditar(true);
@@ -24,16 +27,32 @@ const AlumnosHistorial = () => {
 
     const handleSearch = async(event) => {
         if(event.key === 'Enter') {
-            console.log(buscar);
             const alumnoData = await getAlumnoInfo(buscar);
-            setAlumno(alumnoData);
+            const alumnoInfo = {...alumnoData['curp']};
+            alumnoInfo['edad'] = alumnoData['edad'];
+            alumnoInfo['control'] = alumnoData['no_control'];
+            alumnoInfo['estatus'] = alumnoData['estatus'];
+            alumnoInfo['semestres'] = alumnoData['registros']['ingresos'].length.toString();
+            alumnoInfo['carrera'] = alumnoData['plan']['carrera'];
+            setLenguaInd(alumnoInfo['habla_lengua_indigena']);
+            console.log(alumnoData);
+            setAlumno(alumnoInfo);
+            setEditar(false);
+            const reg = await ordenarRegistros(alumnoData['registros']['ingresos'], alumnoInfo['carrera']);
+            setRegistros(reg);
         }
     };
     useEffect(() => {
-        handleEdit();
-        alumno['nombre'] = '';
-        alumno['control'] = '';
-        alumno['genero'] = '';
+        // handleEdit();
+        const alumnoInicial = {
+            'nombre': '',
+            'control': '',
+            'genero': '',
+            'semestres': '1',
+            'carrera': '',
+        };
+        setAlumno(alumnoInicial);
+        setRegistros([]);
     },[]);
     return(
         <div style={{
@@ -49,7 +68,7 @@ const AlumnosHistorial = () => {
                         <TextInput label="No. de control" value={alumno.control} disabled={!editar} withAsterisk/>
                         <Group className="input-group">
                             <TextInput label="Sexo" value={alumno.genero} disabled={!editar} withAsterisk width="45%"/>
-                            <TextInput label="Edad" disabled={!editar} withAsterisk width="45%"/>
+                            <TextInput label="Edad" value={alumno.edad} disabled={!editar} withAsterisk width="45%"/>
                         </Group>
                         <Group className="input-group">
                             <Select
@@ -63,6 +82,7 @@ const AlumnosHistorial = () => {
                                     {value: 'Egresado', label: 'Egresado'},
                                     {value: 'Titulado', label: 'Titulado'},
                                 ]}
+                                value={alumno.estatus}
                                 withAsterisk
                             />
                             <Select
@@ -71,10 +91,12 @@ const AlumnosHistorial = () => {
                                 disabled={!editar}
                                 placeholder="Seleccione un semestre"
                                 data={dropDownData.semestres.map((fila) => ({"value":fila[0], "label":fila[1]}))}
+                                value={alumno.semestres}
                                 withAsterisk
                             />
                         </Group>
                         <Checkbox labelPosition='left' color='toronja' disabled={!editar} mt={15} label='Liberacion de inglés (2018-1)' radius='sm' />
+                        <Checkbox labelPosition='left' onChange={setLenguaInd} checked={lenguaInd} color='toronja' disabled={!editar} mt={15} label='Habla lengua indígena' radius='sm' />
                         { editar ?
                             <Group className="input-group">
                                 <Button type="button" mt={16} leftIcon={<DeviceFloppy />} >Guardar</Button>
@@ -90,7 +112,7 @@ const AlumnosHistorial = () => {
                     </form>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >
-                    <Tabla headers={headers} content={content} colors="tabla-toronja" />
+                    <Tabla headers={headers} content={registros} colors="tabla-toronja" />
                 </Flex>
             </Group>
         </div>
