@@ -9,9 +9,11 @@ import { useState } from "react";
 import { generatePDF } from "../../utils/helpers/pdfHelpers";
 import { Printer } from "tabler-icons-react";
 import { generateExcel } from "../../utils/helpers/excelHelpers";
+import { buildTable, getTablasPoblacion } from "../../utils/helpers/tablasHelpers";
 
 const TablaPoblacion = () => {
     const [heading, setHeading] = useState([]);
+    const [data, setData] = useState([]);
     const tabla = [
         ['Contador Público', 'CP', '14','16','25','30','27'],
         ['Ingeniería Electrica', 'ELE', '14','16','25','30','27'],
@@ -32,9 +34,18 @@ const TablaPoblacion = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
-    const handleTable = () => {
+    const handleTable = async() => {
+        const tabla =  await getTable();
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
+        setData(tabla);
+        console.log(data);
+    };
+
+    const getTable = async() => {
+        const tabla = await getTablasPoblacion(examenYConv, trasladoYEquiv, cohorte, numSemestres);
+        const table = await buildTable(tabla);
+        return table;
     };
 
     const handlePrint = async() => {
@@ -72,7 +83,7 @@ const TablaPoblacion = () => {
                         <Button  disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)} onClick={handleTable} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
-                <Tabla headers={heading} content={tabla} colors="tabla-toronja" />
+                <Tabla headers={heading} content={data} colors="tabla-toronja" />
             </Flex>
         </div>
     );

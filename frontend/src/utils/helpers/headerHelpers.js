@@ -25,7 +25,7 @@ export function getTablasHeaders(cohorte, numSemestres) {
     const tabla = [];
     tabla.push('Carrera', '', cohorte);
     let periodo = cohorte.split("-");
-    for (let i = 0; i < numSemestres; i++) {
+    for (let i = 1; i < numSemestres; i++) {
         periodo = anioPeriodo(periodo);
         tabla.push(periodo[0]+"-"+periodo[1]);
     }
