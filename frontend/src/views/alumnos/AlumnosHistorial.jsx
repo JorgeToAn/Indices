@@ -13,13 +13,11 @@ const AlumnosHistorial = () => {
     const [buscar, setBuscar] = useInputState('');
     const [alumno, setAlumno] = useState({});
     const [lenguaInd, setLenguaInd] = useState(false);
+    const [liberacionIng, setLiberacionIng] = useState(false);
     const [registros, setRegistros] = useState([]);
     const headers = [
         'Semestre', 'Periodo', 'Estatus'
     ];
-    // const content = [
-    //     ['Semestre 1', '2018-1', 'QUI']
-    // ];
 
     const handleEdit = () => {
         editar ? setEditar(false) : setEditar(true);
@@ -34,8 +32,9 @@ const AlumnosHistorial = () => {
             alumnoInfo['estatus'] = alumnoData['estatus'];
             alumnoInfo['semestres'] = alumnoData['registros']['ingresos'].length.toString();
             alumnoInfo['carrera'] = alumnoData['plan']['carrera'];
-            setLenguaInd(alumnoInfo['habla_lengua_indigena']);
             console.log(alumnoData);
+            setLenguaInd(alumnoInfo['habla_lengua_indigena']);
+            setLiberacionIng(alumnoData['registros']['liberacion_ingles'].length > 0 ? true : false);
             setAlumno(alumnoInfo);
             setEditar(false);
             const reg = await ordenarRegistros(alumnoData['registros']['ingresos'], alumnoInfo['carrera']);
@@ -46,6 +45,8 @@ const AlumnosHistorial = () => {
         // handleEdit();
         const alumnoInicial = {
             'nombre': '',
+            'paterno': '',
+            'materno': '',
             'control': '',
             'genero': '',
             'semestres': '1',
@@ -95,7 +96,7 @@ const AlumnosHistorial = () => {
                                 withAsterisk
                             />
                         </Group>
-                        <Checkbox labelPosition='left' color='toronja' disabled={!editar} mt={15} label='Liberacion de inglés (2018-1)' radius='sm' />
+                        <Checkbox labelPosition='left' color='toronja' onChange={setLiberacionIng} checked={liberacionIng} disabled={!editar} mt={15} label='Liberacion de inglés' radius='sm' />
                         <Checkbox labelPosition='left' onChange={setLenguaInd} checked={lenguaInd} color='toronja' disabled={!editar} mt={15} label='Habla lengua indígena' radius='sm' />
                         { editar ?
                             <Group className="input-group">
