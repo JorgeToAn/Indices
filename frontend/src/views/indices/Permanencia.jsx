@@ -11,6 +11,7 @@ import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
 import { generateExcel } from '../../utils/helpers/excelHelpers';
+import { buildTablaIndices, getIndicesPermanencia } from '../../utils/helpers/indicesHelpers';
 
 const IndicePermanencia = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -24,13 +25,14 @@ const IndicePermanencia = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
-    const handleTable = () => {
-        const tabla = [];
+    const handleTable = async() => {
+        const tabla = await getIndicesPermanencia(examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
         const headers = getIndicesHeaders(1, cohorte, carrera);
         setHeading(headers);
-        setData(tabla);
+        const datos = buildTablaIndices(tabla, numSemestres);
+        console.log(datos);
+        setData(datos);
     };
-
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
