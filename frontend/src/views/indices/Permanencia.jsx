@@ -11,7 +11,7 @@ import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
 import { generateExcel } from '../../utils/helpers/excelHelpers';
-import { buildTablaIndices, getIndicesPermanencia } from '../../utils/helpers/indicesHelpers';
+import { buildTablaIndices, getIndicesData } from '../../utils/helpers/indicesHelpers';
 
 const IndicePermanencia = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -26,7 +26,7 @@ const IndicePermanencia = () => {
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
     const handleTable = async() => {
-        const tabla = await getIndicesPermanencia(examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
+        const tabla = await getIndicesData('permanencia', examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
         const headers = getIndicesHeaders(1, cohorte, carrera);
         setHeading(headers);
         const datos = buildTablaIndices(tabla, numSemestres);

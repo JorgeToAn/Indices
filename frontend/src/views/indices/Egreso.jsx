@@ -10,6 +10,7 @@ import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 import { Printer } from 'tabler-icons-react';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { generateExcel } from '../../utils/helpers/excelHelpers';
+import { buildTablaIndices, getIndicesData } from '../../utils/helpers/indicesHelpers';
 
 const IndiceEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -23,11 +24,13 @@ const IndiceEgreso = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
-    const handleTable = () => {
-        const tabla = [];
+    const handleTable = async() => {
         const headers = getIndicesHeaders(4, cohorte, carrera);
         setHeading(headers);
-        setData(tabla);
+        const tabla = await getIndicesData('egreso', examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
+        const datos = buildTablaIndices('egreso', tabla, numSemestres);
+        console.log(datos);
+        setData(datos);
     };
 
     const handlePrint = async() => {
