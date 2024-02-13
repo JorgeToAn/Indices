@@ -62,12 +62,12 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
         }
         firstRow.push('');
         secondRow.push("Total");
-        firstRow.push('Eficiencia de titulación');
+        firstRow.push(`Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
         secondRow.push('');
         thirdRow.push('');
         thirdRow.push('');
     } else {
-        firstRow.push('', '', '', '', 'Eficiencia de titulación');
+        firstRow.push('', '', '', '', `Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
         for(let n = 9; n < 13; n++){
             secondRow.push(periodo[0]+"-"+periodo[1]);
             periodo = anioPeriodo(periodo);
@@ -87,7 +87,7 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
             periodo = anioPeriodo(periodo);
             thirdRow.push(i);
         }
-        firstRow.push('Eficiencia de titulación');
+        firstRow.push(`Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
         secondRow.push("Total");
         secondRow.push("");
         thirdRow.push('');
