@@ -4,14 +4,20 @@ import { DeviceFloppy, Edit, FileExport, Search } from "tabler-icons-react";
 import dropDownData from "../../mockup/dropDownData";
 import Tabla from "../../components/Tabla";
 import { useEffect, useState } from "react";
-import { useInputState } from "@mantine/hooks";
-import { getAlumnoInfo } from "../../utils/helpers/alumnoHelpers";
+import { useDisclosure, useInputState } from "@mantine/hooks";
+import { getAlumnoInfo, updateAlumnoInfo } from "../../utils/helpers/alumnoHelpers";
 import { ordenarRegistros } from "../../utils/helpers/historialHelpers";
+import { DateInput } from "@mantine/dates";
+import ModalRespuesta from "../../components/ModalRespuesta";
 
 const AlumnosHistorial = () => {
+    const [opened, handlers] = useDisclosure(false);
+    const [response, setResponse] = useState(false);
     const [editar, setEditar] = useState(false);
     const [buscar, setBuscar] = useInputState('');
     const [alumno, setAlumno] = useState({});
+    const [sexo, setSexo] = useState('H');
+    const [fechaNac, setFechaNac] = useState('');
     const [lenguaInd, setLenguaInd] = useState(false);
     const [liberacionIng, setLiberacionIng] = useState(false);
     const [registros, setRegistros] = useState([]);
@@ -27,22 +33,47 @@ const AlumnosHistorial = () => {
         if(event.key === 'Enter') {
             const alumnoData = await getAlumnoInfo(buscar);
             const alumnoInfo = {...alumnoData['curp']};
-            alumnoInfo['edad'] = alumnoData['edad'];
-            alumnoInfo['control'] = alumnoData['no_control'];
+            const fechaNac = new Date(alumnoInfo['fecha_nacimiento']);
+            alumnoInfo['fecha_nac'] = fechaNac;
+            alumnoInfo['no_control'] = alumnoData['no_control'];
             alumnoInfo['estatus'] = alumnoData['estatus'];
             alumnoInfo['semestres'] = alumnoData['registros']['ingresos'].length.toString();
             alumnoInfo['carrera'] = alumnoData['plan']['carrera'];
-            console.log(alumnoData);
             setLenguaInd(alumnoInfo['habla_lengua_indigena']);
+            alumnoInfo['plan'] = alumnoData['plan']['clave'];
             setLiberacionIng(alumnoData['registros']['liberacion_ingles'].length > 0 ? true : false);
             setAlumno(alumnoInfo);
+            setFechaNac(alumnoInfo['fecha_nac']);
+            setSexo(alumnoData['curp']['genero']);
             setEditar(false);
             const reg = await ordenarRegistros(alumnoData['registros']['ingresos'], alumnoInfo['carrera']);
             setRegistros(reg);
         }
     };
+
+    const updateAlumno = async() => {
+        const alumnoForm = new FormData(document.getElementById('form-alumno'));
+        alumnoForm.append('curp', alumno['curp']);
+        alumnoForm.append('plan', alumno['plan']);
+        const fechaN = new Date(alumnoForm.get('fecha_nacimiento'));
+        const fechaNacFormatted = `${fechaN.getFullYear()}-${fechaN.getMonth()+1}-${fechaN.getDate()}`;
+        alumnoForm.delete('fecha_nacimiento');
+        alumnoForm.delete('habla_lengua_indigena');
+        alumnoForm.append('fecha_nacimiento', fechaNacFormatted);
+        alumnoForm.append('habla_lengua_indigena', lenguaInd);
+        const res = await updateAlumnoInfo(alumnoForm, alumno['curp']);
+        setResponse(res);
+        handlers.open();
+    };
+
+    const handleInputChange = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        const copyAlumno = {...alumno};
+        copyAlumno[name] = value;
+        setAlumno(copyAlumno);
+    };
     useEffect(() => {
-        // handleEdit();
         const alumnoInicial = {
             'nombre': '',
             'paterno': '',
@@ -63,18 +94,21 @@ const AlumnosHistorial = () => {
             <Header color="toronja" section="Alumnos" title="Historial" route="/alumnos" />
             <Group align="flex-start" spacing="3vw">
                 <Flex direction="column">
-                    <form>
+                    <form id="form-alumno">
                         <TextInput label="Buscar" value={buscar} onChange={setBuscar} onKeyUp={handleSearch}  icon={<Search width={20} />} />
-                        <TextInput label="Nombre" value={`${alumno.nombre} ${alumno.paterno} ${alumno.materno}`} disabled={!editar} withAsterisk/>
-                        <TextInput label="No. de control" value={alumno.control} disabled={!editar} withAsterisk/>
+                        <TextInput label="Nombre" value={alumno.nombre} name="nombre" onChange={handleInputChange} disabled={!editar} withAsterisk/>
+                        <TextInput label="Apellido paterno" name="paterno" onChange={handleInputChange} value={alumno.paterno} disabled={!editar} withAsterisk/>
+                        <TextInput label="Apellido materno" name="materno" onChange={handleInputChange} value={alumno.materno} disabled={!editar} withAsterisk/>
+                        <TextInput label="No. de control" name="no_control" onChange={handleInputChange}  value={alumno['no_control']} disabled={!editar} withAsterisk/>
                         <Group className="input-group">
-                            <TextInput label="Sexo" value={alumno.genero} disabled={!editar} withAsterisk width="45%"/>
-                            <TextInput label="Edad" value={alumno.edad} disabled={!editar} withAsterisk width="45%"/>
+                            <Select width="45%" label="Sexo" name="genero" disabled={!editar} onChange={setSexo} placeholder="Seleccionar una opción" data={[{value:'H', label:'Hombre'},{value:'M',label:'Mujer'}]} withAsterisk value={sexo}/>
+                            <DateInput label="Fecha de nacimiento" name="fecha_nacimiento" onChange={setFechaNac} disabled={!editar} valueFormat="YYYY-MM-DD" value={fechaNac}  withAsterisk width="45%"/>
                         </Group>
                         <Group className="input-group">
                             <Select
                                 width="45%"
                                 label="Estatus"
+                                readOnly
                                 disabled={!editar}
                                 placeholder="Seleccionar un estatus"
                                 data={[
@@ -90,17 +124,18 @@ const AlumnosHistorial = () => {
                                 width="45%"
                                 label="Semestre"
                                 disabled={!editar}
+                                readOnly
                                 placeholder="Seleccione un semestre"
                                 data={dropDownData.semestres.map((fila) => ({"value":fila[0], "label":fila[1]}))}
                                 value={alumno.semestres}
                                 withAsterisk
                             />
                         </Group>
-                        <Checkbox labelPosition='left' color='toronja' onChange={setLiberacionIng} checked={liberacionIng} disabled={!editar} mt={15} label='Liberacion de inglés' radius='sm' />
-                        <Checkbox labelPosition='left' onChange={setLenguaInd} checked={lenguaInd} color='toronja' disabled={!editar} mt={15} label='Habla lengua indígena' radius='sm' />
+                        <Checkbox labelPosition='left' color='toronja' readOnly checked={liberacionIng} disabled={!editar} mt={15} label='Liberacion de inglés' radius='sm' />
+                        <Checkbox labelPosition='left' name="habla_lengua_indigena" onChange={(event) => setLenguaInd(event.currentTarget.checked)} checked={lenguaInd} color='toronja' disabled={!editar} mt={15} label='Habla lengua indígena' radius='sm' />
                         { editar ?
                             <Group className="input-group">
-                                <Button type="button" mt={16} leftIcon={<DeviceFloppy />} >Guardar</Button>
+                                <Button type="button" mt={16} leftIcon={<DeviceFloppy />} onClick={updateAlumno}>Guardar</Button>
                                 <Button type="button" mt={16} color="gris" onClick={handleEdit} >Cancelar</Button>
                                 <Button type="button" mt={16} color="naranja" leftIcon={<FileExport />} >Exportar</Button>
                             </Group>
@@ -116,6 +151,7 @@ const AlumnosHistorial = () => {
                     <Tabla headers={headers} content={registros} colors="tabla-toronja" />
                 </Flex>
             </Group>
+            <ModalRespuesta opened={opened} close={handlers.close} success={response}/>
         </div>
     );
 };
