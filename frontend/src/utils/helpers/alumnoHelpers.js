@@ -21,3 +21,16 @@ export const updateAlumnoInfo = async(alumno, curp) => {
     }
     return success;
 };
+
+export const getAllAlumnosHistorial = async() => {
+    let res = await API.get('/alumnos/historial');
+    let data = res.data;
+    const historial = [data['results']];
+    while(data['next'] !== null){
+        res = await API.get(data['next']);
+        data = res.data;
+        historial.push(data['results']);
+    }
+    console.log(historial);
+    return res.data;
+};

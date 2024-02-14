@@ -1,5 +1,5 @@
 import "../indices/Indices.css";
-import { Button, Flex, Group } from "@mantine/core";
+import { Button, Flex, Group, Pagination } from "@mantine/core";
 import Header from "../../components/header";
 import Dropdown from "../../components/Dropdown";
 import Tabla from "../../components/Tabla";
@@ -10,6 +10,7 @@ import { getListaAlumnosHeaders } from "../../utils/helpers/headerHelpers";
 import { generatePDF } from "../../utils/helpers/pdfHelpers";
 import { generateExcel } from "../../utils/helpers/excelHelpers";
 import { Printer } from "tabler-icons-react";
+import { getAllAlumnosHistorial } from "../../utils/helpers/alumnoHelpers";
 
 
 const AlumnosLista = () => {
@@ -22,11 +23,12 @@ const AlumnosLista = () => {
     const [numSemestres, setNumSemestre] = useInputState(0);
     const [exportar, setExportar] = useInputState('');
 
-    const handleTable = () => {
-        const tabla = [];
+    const handleTable = async() => {
+        const tabla = await getAllAlumnosHistorial();
+        console.log(tabla);
         const headers = getListaAlumnosHeaders(cohorte, numSemestres);
         setHeading(headers);
-        setData(tabla);
+        setData([]);
     };
     const reorderHeading = () => {
         const header = [...heading];
@@ -66,6 +68,7 @@ const AlumnosLista = () => {
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-naranja" doubleHeader headers={heading} content={data} />
+                <Pagination color="naranja" total={10}/>
             </Flex>
         </div>
     );
