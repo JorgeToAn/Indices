@@ -29,8 +29,7 @@ const IndicePermanencia = () => {
         const tabla = await getIndicesData('permanencia', examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
         const headers = getIndicesHeaders(1, cohorte, carrera);
         setHeading(headers);
-        const datos = buildTablaIndices(tabla, numSemestres);
-        console.log(datos);
+        const datos = buildTablaIndices('permanencia',tabla, numSemestres);
         setData(datos);
     };
     const handlePrint = async() => {
