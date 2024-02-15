@@ -1,10 +1,12 @@
+import { getNombreCarrera } from "./carreraHelpers";
 
 export function getIndicesHeaders(tipo, cohorte, carrera) {
     const tabla = [];
-    tabla.push(["Indices de rendimiento escolar cohorte generacional"+' '+cohorte+' '+carrera]);
+    const nombreCarrera = getNombreCarrera(carrera);
+    tabla.push(["Indices de rendimiento escolar cohorte generacional"+' '+cohorte+' '+nombreCarrera]);
     switch(tipo) {
         case 1:
-            tabla.push(['Semestre', 'Periodo', 'Inscritos', 'Egresados','Desercion', 'Matricula final','Tasa de retencion']);
+            tabla.push(['Semestre', 'Periodo', 'Inscritos', 'Egresados','Desercion','Tasa de retencion']);
             break;
         case 2:
             tabla.push(['Semestre', 'Periodo', 'Inscritos', 'Egresados','Desercion','Tasa de desercion escolar']);
