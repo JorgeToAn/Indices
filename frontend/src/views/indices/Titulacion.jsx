@@ -10,6 +10,7 @@ import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
 import { generateExcel } from '../../utils/helpers/excelHelpers';
+import { buildTablaIndices, getIndicesData } from '../../utils/helpers/indicesHelpers';
 
 const IndiceTitulacion = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -23,11 +24,12 @@ const IndiceTitulacion = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
-    const handleTable = () => {
-        const tabla = [];
+    const handleTable = async() => {
         const headers = getIndicesHeaders(3, cohorte, carrera);
         setHeading(headers);
-        setData(tabla);
+        const tabla = await getIndicesData('titulacion', examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
+        const datos = buildTablaIndices('titulacion', tabla, numSemestres);
+        setData(datos);
     };
 
     const handlePrint = async() => {

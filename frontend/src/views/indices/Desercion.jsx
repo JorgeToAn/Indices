@@ -9,6 +9,7 @@ import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 import { Printer } from 'tabler-icons-react';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { generateExcel } from '../../utils/helpers/excelHelpers';
+import { buildTablaIndices, getIndicesData } from '../../utils/helpers/indicesHelpers';
 
 const IndiceDesercion = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -22,11 +23,12 @@ const IndiceDesercion = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
-    const handleTable = () => {
-        const tabla = [];
+    const handleTable = async() => {
         const headers = getIndicesHeaders(2, cohorte, carrera);
         setHeading(headers);
-        setData(tabla);
+        const tabla = await getIndicesData('desercion', examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
+        const datos = buildTablaIndices('desercion', tabla, numSemestres);
+        setData(datos);
     };
 
     const handlePrint = async() => {
