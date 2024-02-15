@@ -23,49 +23,52 @@ export const updateAlumnoInfo = async(alumno, curp) => {
     return success;
 };
 
-export const getAllAlumnosHistorial = async(semestres, cohorte) => {
+export const getAllAlumnosHistorial = async(pagina, link='/alumnos/historial') => {
+    const res = await API.get(link);
+    const data = res.data;
+    return data;
+};
+
+export const getFullHistorial = async(cohorte, semestres) => {
     let res = await API.get('/alumnos/historial');
     let data = res.data;
-    const historial = [data['results']];
+    const historial = [buildListaAlumnos(data['results'], semestres, cohorte)];
     while(data['next'] !== null){
         res = await API.get(data['next']);
         data = res.data;
-        historial.push(data['results']);
+        const pagina = buildListaAlumnos(data['results'], semestres, cohorte);
+        historial.push(pagina);
     }
-    return buildListaAlumnos(historial, semestres, cohorte);
-    // buildListaAlumnos(historial, semestres, cohorte);
+    return historial;
 };
 
-const buildListaAlumnos = (lista, semestres, cohorte) => {
+export const buildListaAlumnos = (lista, semestres, cohorte) => {
     const tabla = [];
-    lista.forEach((pagina) => {
-        const page = [];
-        pagina.forEach((fila) => {
-            const row = [];
-            const nombre = `${fila['curp']['nombre']} ${fila['curp']['paterno']} ${fila['curp']['materno']}`;
-            row.push(nombre, fila['no_control'], fila['plan']['carrera'], fila['curp']['genero']);
-            let num = 0;
-            let periodo = cohorte.split("-");
-            while(num < semestres) {
-                fila['registros']['ingresos'].forEach((ingreso) => {
-                    if (ingreso['periodo'] === `${periodo[0]}${periodo[1]}`) {
-                        row.push(fila['plan']['carrera']);
-                    } else {
-                        row.push('BAJA');
-                        // if (fila['registros']['engresos']['periodo'] !== `${periodo[0]}${periodo[1]}`) {
-                        // } else {
-                        //     row.push('EGR');
-                        // }
-                    }
-                    num++;
-                    periodo = anioPeriodo(periodo);
-                });
-            }
-            page.push(row);
-            num = 0;
-            periodo = cohorte.split("-");
-        });
-        tabla.push(page);
+
+    lista.forEach((fila) => {
+        const row = [];
+        const nombre = `${fila['curp']['nombre']} ${fila['curp']['paterno']} ${fila['curp']['materno']}`;
+        row.push(nombre, fila['no_control'], fila['plan']['carrera'], fila['curp']['genero']);
+        let num = 0;
+        let periodo = cohorte.split("-");
+        while(num < semestres) {
+            fila['registros']['ingresos'].forEach((ingreso) => {
+                if (ingreso['periodo'] === `${periodo[0]}${periodo[1]}`) {
+                    row.push(fila['plan']['carrera']);
+                } else {
+                    row.push('BAJA');
+                    // if (fila['registros']['engresos']['periodo'] !== `${periodo[0]}${periodo[1]}`) {
+                    // } else {
+                    //     row.push('EGR');
+                    // }
+                }
+                num++;
+                periodo = anioPeriodo(periodo);
+            });
+        }
+        tabla.push(row);
+        num = 0;
+        periodo = cohorte.split("-");
     });
     return tabla;
 };
