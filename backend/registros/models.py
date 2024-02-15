@@ -28,6 +28,9 @@ class BaseRegistro(models.Model):
 
     class Meta:
         abstract = True
+        constraints = [
+            models.UniqueConstraint(fields=['alumno', 'periodo'], name='unique_%(class)s')
+        ]
 
 class Ingreso(BaseRegistro):
     class TiposIngresos(models.TextChoices):
@@ -39,8 +42,24 @@ class Ingreso(BaseRegistro):
 
     tipo = models.CharField(max_length=2, choices=TiposIngresos.choices, default=TiposIngresos.EXAMEN, null=False, blank=False)
 
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            exclusive_tipos = [
+                Ingreso.TiposIngresos.EXAMEN.value,
+                Ingreso.TiposIngresos.EQUIVALENCIA.value,
+                Ingreso.TiposIngresos.TRASLADO.value,
+                Ingreso.TiposIngresos.CONVALIDACION.value
+            ]
+            if self.tipo in exclusive_tipos and Ingreso.objects.filter(alumno=self.alumno, tipo__in=exclusive_tipos):
+                raise ValidationError('Solo puede existir un ingreso de EXAMEN, EQUIVALENCIA, TRASLADO o CONVALIDACION')
+        super(Ingreso, self).save(*args, **kwargs)
+
+
 class Egreso(BaseRegistro):
-    pass
+    def save(self, *args, **kwargs):
+        if not self.pk and Egreso.objects.filter(alumno=self.alumno).exists():
+            raise ValidationError('Solo puede existir un egreso por alumno')
+        super(Egreso, self).save(*args, **kwargs)
 
 class Titulacion(BaseRegistro):
     class TiposTitulaciones(models.TextChoices):
@@ -50,11 +69,23 @@ class Titulacion(BaseRegistro):
 
     tipo = models.CharField(max_length=2, choices=TiposTitulaciones.choices, default=TiposTitulaciones.RESIDENCIA, null=False, blank=False)
 
+    def save(self, *args, **kwargs):
+        if not self.pk and Titulacion.objects.filter(alumno=self.alumno).exists():
+            raise ValidationError('Solo puede existir una titulacion por alumno')
+        elif not Egreso.objects.filter(alumno=self.alumno).exists():
+            raise ValidationError('No se puede crear una titulacion sin un egreso existente')
+        super(Titulacion, self).save(*args, **kwargs)
+
     class Meta(BaseRegistro.Meta):
         verbose_name = 'titulación'
         verbose_name_plural = 'titulaciones'
 
 class LiberacionIngles(BaseRegistro):
+    def save(self, *args, **kwargs):
+        if not self.pk and LiberacionIngles.objects.filter(alumno=self.alumno).exists():
+            raise ValidationError('Solo puede existir una liberacion de ingles por alumno')
+        super(LiberacionIngles, self).save(*args, **kwargs)
+
     class Meta(BaseRegistro.Meta):
         verbose_name = 'liberación de inglés'
         verbose_name_plural = 'liberaciones de inglés'
