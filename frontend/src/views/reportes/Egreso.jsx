@@ -10,6 +10,7 @@ import { getReportesHeaders } from '../../utils/helpers/headerHelpers';
 import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
 import { generateExcel } from '../../utils/helpers/excelHelpers';
+import { getReportesEgresoTitulacion } from '../../utils/helpers/reportesHelpers';
 
 const ReportesEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -23,11 +24,12 @@ const ReportesEgreso = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
-    const handleTable = () => {
-        const tabla = [];
+    const handleTable = async() => {
+        const tabla = await getReportesEgresoTitulacion('egreso', examenYConv, trasladoYEquiv, cohorte, numSemestres);
+        console.log(tabla.data);
         const headers = getReportesHeaders(2, cohorte, numSemestres);
         setHeading(headers);
-        setData(tabla);
+        setData([]);
     };
 
     const handlePrint = async() => {

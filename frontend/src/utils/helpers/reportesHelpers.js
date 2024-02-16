@@ -8,6 +8,13 @@ export const getReportesNuevoIngreso = async(nuevoIngreso, trasladoEquiv, cohort
     return reporte;
 };
 
+export const getReportesEgresoTitulacion = async(tipo, nuevoIngreso, trasladoEquiv,cohorte,numSemestres) => {
+    const res =  await API.get(`/reportes/${tipo}`,  {
+        params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': numSemestres.toString()}
+    });
+    return res;
+};
+
 const buildTablaReportesNuevoIngreso = (data) => {
     const datos= Object.entries(data);
     const tabla = [];
