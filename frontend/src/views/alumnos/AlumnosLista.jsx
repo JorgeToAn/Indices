@@ -7,10 +7,11 @@ import dropDownData from '../../mockup/dropDownData';
 import { useInputState } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 import { getListaAlumnosHeaders } from "../../utils/helpers/headerHelpers";
-import { generatePDF } from "../../utils/helpers/pdfHelpers";
-import { generateExcel } from "../../utils/helpers/excelHelpers";
+
 import { Printer } from "tabler-icons-react";
-import { getAllAlumnosHistorial } from "../../utils/helpers/alumnoHelpers";
+import { getAllAlumnosHistorial } from "../../routes/api/controllers/alumnoController";
+import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
+import { generateExcel } from "../../utils/helpers/export/excelHelpers";
 
 
 const AlumnosLista = () => {
@@ -47,6 +48,7 @@ const AlumnosLista = () => {
         }
         setData(items);
     }, [page]);
+
     const handlePrint = async() => {
         if (exportar === 'PDF') {
             generatePDF('Lista de Alumnos', cohorte, numSemestres, carrera);

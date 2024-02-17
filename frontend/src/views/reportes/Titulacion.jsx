@@ -7,9 +7,9 @@ import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
 import { getReportesHeaders } from '../../utils/helpers/headerHelpers';
-import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
-import { generateExcel } from '../../utils/helpers/excelHelpers';
+import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
+import { generateExcel } from '../../utils/helpers/export/excelHelpers';
 
 const ReportesTitulacion = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente

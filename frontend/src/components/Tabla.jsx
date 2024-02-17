@@ -8,8 +8,10 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
     const [selectedRow, setSelectedRow] = useState([]);
     const getBlankSpaces = (index) => {
         for (let i = index+1; i < headers[0].length; i++) {
-            if(headers[0][i] !== '')
-                return (i-index+1) > 5 ? 5 : i === index+1 ? 1 : (i-index+1);
+            if(headers[0][i] !== ''){
+                headers[0][index-1] === "Eficiencia de egreso" ? console.log(index) : console.log('');
+                return (i-index) > 5 ? 5 : i === (index+1) ? 1 : (i-index);
+            }
         }
         return index > 0 ? headers[1].length-1 : headers[1].length;
     };

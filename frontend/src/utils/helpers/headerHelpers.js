@@ -89,6 +89,7 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
             periodo = anioPeriodo(periodo);
             thirdRow.push(i);
         }
+        firstRow.push('');
         firstRow.push(`Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
         secondRow.push("Total");
         secondRow.push("");

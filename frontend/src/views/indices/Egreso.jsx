@@ -8,9 +8,10 @@ import { useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 import { Printer } from 'tabler-icons-react';
-import { generatePDF } from '../../utils/helpers/pdfHelpers';
-import { generateExcel } from '../../utils/helpers/excelHelpers';
-import { buildTablaIndices, getIndicesData } from '../../utils/helpers/indicesHelpers';
+import { buildTablaIndices } from '../../utils/helpers/indicesHelpers';
+import { getIndicesData } from '../../routes/api/controllers/indicesHelpers';
+import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
+import { generateExcel } from '../../utils/helpers/export/excelHelpers';
 
 const IndiceEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -29,7 +30,6 @@ const IndiceEgreso = () => {
         setHeading(headers);
         const tabla = await getIndicesData('egreso', examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
         const datos = buildTablaIndices('egreso', tabla, numSemestres);
-        console.log(datos);
         setData(datos);
     };
 

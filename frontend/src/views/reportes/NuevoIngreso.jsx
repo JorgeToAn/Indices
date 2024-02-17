@@ -7,10 +7,10 @@ import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
 import { getNuevoIngresoHeaders } from '../../utils/helpers/headerHelpers';
-import { generatePDF } from '../../utils/helpers/pdfHelpers';
+import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
-import { generateExcel } from '../../utils/helpers/excelHelpers';
-import { getReportesNuevoIngreso } from '../../utils/helpers/reportesHelpers';
+import { generateExcel } from '../../utils/helpers/export/excelHelpers';
+import { getReportesNuevoIngreso } from '../../routes/api/controllers/reportesController';
 
 const ReportesNuevoIngreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
