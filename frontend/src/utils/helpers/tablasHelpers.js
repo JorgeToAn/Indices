@@ -1,12 +1,15 @@
 import { getCarreras } from "./carreraHelpers";
+
 /*
 * Regresa una lista de las carreras y sus claves
  */
 export const getAllCarreras = async() => {
     const listaCarreras = await getCarreras();
     let listaC = Object.entries(listaCarreras);
-    listaC = listaC.map((carrera) => Object.entries(carrera[1]));
-    listaC = listaC.map((carrera) => carrera.map((c) => c.filter((dato, index) => index > 0)));
+    listaC = Object.entries(listaC[3][1]);
+    listaC = listaC.map((carrera) => carrera.filter((c, index) => index > 0));
+    listaC = listaC.map((carrera) => Object.entries(carrera[0]));
+    listaC = listaC.map((carrera) => carrera.map((c)=> c.filter((d, index) => index > 0)));
     listaC.sort();
     return listaC;
 };
