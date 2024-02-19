@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import permissions
 
 from registros.models import Ingreso
-from registros.periodos import calcularPeriodos
+from registros.periodos import calcularPeriodos, getPeriodoActual
 
 class TablasPoblacion(APIView):
     """
@@ -20,10 +20,10 @@ class TablasPoblacion(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        nuevo_ingreso = request.GET.get('nuevo-ingreso')
-        traslado_equivalencia = request.GET.get('traslado-equivalencia')
-        cohorte = request.GET.get('cohorte') if request.GET.get('cohorte') else '20241'
-        semestres = request.GET.get('semestres') if request.GET.get('semestres') else '9'
+        nuevo_ingreso = request.query_params.get('nuevo-ingreso')
+        traslado_equivalencia = request.query_params.get('traslado-equivalencia')
+        cohorte = request.query_params.get('cohorte') if request.query_params.get('cohorte') else getPeriodoActual()
+        semestres = request.query_params.get('semestres') if request.query_params.get('semestres') else '9'
 
         tipos = []
         if nuevo_ingreso:
