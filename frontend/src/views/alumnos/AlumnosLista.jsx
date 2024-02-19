@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { getListaAlumnosHeaders } from "../../utils/helpers/headerHelpers";
 import { generatePDF } from "../../utils/helpers/pdfHelpers";
 import { generateExcel } from "../../utils/helpers/excelHelpers";
-import { Printer } from "tabler-icons-react";
+import { Checkbox, Printer } from "tabler-icons-react";
 import { getAllAlumnosHistorial } from "../../utils/helpers/alumnoHelpers";
 
 
@@ -24,9 +24,11 @@ const AlumnosLista = () => {
     const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
     const [exportar, setExportar] = useInputState('');
+    const [examenYConv, setExamenYConv] = useState(true);
+    const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
     const handleTable = async() => {
-        const tabla = await getAllAlumnosHistorial(numSemestres, cohorte);
+        const tabla = await getAllAlumnosHistorial(examenYConv, trasladoYEquiv, numSemestres, cohorte, carrera);
         console.log(tabla);
         const headers = getListaAlumnosHeaders(cohorte, numSemestres);
         setHeading(headers);
@@ -77,6 +79,10 @@ const AlumnosLista = () => {
                         <Button onClick={handleTable} disabled={!cohorte || !carrera || !numSemestres} color="negro">Filtrar</Button>
                     </Group>
                 </fieldset>
+                <Group mt={0} mb={16} >
+                        <Checkbox labelPosition='left' checked={examenYConv} color="naranja" onChange={(event) => setExamenYConv(event.currentTarget.checked)} label='Examen y Convalidación' radius='sm' />
+                        <Checkbox labelPosition='left' checked={trasladoYEquiv} color="naranja" onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
+                    </Group>
                 <Tabla colors="tabla-naranja" doubleHeader headers={heading} content={data} />
                 <Pagination color="naranja" mt={20} value={page} onChange={setPage} total={fullTable.length}/>
             </Flex>

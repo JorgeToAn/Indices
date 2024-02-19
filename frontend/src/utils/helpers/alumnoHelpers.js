@@ -23,8 +23,10 @@ export const updateAlumnoInfo = async(alumno, curp) => {
     return success;
 };
 
-export const getAllAlumnosHistorial = async(semestres, cohorte) => {
-    let res = await API.get('/alumnos/historial');
+export const getAllAlumnosHistorial = async(nuevoIngreso, trasladoEquiv, semestres, cohorte, carrera) => {
+    let res = await API.get('/alumnos/historial', {
+        params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': semestres.toString(), carrera:carrera}
+    });
     let data = res.data;
     const historial = [data['results']];
     while(data['next'] !== null){
