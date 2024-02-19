@@ -1,25 +1,30 @@
 import "../indices/Indices.css";
-import { Button, Flex, Group, Pagination } from "@mantine/core";
+import { Button, Flex, Group, Loader, Pagination } from "@mantine/core";
 import Header from "../../components/header";
 import Dropdown from "../../components/Dropdown";
 import Tabla from "../../components/Tabla";
 import dropDownData from '../../mockup/dropDownData';
 import { useInputState } from "@mantine/hooks";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getListaAlumnosHeaders } from "../../utils/helpers/headerHelpers";
 
 import { Printer } from "tabler-icons-react";
 import { getAllAlumnosHistorial } from "../../routes/api/controllers/alumnoController";
 import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
 import { generateExcel } from "../../utils/helpers/export/excelHelpers";
+import { buildListaAlumnos } from "../../utils/helpers/alumnoHelpers";
 
 
 const AlumnosLista = () => {
+    const mounted = useRef(false);
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
     const [heading, setHeading] = useState([[], []]);
     const [data, setData] = useState([]);
     const [page, setPage] = useState(1);
+    const [nextPage, setNextPage] = useState('');
     const [fullTable, setFullTable] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [tableCount, setTableCount] = useState(0);
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
     const [carrera, setCarrera] = useInputState('');
@@ -27,12 +32,22 @@ const AlumnosLista = () => {
     const [exportar, setExportar] = useInputState('');
 
     const handleTable = async() => {
-        const tabla = await getAllAlumnosHistorial(numSemestres, cohorte);
-        console.log(tabla);
+        setIsLoading(true);
+        const res = await getAllAlumnosHistorial(page, nextPage !== '' ? nextPage: '/alumnos/historial');
+        console.log(res);
+        setNextPage(res['next']);
         const headers = getListaAlumnosHeaders(cohorte, numSemestres);
+        setTableCount(res['count']);
         setHeading(headers);
-        setFullTable(tabla);
-        setData(tabla[page-1]);
+        const tabla = buildListaAlumnos(res['results'],numSemestres, cohorte);
+        setData(tabla);
+        setIsLoading(false);
+        getFullTable();
+    };
+
+    const getFullTable = async() => {
+        const res = await getFullHistorial(cohorte, numSemestres);
+        setFullTable(res);
     };
     const reorderHeading = () => {
         const header = [...heading];
@@ -42,9 +57,15 @@ const AlumnosLista = () => {
     };
 
     useEffect(() => {
-        let items = [];
-        if (fullTable.length !== 0){
-            items = fullTable[page-1];
+        if (mounted.current) {
+            if (fullTable.length < 1){
+                if (page > 1)
+                    handleTable();
+            } else {
+                setData(fullTable[page-1]);
+            }
+        } else {
+            mounted.current = true;
         }
         setData(items);
     }, [page]);
@@ -76,11 +97,12 @@ const AlumnosLista = () => {
                     </Group>
                     <Group style={{ justifyContent: "flex-end"}} >
                         <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
-                        <Button onClick={handleTable} disabled={!cohorte || !carrera || !numSemestres} color="negro">Filtrar</Button>
+                        <Button onClick={handleTable} disabled={!cohorte || !carrera || !numSemestres || isLoading} color="negro">{isLoading ? <Loader size="sm" color="#FFFFFF" /> : "Filtrar"}</Button>
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-naranja" doubleHeader headers={heading} content={data} />
-                <Pagination color="naranja" mt={20} value={page} onChange={setPage} total={fullTable.length}/>
+                <p>{tableCount > 0 ? `Mostrando ${page !== 1 ? ((page-1)*30)+1 : 1} - ${(page)*30} de ${tableCount}`: null}</p>
+                <Pagination color="naranja" mt={20} value={page} onChange={setPage} total={(tableCount/30)+1}/>
             </Flex>
         </div>
     );
