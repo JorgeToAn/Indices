@@ -1,46 +1,4 @@
-import API from './../api';
 import { anioPeriodo } from './headerHelpers';
-
-export const getAlumnoInfo = async(numControl) => {
-    const res = await API.get('/alumnos/historial/'+numControl);
-    const alumnoData = res.data;
-    return alumnoData;
-};
-
-export const updateAlumnoInfo = async(alumno, curp) => {
-    let success = true;
-    let res = await API.put(`/personal/${curp}/`,alumno)
-    .catch((error) => {
-        success = false;
-    });
-    if(success){
-        // eslint-disable-next-line no-unused-vars
-        res = await API.put(`/alumnos/${alumno.get('no_control')}/`, alumno)
-        .catch((error) => {
-            success = false;
-        });
-    }
-    return success;
-};
-
-export const getAllAlumnosHistorial = async(pagina, link='/alumnos/historial') => {
-    const res = await API.get(link);
-    const data = res.data;
-    return data;
-};
-
-export const getFullHistorial = async(cohorte, semestres) => {
-    let res = await API.get('/alumnos/historial');
-    let data = res.data;
-    const historial = [buildListaAlumnos(data['results'], semestres, cohorte)];
-    while(data['next'] !== null){
-        res = await API.get(data['next']);
-        data = res.data;
-        const pagina = buildListaAlumnos(data['results'], semestres, cohorte);
-        historial.push(pagina);
-    }
-    return historial;
-};
 
 export const buildListaAlumnos = (lista, semestres, cohorte) => {
     const tabla = [];

@@ -81,7 +81,7 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
         thirdRow.push('');
         for (let i = 13; i <= numSemestres; i++) {
             if (i === 13){
-                firstRow.push(`Año de ${tipo === 1 ? 'titulación' : 'egreso'}`);
+                firstRow.push(`Año  de ${tipo === 1 ? 'titulación' : 'egreso'}`);
             } else {
                 firstRow.push('');
             }
@@ -89,6 +89,7 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
             periodo = anioPeriodo(periodo);
             thirdRow.push(i);
         }
+        firstRow.push('');
         firstRow.push(`Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
         secondRow.push("Total");
         secondRow.push("");

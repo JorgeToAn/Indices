@@ -7,8 +7,9 @@ import { useInputState } from "@mantine/hooks";
 import { useState } from "react";
 import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
 import { Printer } from "tabler-icons-react";
-import { generatePDF } from "../../utils/helpers/pdfHelpers";
-import { generateExcel } from "../../utils/helpers/excelHelpers";
+import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
+import { generateExcel } from "../../utils/helpers/export/excelHelpers";
+
 
 const TablaCrecimiento = () => {
     const [heading, setHeading] = useState([]);

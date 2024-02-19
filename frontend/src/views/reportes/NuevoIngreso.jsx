@@ -1,4 +1,4 @@
-import { Button, Checkbox, Flex, Group } from '@mantine/core';
+import { Button, Checkbox, Flex, Group, Loader } from '@mantine/core';
 import Header from '../../components/header';
 import Tabla from '../../components/Tabla';
 import Dropdown from '../../components/Dropdown';
@@ -7,15 +7,16 @@ import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
 import { getNuevoIngresoHeaders } from '../../utils/helpers/headerHelpers';
-import { generatePDF } from '../../utils/helpers/pdfHelpers';
+import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
-import { generateExcel } from '../../utils/helpers/excelHelpers';
-// import { getReportesHeaders } from '../../utils/helpers/headerHelpers';
+import { generateExcel } from '../../utils/helpers/export/excelHelpers';
+import { getReportesNuevoIngreso } from '../../routes/api/controllers/reportesController';
 
 const ReportesNuevoIngreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
     const [data, setData] = useState([]);
     const [heading, setHeading] = useState([[], [], []]);
+    const [isLoading, setIsLoading] = useState(false);
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
     // const [carrera, setCarrera] = useInputState('');
@@ -24,13 +25,13 @@ const ReportesNuevoIngreso = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
-    const handleTable = () => {
-        const tabla = [];
+    const handleTable = async() => {
+        setIsLoading(true);
+        const tabla = await getReportesNuevoIngreso(examenYConv, trasladoYEquiv, cohorte, numSemestres);
         const header = getNuevoIngresoHeaders(cohorte, numSemestres);
         setHeading(header);
-        // const headers = getReportesHeaders(2, cohorte, numSemestres);
-        // setHeading(headers);
         setData(tabla);
+        setIsLoading(false);
     };
 
     const handlePrint = async() => {
@@ -64,7 +65,7 @@ const ReportesNuevoIngreso = () => {
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
                         <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
-                        <Button onClick={handleTable} disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)} color='negro'>Filtrar</Button>
+                        <Button onClick={handleTable} disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv) && !isLoading} color='negro'>{isLoading ? <Loader size='sm' color='#FFFFFF'/>  : "Filtrar"}</Button>
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-naranja" doubleHeader  headers={heading} content={data} />

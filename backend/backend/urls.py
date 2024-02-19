@@ -29,4 +29,5 @@ urlpatterns = [
     path('registros/', include('registros.urls')),
     path('tablas/', include('tablas.urls')),
     path('indices/', include('indices.urls')),
+    path('reportes/', include('reportes.urls')),
 ]

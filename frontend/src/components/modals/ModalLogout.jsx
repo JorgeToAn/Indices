@@ -1,7 +1,7 @@
 import { Button, Group, Modal } from "@mantine/core";
 import { Logout } from "tabler-icons-react";
 import { PropTypes } from 'prop-types';
-import { logout } from "../utils/auth";
+import { logout } from "../../utils/auth";
 import { useNavigate } from 'react-router-dom';
 
 
