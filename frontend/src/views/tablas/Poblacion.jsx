@@ -40,7 +40,6 @@ const TablaPoblacion = () => {
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
         setData(tabla);
-        console.log(data);
     };
 
     const getTable = async() => {

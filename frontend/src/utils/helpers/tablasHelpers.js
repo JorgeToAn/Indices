@@ -17,24 +17,32 @@ export const getAllCarreras = async() => {
 /*
 * Regresa un arreglo de datos con el campo solicitado a partir de un arreglo de objets.
  */
-const getDatoFromObjectArray = (array, dato) => {
-    let datosPoblacionInc = array.map((cohorte) => Object.entries(cohorte));
-    datosPoblacionInc = datosPoblacionInc.map((periodo)=> periodo.map((carrera) => carrera.filter((dato, index)=> index > 0)));
-    datosPoblacionInc = datosPoblacionInc.map((periodo)=> periodo.map((carrera) => carrera.map((campo, index)=> campo[dato])));
-    return datosPoblacionInc;
-};
+// const getDatoFromObjectArray = (array, dato) => {
+//     let datosPoblacionInc = array.map((cohorte) => Object.entries(cohorte));
+//     datosPoblacionInc = datosPoblacionInc.map((periodo)=> periodo.map((carrera) => carrera.filter((dato, index)=> index > 0)));
+//     datosPoblacionInc = datosPoblacionInc.map((periodo)=> periodo.map((carrera) => carrera.map((campo, index)=> campo[dato])));
+//     return datosPoblacionInc;
+// };
 
 /*
 * Regresa la tabla de poblacion juntando los datos de las carreras y los datos poblacionales.
 */
 export const buildTable = async(data) => {
     const datos = Object.values(data);
-    const datosPoblacion = getDatoFromObjectArray(datos,'poblacion');
-    const table = await getAllCarreras();
-    table.forEach((row, index) => {
-        datosPoblacion.forEach((column) => {
-            row.push(column[index]);
+    const carreras = await getCarreras();
+    const table = [];
+    carreras.forEach((row, index) => {
+        const fila = [row['nombre'],row['clave']];
+        datos.forEach((periodo) => {
+            periodo.forEach((carrera) => {
+                let poblacion = 0;
+                if (carrera['clave'] === row['clave']){
+                    poblacion = carrera['poblacion'];
+                    fila.push(poblacion);
+                }
+            });
         });
+        table.push(fila);
     });
     return table;
 };
