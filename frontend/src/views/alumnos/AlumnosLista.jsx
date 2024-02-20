@@ -8,8 +8,8 @@ import { useInputState } from "@mantine/hooks";
 import { useEffect, useRef, useState } from "react";
 import { getListaAlumnosHeaders } from "../../utils/helpers/headerHelpers";
 
-import { Printer } from "tabler-icons-react";
-import { getAllAlumnosHistorial } from "../../routes/api/controllers/alumnoController";
+import { Checkbox, Printer } from "tabler-icons-react";
+import { getAllAlumnosHistorial, getFullHistorial } from "../../routes/api/controllers/alumnoController";
 import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
 import { generateExcel } from "../../utils/helpers/export/excelHelpers";
 import { buildListaAlumnos } from "../../utils/helpers/alumnoHelpers";
@@ -30,10 +30,12 @@ const AlumnosLista = () => {
     const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
     const [exportar, setExportar] = useInputState('');
+    const [examenYConv, setExamenYConv] = useState(true);
+    const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
     const handleTable = async() => {
         setIsLoading(true);
-        const res = await getAllAlumnosHistorial(page, nextPage !== '' ? nextPage: '/alumnos/historial');
+        const res = await getAllAlumnosHistorial(examenYConv, trasladoYEquiv,cohorte, numSemestres, carrera, page, nextPage !== '' ? nextPage: '/alumnos/historial');
         console.log(res);
         setNextPage(res['next']);
         const headers = getListaAlumnosHeaders(cohorte, numSemestres);
@@ -46,7 +48,8 @@ const AlumnosLista = () => {
     };
 
     const getFullTable = async() => {
-        const res = await getFullHistorial(cohorte, numSemestres);
+        const res = await getFullHistorial(examenYConv, trasladoYEquiv,cohorte, numSemestres, carrera);
+        console.log(res);
         setFullTable(res);
     };
     const reorderHeading = () => {
@@ -67,7 +70,6 @@ const AlumnosLista = () => {
         } else {
             mounted.current = true;
         }
-        setData(items);
     }, [page]);
 
     const handlePrint = async() => {
@@ -100,6 +102,10 @@ const AlumnosLista = () => {
                         <Button onClick={handleTable} disabled={!cohorte || !carrera || !numSemestres || isLoading} color="negro">{isLoading ? <Loader size="sm" color="#FFFFFF" /> : "Filtrar"}</Button>
                     </Group>
                 </fieldset>
+                <Group mt={0} mb={16} >
+                    <Checkbox labelPosition='left' color='naranja'  checked={examenYConv} onChange={(event) => setExamenYConv(event.currentTarget.checked)} label='Examen y Convalidación' radius='sm' />
+                    <Checkbox labelPosition='left' color='naranja'  checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
+                </Group>
                 <Tabla colors="tabla-naranja" doubleHeader headers={heading} content={data} />
                 <p>{tableCount > 0 ? `Mostrando ${page !== 1 ? ((page-1)*30)+1 : 1} - ${(page)*30} de ${tableCount}`: null}</p>
                 <Pagination color="naranja" mt={20} value={page} onChange={setPage} total={(tableCount/30)+1}/>

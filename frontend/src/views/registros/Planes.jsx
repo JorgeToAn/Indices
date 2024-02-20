@@ -17,13 +17,10 @@ const RegistroPlanes = () => {
 
     const obtenerPlanes = async() => {
         const listaPlanes = await getPlanes();
-        let listaP = Object.entries(listaPlanes);
-        listaP = listaP.map((plan) => Object.entries(plan[1]));
-        listaP = listaP.map((plan) => plan.filter((dato, index)=> index > 0 ));
-        listaP = listaP.map((plan) => plan.map((p, index) => index > 2 ? Object.entries(p[1]): p));
-        listaP = listaP.map((plan) => plan.map((c) => c.filter((dato, index) => index > 0)));
-        listaP = listaP.map((plan) => plan.map((c, index) => index > 2 ? c.map((p) => p.filter((dato, i) => i > 0)) : c));
-        listaP = listaP.map((plan) => plan.map((c, index) => index > 2 ? c.filter((p, i) => i > 0) : c));
+        let listaP = listaPlanes;
+        listaP = listaP.map((plan) => Object.entries(plan));
+        listaP = listaP.map((plan) => plan.map((p) => p.filter((dato, index)=> index > 0 )));
+        listaP = listaP.map((plan) => plan.filter((dato, index)=> index < 3));
         setPlanes(listaP);
     };
 

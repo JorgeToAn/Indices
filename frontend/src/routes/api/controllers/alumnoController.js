@@ -1,5 +1,5 @@
 import API from '../../../utils/api';
-import { buildListaAlumnos } from '../../../utils/helpers/alumnoHelpers';
+import { buildListaAlumnos } from './../../../utils/helpers/alumnoHelpers';
 
 export const getAlumnoInfo = async(numControl) => {
     const res = await API.get('/alumnos/historial/'+numControl);
@@ -23,15 +23,27 @@ export const updateAlumnoInfo = async(alumno, curp) => {
     return success;
 };
 
-export const getAllAlumnosHistorial = async(semestres, cohorte) => {
-    let res = await API.get('/alumnos/historial');
+export const getAllAlumnosHistorial = async(nuevoIngreso, trasladoEquiv, cohorte, semestres, carrera, pagina, link='/alumnos/historial') => {
+    const res = await API.get(link, {
+        params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': semestres.toString(), 'carrera': carrera}
+    });
+    const data = res.data;
+    return data;
+};
+
+export const getFullHistorial = async(nuevoIngreso, trasladoEquiv, cohorte, semestres, carrera) => {
+    let res = await API.get('/alumnos/historial', {
+        params: {'nuevo-ingreso': nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': semestres.toString(), 'carrera': carrera}
+    });
     let data = res.data;
-    const historial = [data['results']];
+    console.log(data);
+    const historial = [buildListaAlumnos(data['results'], semestres, cohorte)];
     while(data['next'] !== null){
         res = await API.get(data['next']);
         data = res.data;
-        historial.push(data['results']);
+        const pagina = buildListaAlumnos(data['results'], semestres, cohorte);
+        historial.push(pagina);
     }
-    return buildListaAlumnos(historial, semestres, cohorte);
-    // buildListaAlumnos(historial, semestres, cohorte);
+    return historial;
 };
+
