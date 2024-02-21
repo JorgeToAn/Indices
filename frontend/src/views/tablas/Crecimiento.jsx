@@ -9,10 +9,12 @@ import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
 import { Printer } from "tabler-icons-react";
 import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
 import { generateExcel } from "../../utils/helpers/export/excelHelpers";
+import { getTablasCrecimiento } from "../../routes/api/controllers/tablasController";
 
 
 const TablaCrecimiento = () => {
     const [heading, setHeading] = useState([]);
+    const [data, setData] = useState([]);
     const tabla = [
         ['Contador Público', 'CP', '14','16','25','30','27'],
         ['Ingeniería Electrica', 'ELE', '14','16','25','30','27'],
@@ -27,8 +29,11 @@ const TablaCrecimiento = () => {
         ['Ingeniería en Logistica','LOG', '14','16','25','30','27']
     ];
 
-    const handleTable = () => {
+    const handleTable = async() => {
         const header = getTablasHeaders(cohorte, numSemestres);
+        const table = await getTablasCrecimiento(examenYConv, trasladoYEquiv, cohorte, numSemestres, carrera);
+        console.log(table);
+        setData([]);
         setHeading(header);
     };
     const handlePrint = async() => {
@@ -41,7 +46,7 @@ const TablaCrecimiento = () => {
     };
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
-    // const [carrera, setCarrera] = useInputState('');
+    const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
     const [exportar, setExportar] = useInputState('');
     const [examenYConv, setExamenYConv] = useState(true);
@@ -57,7 +62,7 @@ const TablaCrecimiento = () => {
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        {/* <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={dropDownData.carreras} /> */}
+                        <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={dropDownData.carreras} />
                         <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
                         <Dropdown  label="Cálculo de semestres" color="#FFAA5A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
                         <Dropdown  label="Exportar" color="#FFAA5A" handleChangeFn={setExportar} data={[
@@ -74,7 +79,7 @@ const TablaCrecimiento = () => {
                         <Button  disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)} onClick={handleTable} color='negro'>Filtrar</Button>
                     </Group>
                 </fieldset>
-                <Tabla headers={heading} content={tabla} colors="tabla-naranja" />
+                <Tabla headers={heading} content={data} colors="tabla-naranja" />
             </Flex>
         </div>
     );
