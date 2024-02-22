@@ -1,5 +1,5 @@
 import "../indices/Indices.css";
-import { Button, Flex, Group, Loader, Pagination } from "@mantine/core";
+import { Button, Checkbox, Flex, Group, Loader, Pagination } from "@mantine/core";
 import Header from "../../components/header";
 import Dropdown from "../../components/Dropdown";
 import Tabla from "../../components/Tabla";
@@ -8,7 +8,7 @@ import { useInputState } from "@mantine/hooks";
 import { useEffect, useRef, useState } from "react";
 import { getListaAlumnosHeaders } from "../../utils/helpers/headerHelpers";
 
-import { Checkbox, Printer } from "tabler-icons-react";
+import { Printer } from "tabler-icons-react";
 import { getAllAlumnosHistorial, getFullHistorial } from "../../routes/api/controllers/alumnoController";
 import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
 import { generateExcel } from "../../utils/helpers/export/excelHelpers";
@@ -89,15 +89,15 @@ const AlumnosLista = () => {
                             ['PDF','PDF'],
                         ]} />
                     </Group>
+                    <Group mt={0} mb={16} >
+                        <Checkbox labelPosition='left' color='naranja'  checked={examenYConv} onChange={(event) => setExamenYConv(event.currentTarget.checked)} label='Examen y Convalidación' radius='sm' />
+                        <Checkbox labelPosition='left' color='naranja'  checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
+                    </Group>
                     <Group style={{ justifyContent: "flex-end"}} >
                         <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
                         <Button onClick={handleTable} disabled={!cohorte || !carrera || !numSemestres || isLoading} color="negro">{isLoading ? <Loader size="sm" color="#FFFFFF" /> : "Filtrar"}</Button>
                     </Group>
                 </fieldset>
-                <Group mt={0} mb={16} >
-                    <Checkbox labelPosition='left' color='naranja'  checked={examenYConv} onChange={(event) => setExamenYConv(event.currentTarget.checked)} label='Examen y Convalidación' radius='sm' />
-                    <Checkbox labelPosition='left' color='naranja'  checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
-                </Group>
                 <Tabla colors="tabla-naranja" doubleHeader headers={heading} content={data} />
                 <p>{tableCount > 0 ? `Mostrando ${page !== 1 ? ((page-1)*30)+1 : 1} - ${(page)*30} de ${tableCount}`: null}</p>
                 <Pagination color="naranja" mt={20} value={page} onChange={setPage} total={(tableCount/30)+1}/>
