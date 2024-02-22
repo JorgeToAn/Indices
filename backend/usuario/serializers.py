@@ -60,3 +60,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         usuario.save()
 
         return usuario
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = '__all__'
