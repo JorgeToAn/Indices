@@ -36,7 +36,6 @@ const AlumnosLista = () => {
     const handleTable = async() => {
         setIsLoading(true);
         const res = await getAllAlumnosHistorial(examenYConv, trasladoYEquiv,cohorte, numSemestres, carrera, page, nextPage !== '' ? nextPage: '/alumnos/historial');
-        console.log(res);
         setNextPage(res['next']);
         const headers = getListaAlumnosHeaders(cohorte, numSemestres);
         setTableCount(res['count']);
@@ -49,14 +48,7 @@ const AlumnosLista = () => {
 
     const getFullTable = async() => {
         const res = await getFullHistorial(examenYConv, trasladoYEquiv,cohorte, numSemestres, carrera);
-        console.log(res);
         setFullTable(res);
-    };
-    const reorderHeading = () => {
-        const header = [...heading];
-        const firstRow = ['', ...header[0]];
-        header[0] = firstRow;
-        return header;
     };
 
     useEffect(() => {
@@ -76,7 +68,7 @@ const AlumnosLista = () => {
         if (exportar === 'PDF') {
             generatePDF('Lista de Alumnos', cohorte, numSemestres, carrera);
         } else if (exportar === 'Excel') {
-            await generateExcel(reorderHeading(), data, 'Lista de Alumnos', cohorte, numSemestres, 0, carrera);
+            await generateExcel(heading, data, 'Lista de Alumnos', cohorte, numSemestres, 0, carrera);
         }
     };
     return(
