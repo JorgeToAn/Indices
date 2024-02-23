@@ -1,13 +1,12 @@
-// import { useAuthStore } from "../store/auth";
 import dropDownData from "../../mockup/dropDownData";
 import API from "../api";
 
 
 export const getCarreras = async() =>{
     const carreras = await API.get('carreras/');
-    return carreras.data;
+    const sortedCarreras = carreras.data['results'].sort((first, second) => (first['clave']  < second['clave']) ? -1 : (first['clave']  > second['clave']) ? 1 : 0);
+    return sortedCarreras;
 };
-
 export const getNombreCarrera = (clave) => {
     const carreras = dropDownData.carreras;
     let nombreCarrera = "";
