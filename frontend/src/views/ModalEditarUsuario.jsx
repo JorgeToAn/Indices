@@ -32,7 +32,7 @@ function ModalEditarUsuario ({opened, close, info}) {
                         </Flex>
                         <Flex direction="column" className="datos" w="45%">
                             <Text fw="bold">Permisos</Text>
-                            <MultiSelect label="Tablas" data={['Consultar <i class="fa-solid fa-eye"></i>', 'Exportar']} styles={(theme)=>({
+                            <MultiSelect label="Tablas" data={['Consultar', 'Exportar']} styles={(theme)=>({
                                 wrapper: {
                                     pill: {
                                         backgroundColor: theme.white,

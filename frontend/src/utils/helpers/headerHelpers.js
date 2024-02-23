@@ -116,7 +116,7 @@ export function getNuevoIngresoHeaders(cohorte, numSemestres) {
 
 export function getListaAlumnosHeaders(cohorte, numSemestres) {
     const tabla = [];
-    tabla.push([' ', '', '']);
+    tabla.push([' ', '', '', '']);
     tabla.push(['Nombre', 'No. control', 'Carrera', 'Sexo']);
     let periodo = cohorte.split("-");
     for (let i = 1; i <= numSemestres; i++) {

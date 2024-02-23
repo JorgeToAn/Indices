@@ -1,5 +1,5 @@
 import "../indices/Indices.css";
-import { Button, Flex, Group, Loader, Pagination } from "@mantine/core";
+import { Button, Checkbox, Flex, Group, Loader, Pagination } from "@mantine/core";
 import Header from "../../components/header";
 import Dropdown from "../../components/Dropdown";
 import Tabla from "../../components/Tabla";
@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { getListaAlumnosHeaders } from "../../utils/helpers/headerHelpers";
 
 import { Printer } from "tabler-icons-react";
-import { getAllAlumnosHistorial } from "../../routes/api/controllers/alumnoController";
+import { getAllAlumnosHistorial, getFullHistorial } from "../../routes/api/controllers/alumnoController";
 import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
 import { generateExcel } from "../../utils/helpers/export/excelHelpers";
 import { buildListaAlumnos } from "../../utils/helpers/alumnoHelpers";
@@ -30,11 +30,12 @@ const AlumnosLista = () => {
     const [carrera, setCarrera] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
     const [exportar, setExportar] = useInputState('');
+    const [examenYConv, setExamenYConv] = useState(true);
+    const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
     const handleTable = async() => {
         setIsLoading(true);
-        const res = await getAllAlumnosHistorial(page, nextPage !== '' ? nextPage: '/alumnos/historial');
-        console.log(res);
+        const res = await getAllAlumnosHistorial(examenYConv, trasladoYEquiv,cohorte, numSemestres, carrera, page, nextPage !== '' ? nextPage: '/alumnos/historial');
         setNextPage(res['next']);
         const headers = getListaAlumnosHeaders(cohorte, numSemestres);
         setTableCount(res['count']);
@@ -46,14 +47,8 @@ const AlumnosLista = () => {
     };
 
     const getFullTable = async() => {
-        const res = await getFullHistorial(cohorte, numSemestres);
+        const res = await getFullHistorial(examenYConv, trasladoYEquiv,cohorte, numSemestres, carrera);
         setFullTable(res);
-    };
-    const reorderHeading = () => {
-        const header = [...heading];
-        const firstRow = ['', ...header[0]];
-        header[0] = firstRow;
-        return header;
     };
 
     useEffect(() => {
@@ -67,14 +62,13 @@ const AlumnosLista = () => {
         } else {
             mounted.current = true;
         }
-        setData(items);
     }, [page]);
 
     const handlePrint = async() => {
         if (exportar === 'PDF') {
             generatePDF('Lista de Alumnos', cohorte, numSemestres, carrera);
         } else if (exportar === 'Excel') {
-            await generateExcel(reorderHeading(), data, 'Lista de Alumnos', cohorte, numSemestres, 0, carrera);
+            await generateExcel(heading, data, 'Lista de Alumnos', cohorte, numSemestres, 0, carrera);
         }
     };
     return(
@@ -94,6 +88,10 @@ const AlumnosLista = () => {
                             ['Excel','Excel'],
                             ['PDF','PDF'],
                         ]} />
+                    </Group>
+                    <Group mt={0} mb={16} >
+                        <Checkbox labelPosition='left' color='naranja'  checked={examenYConv} onChange={(event) => setExamenYConv(event.currentTarget.checked)} label='Examen y Convalidación' radius='sm' />
+                        <Checkbox labelPosition='left' color='naranja'  checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end"}} >
                         <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
