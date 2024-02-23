@@ -46,3 +46,12 @@ export const buildTable = async(data) => {
     });
     return table;
 };
+
+export const buildTablaCrecimiento = (data) => {
+    const datos = Object.entries(data);
+    const tabla = [];
+    datos.forEach((fila) => {
+        tabla.push([`${fila[0].slice(0,4)}-${fila[0].slice(4,5)}`, fila[1]['poblacion']]);
+    });
+    return tabla;
+};

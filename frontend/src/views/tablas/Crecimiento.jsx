@@ -5,11 +5,12 @@ import Tabla from "../../components/Tabla";
 import dropDownData from "../../mockup/dropDownData";
 import { useInputState } from "@mantine/hooks";
 import { useState } from "react";
-import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
+import { getCrecimientoHeaders } from "../../utils/helpers/headerHelpers";
 import { Printer } from "tabler-icons-react";
 import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
 import { generateExcel } from "../../utils/helpers/export/excelHelpers";
 import { getTablasCrecimiento } from "../../routes/api/controllers/tablasController";
+import { buildTablaCrecimiento } from "../../utils/helpers/tablasHelpers";
 
 
 const TablaCrecimiento = () => {
@@ -30,10 +31,10 @@ const TablaCrecimiento = () => {
     ];
 
     const handleTable = async() => {
-        const header = getTablasHeaders(cohorte, numSemestres);
+        const header = getCrecimientoHeaders(cohorte, numSemestres);
         const table = await getTablasCrecimiento(examenYConv, trasladoYEquiv, cohorte, numSemestres, carrera);
-        console.log(table);
-        setData([]);
+        const tab = buildTablaCrecimiento(table);
+        setData(tab);
         setHeading(header);
     };
     const handlePrint = async() => {
