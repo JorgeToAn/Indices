@@ -40,7 +40,7 @@ const TablaCrecimiento = () => {
     const handlePrint = async() => {
         const tipoAlumno = (examenYConv && trasladoYEquiv) ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Poblacion', cohorte, numSemestres, heading, data);
+            generatePDF('Poblacion', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera !== 'TODAS' ? carrera : 'Población general');
         } else if (exportar === 'Excel') {
              await generateExcel(heading, tabla, 'Crecimiento', cohorte, numSemestres, tipoAlumno);
         }

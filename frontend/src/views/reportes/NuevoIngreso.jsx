@@ -37,7 +37,7 @@ const ReportesNuevoIngreso = () => {
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Nuevo Ingreso', cohorte, numSemestres);
+            generatePDF('Nuevo Ingreso', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv);
         } else if (exportar === 'Excel') {
             await generateExcel(heading, data, 'Nuevo Ingreso', cohorte, numSemestres, tipoAlumno);
         }

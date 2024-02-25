@@ -66,7 +66,7 @@ const AlumnosLista = () => {
 
     const handlePrint = async() => {
         if (exportar === 'PDF') {
-            generatePDF('Lista de Alumnos', cohorte, numSemestres, carrera);
+            generatePDF('Lista de Alumnos', cohorte, numSemestres, heading, data, true, examenYConv, trasladoYEquiv, carrera);
         } else if (exportar === 'Excel') {
             await generateExcel(heading, data, 'Lista de Alumnos', cohorte, numSemestres, 0, carrera);
         }

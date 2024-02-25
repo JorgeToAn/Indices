@@ -35,7 +35,7 @@ const IndiceDesercion = () => {
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Deserción', cohorte, numSemestres);
+            generatePDF('Deserción', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera);
         } else if (exportar === 'Excel') {
             await generateExcel(heading, data, 'Indice Desercion', cohorte, numSemestres, tipoAlumno);
         }
