@@ -36,7 +36,7 @@ const IndiceEgreso = () => {
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Egreso', cohorte, numSemestres, carrera);
+            generatePDF('Egreso', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera);
         } else if (exportar === 'Excel') {
             await generateExcel(heading, data, 'Indice Egreso', cohorte, numSemestres, tipoAlumno);
         }

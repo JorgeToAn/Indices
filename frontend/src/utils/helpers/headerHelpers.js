@@ -34,6 +34,11 @@ export function getTablasHeaders(cohorte, numSemestres) {
     return tabla;
 }
 
+export function getCrecimientoHeaders(cohorte, numSemestres) {
+    const tabla =['Periodo', 'Población'];
+    return tabla;
+}
+
 export function anioPeriodo(periodoAnterior) {
     if (periodoAnterior[1] === '3') {
         periodoAnterior[0] = String(Number(periodoAnterior[0]) + 1);

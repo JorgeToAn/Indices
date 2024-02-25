@@ -1,4 +1,5 @@
 const carreras = [
+    ['TODAS', 'Todas las carreras'],
     ['SYC','Ingenieria Sistemas Computacionales'],
     ['QUI','Ingenieria Quimica'],
     ['IND','Ingenieria Industrial'],
