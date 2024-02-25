@@ -3,9 +3,9 @@ import Header from '../components/header';
 import { Edit, Search } from 'tabler-icons-react';
 import { Group } from '@mantine/core';
 import Tabla from '../components/Tabla';
-import { getListaUsuarios } from '../utils/helpers/adminHelpers';
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
+import { getListaUsuarios } from '../routes/api/controllers/adminController';
 import ModalEditarUsuario from './ModalEditarUsuario';
 
 const UsuariosLista = () => {
@@ -19,8 +19,6 @@ const UsuariosLista = () => {
     const [filaSelect, setFilaSelect] = useState([]);
     const seleccion = (data) => {
         setFilaSelect(data);
-        const fila = data;
-        console.log(fila);
     };
 
     const handleTable = async() => {
@@ -29,6 +27,7 @@ const UsuariosLista = () => {
         listaU = listaU.map((lista) => Object.entries(lista[1]));
         listaU = listaU.map((disc) => disc.filter((u, index) => index === 0 || index === 4 || index === 12));
         listaU = listaU.map((disc) => disc.map((c) => c.filter((dato, index) => index > 0)));
+        console.log(listaU);
         setLista(listaU);
     };
 

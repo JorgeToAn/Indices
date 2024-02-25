@@ -1,23 +1,35 @@
-import API from './../api';
+import { anioPeriodo } from './headerHelpers';
 
-export const getAlumnoInfo = async(numControl) => {
-    const res = await API.get('/alumnos/historial/'+numControl);
-    const alumnoData = res.data;
-    return alumnoData;
-};
+export const buildListaAlumnos = (lista, semestres, cohorte) => {
+    const tabla = [];
 
-export const updateAlumnoInfo = async(alumno, curp) => {
-    let success = true;
-    let res = await API.put(`/personal/${curp}/`,alumno)
-    .catch((error) => {
-        success = false;
+    lista.forEach((fila) => {
+        const row = [];
+        const nombre = `${fila['curp']['nombre']} ${fila['curp']['paterno']} ${fila['curp']['materno']}`;
+        row.push(nombre, fila['no_control'], fila['plan']['carrera'], fila['curp']['genero']);
+        let periodo = cohorte.split("-");
+        for(let num = 0; num < semestres; num++) {
+            const dato = fila['registros']['ingresos'][num];
+            if(dato !== undefined){
+                if (dato['periodo'] === `${periodo[0]}${periodo[1]}`) {
+                    row.push(fila['plan']['carrera']);
+                } else {
+                    if (fila['registros']['egresos'] !== undefined) {
+                        if (fila['registros']['engresos']['periodo'] !== `${periodo[0]}${periodo[1]}`) {
+                        } else {
+                            row.push('EGR');
+                        }
+                    } else {
+                        row.push('BAJA');
+                    }
+                }
+                periodo = anioPeriodo(periodo);
+            } else {
+                row.push('BAJA');
+            }
+        }
+        tabla.push(row);
+        periodo = cohorte.split("-");
     });
-    if(success){
-        // eslint-disable-next-line no-unused-vars
-        res = await API.put(`/alumnos/${alumno.get('no_control')}/`, alumno)
-        .catch((error) => {
-            success = false;
-        });
-    }
-    return success;
+    return tabla;
 };

@@ -1,4 +1,3 @@
-
 import { Button, Checkbox, Flex, Group } from '@mantine/core';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
@@ -7,10 +6,11 @@ import { useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
-import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
-import { generateExcel } from '../../utils/helpers/excelHelpers';
-import { buildTablaIndices, getIndicesData } from '../../utils/helpers/indicesHelpers';
+import { buildTablaIndices } from '../../utils/helpers/indicesHelpers';
+import { getIndicesData } from './../../routes/api/controllers/indicesHelpers';
+import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
+import { generateExcel } from '../../utils/helpers/export/excelHelpers';
 
 const IndiceTitulacion = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -35,7 +35,7 @@ const IndiceTitulacion = () => {
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Titulación', cohorte, numSemestres);
+            generatePDF('Titulación', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera);
         } else if (exportar === 'Excel') {
             await generateExcel(heading, data, 'Indice Titulacion', cohorte, numSemestres, tipoAlumno);
         }

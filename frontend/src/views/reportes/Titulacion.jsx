@@ -1,4 +1,4 @@
-import { Button, Checkbox, Flex, Group } from '@mantine/core';
+import { Button, Checkbox, Flex, Group, Loader } from '@mantine/core';
 import Header from '../../components/header';
 import Tabla from '../../components/Tabla';
 import Dropdown from '../../components/Dropdown';
@@ -7,9 +7,10 @@ import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
 import { getReportesHeaders } from '../../utils/helpers/headerHelpers';
-import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
-import { generateExcel } from '../../utils/helpers/excelHelpers';
+import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
+import { generateExcel } from '../../utils/helpers/export/excelHelpers';
+import { getReportesEgresoTitulacion } from '../../routes/api/controllers/reportesController';
 
 const ReportesTitulacion = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -22,18 +23,21 @@ const ReportesTitulacion = () => {
     const [exportar, setExportar] = useInputState('');
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleTable = () => {
-        const tabla = [];
+    const handleTable = async() => {
+        setIsLoading(true);
+        const tabla = await getReportesEgresoTitulacion('titulacion', examenYConv, trasladoYEquiv, cohorte, numSemestres);
         const headers = getReportesHeaders(1, cohorte, numSemestres);
         setHeading(headers);
         setData(tabla);
+        setIsLoading(false);
     };
 
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Titulación', cohorte, numSemestres);
+            generatePDF('Titulación', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv);
         } else if (exportar === 'Excel') {
             await generateExcel(heading, data, 'Titulacion', cohorte, numSemestres, tipoAlumno);
         }
@@ -63,7 +67,7 @@ const ReportesTitulacion = () => {
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
                         <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
-                        <Button onClick={handleTable} disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)} color='negro'>Filtrar</Button>
+                        <Button onClick={handleTable} disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv) && !isLoading} color='negro'>{isLoading ? <Loader size='sm'  color='#FFFFFF' /> : 'Filtrar'}</Button>
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-naranja" tripleHeader  headers={heading} content={data} />
