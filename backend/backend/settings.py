@@ -110,12 +110,24 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "OPTIONS": {
+            "min_length": 8,
+        },
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+    {
+        'NAME': 'backend.validators.LowercaseUppercasePasswordValidator',
+    },
+    {
+        'NAME': 'backend.validators.ContainsNumberPasswordValidator',
+    },
+    {
+        'NAME': 'backend.validators.SpecialCharacterValidator',
     },
 ]
 
@@ -165,7 +177,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 30
 }
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
