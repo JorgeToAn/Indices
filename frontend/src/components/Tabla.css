@@ -11,10 +11,9 @@
 th {
     color: white !important;
     text-transform: uppercase;
-    /* width: 2rem; */
     width: max-content  !important;
-    /* max-width: 200px !important; */
-    /* max-width: 150px !important; */
+    max-width: 250px !important;
+    min-width: 70px;
 }
 
 .tabla tr > td {
@@ -24,12 +23,10 @@ th {
     text-align: center;
 }
 .celda-nombre {
-    width: 250px !important;
+    min-width: 250px !important;
 }
 .doble-encabezado {
     border: none !important;
     border-bottom: 0.0625rem solid #dee2e6 !important;
 }
-/* .tabla {
-    width: 85vw;
-} */
+

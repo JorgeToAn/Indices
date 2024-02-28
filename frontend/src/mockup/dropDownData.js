@@ -1,15 +1,17 @@
 const carreras = [
-    ['Ingenieria en Sistemas computacionales','Sistemas computacionales'],
-    ['Ingenieria Quimica','Quimica'],
-    ['Ingenieria Industrial','Industrial'],
-    ['Ingenieria Logística','Logística'],
-    ['Ingenieria Gestión Empresarial','Gestión Empresarial'],
-    ['Ingenieria Electrónica','Electrónica'],
-    ['Ingenieria Eléctrica','Eléctrica'],
-    ['Ingenieria Mecatrónica','Mecatrónica'],
-    ['Ingenieria Mecánica','Mecánica'],
-    ['Contador Público','Contador Público'],
-    ['Ingenieria Energías Renovables','Energías Renovables'],
+    ['TODAS', 'Todas las carreras'],
+    ['SYC','Ingenieria Sistemas Computacionales'],
+    ['QUI','Ingenieria Quimica'],
+    ['IND','Ingenieria Industrial'],
+    ['LOG','Ingenieria Logística'],
+    ['MAT','Ingenieria en Materiales'],
+    ['GEM','Ingenieria Gestión Empresarial'],
+    ['ELN','Ingenieria Electrónica'],
+    ['ELE','Ingenieria Eléctrica'],
+    ['MKT','Ingenieria Mecatrónica'],
+    ['MEC','Ingenieria Mecánica'],
+    ['CP','Contador Público'],
+    ['ENR','Ingenieria Energías Renovables'],
 ];
 
 const cohortes = [

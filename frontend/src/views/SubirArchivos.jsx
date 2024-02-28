@@ -10,8 +10,8 @@ import {
 } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
 import { ArrowLeft, FileUpload, Upload } from "tabler-icons-react";
-import ResultadosLog from '../components/resultadosLog';
 import { useDisclosure } from '@mantine/hooks';
+import ResultadosLog from '../components/modals/resultadosLog';
 
 const SubirArchivos = () => {
     const [opened, { open, close }] = useDisclosure(false);

@@ -1,10 +1,12 @@
+import { getNombreCarrera } from "./carreraHelpers";
 
 export function getIndicesHeaders(tipo, cohorte, carrera) {
     const tabla = [];
-    tabla.push(["Indices de rendimiento escolar cohorte generacional"+' '+cohorte+' '+carrera]);
+    const nombreCarrera = getNombreCarrera(carrera);
+    tabla.push(["Indices de rendimiento escolar cohorte generacional"+' '+cohorte+' '+nombreCarrera]);
     switch(tipo) {
         case 1:
-            tabla.push(['Semestre', 'Periodo', 'Inscritos', 'Egresados','Desercion', 'Matricula final','Tasa de retencion']);
+            tabla.push(['Semestre', 'Periodo', 'Inscritos', 'Egresados','Desercion','Tasa de retencion']);
             break;
         case 2:
             tabla.push(['Semestre', 'Periodo', 'Inscritos', 'Egresados','Desercion','Tasa de desercion escolar']);
@@ -32,7 +34,12 @@ export function getTablasHeaders(cohorte, numSemestres) {
     return tabla;
 }
 
-function anioPeriodo(periodoAnterior) {
+export function getCrecimientoHeaders(cohorte, numSemestres) {
+    const tabla =['Periodo', 'Población'];
+    return tabla;
+}
+
+export function anioPeriodo(periodoAnterior) {
     if (periodoAnterior[1] === '3') {
         periodoAnterior[0] = String(Number(periodoAnterior[0]) + 1);
         periodoAnterior[1] = '1';
@@ -79,7 +86,7 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
         thirdRow.push('');
         for (let i = 13; i <= numSemestres; i++) {
             if (i === 13){
-                firstRow.push(`Año de ${tipo === 1 ? 'titulación' : 'egreso'}`);
+                firstRow.push(`Año  de ${tipo === 1 ? 'titulación' : 'egreso'}`);
             } else {
                 firstRow.push('');
             }
@@ -87,6 +94,7 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
             periodo = anioPeriodo(periodo);
             thirdRow.push(i);
         }
+        firstRow.push('');
         firstRow.push(`Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
         secondRow.push("Total");
         secondRow.push("");
@@ -113,7 +121,7 @@ export function getNuevoIngresoHeaders(cohorte, numSemestres) {
 
 export function getListaAlumnosHeaders(cohorte, numSemestres) {
     const tabla = [];
-    tabla.push([' ', '', '']);
+    tabla.push([' ', '', '', '']);
     tabla.push(['Nombre', 'No. control', 'Carrera', 'Sexo']);
     let periodo = cohorte.split("-");
     for (let i = 1; i <= numSemestres; i++) {

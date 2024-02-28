@@ -3,8 +3,8 @@ import { CirclePlus } from 'tabler-icons-react';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import './Registro.css';
-import { getDiscapacidades } from "../../utils/helpers/discapacidadHelpers";
 import { useEffect, useState } from "react";
+import { getDiscapacidades } from "../../routes/api/controllers/discapacidadController";
 
 
 const RegistroDiscapacidades = () => {

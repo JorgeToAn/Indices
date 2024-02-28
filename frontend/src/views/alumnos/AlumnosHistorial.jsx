@@ -5,10 +5,10 @@ import dropDownData from "../../mockup/dropDownData";
 import Tabla from "../../components/Tabla";
 import { useEffect, useState } from "react";
 import { useDisclosure, useInputState } from "@mantine/hooks";
-import { getAlumnoInfo, updateAlumnoInfo } from "../../utils/helpers/alumnoHelpers";
 import { ordenarRegistros } from "../../utils/helpers/historialHelpers";
 import { DateInput } from "@mantine/dates";
-import ModalRespuesta from "../../components/ModalRespuesta";
+import { getAlumnoInfo, updateAlumnoInfo } from "../../routes/api/controllers/alumnoController";
+import ModalRespuesta from './../../components/modals/ModalRespuesta';
 
 const AlumnosHistorial = () => {
     const [opened, handlers] = useDisclosure(false);

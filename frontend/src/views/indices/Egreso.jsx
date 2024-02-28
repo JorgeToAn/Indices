@@ -8,8 +8,10 @@ import { useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
 import { Printer } from 'tabler-icons-react';
-import { generatePDF } from '../../utils/helpers/pdfHelpers';
-import { generateExcel } from '../../utils/helpers/excelHelpers';
+import { buildTablaIndices } from '../../utils/helpers/indicesHelpers';
+import { getIndicesData } from '../../routes/api/controllers/indicesHelpers';
+import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
+import { generateExcel } from '../../utils/helpers/export/excelHelpers';
 
 const IndiceEgreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -23,17 +25,18 @@ const IndiceEgreso = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
-    const handleTable = () => {
-        const tabla = [];
+    const handleTable = async() => {
         const headers = getIndicesHeaders(4, cohorte, carrera);
         setHeading(headers);
-        setData(tabla);
+        const tabla = await getIndicesData('egreso', examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
+        const datos = buildTablaIndices('egreso', tabla, numSemestres);
+        setData(datos);
     };
 
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Egreso', cohorte, numSemestres, carrera);
+            generatePDF('Egreso', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera);
         } else if (exportar === 'Excel') {
             await generateExcel(heading, data, 'Indice Egreso', cohorte, numSemestres, tipoAlumno);
         }

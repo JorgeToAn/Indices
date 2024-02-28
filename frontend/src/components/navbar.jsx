@@ -1,6 +1,5 @@
 import "./NavBar.css";
 import { ChevronDown, Home, Search, UserCircle } from "tabler-icons-react";
-import ModalLogout from './ModalLogout';
 import {
     Header,
     Menu,
@@ -17,6 +16,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
+import ModalLogout from './modals/ModalLogout';
 
 const useStyles = createStyles((theme) => ({
     burger: {

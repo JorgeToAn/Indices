@@ -6,10 +6,11 @@ import { useInputState } from "@mantine/hooks";
 import dropDownData from "../../mockup/dropDownData";
 import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
 import { useState } from "react";
-import { generatePDF } from "../../utils/helpers/pdfHelpers";
 import { Printer } from "tabler-icons-react";
-import { generateExcel } from "../../utils/helpers/excelHelpers";
-import { buildTable, getTablasPoblacion } from "../../utils/helpers/tablasHelpers";
+import { buildTable } from "../../utils/helpers/tablasHelpers";
+import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
+import { generateExcel } from "../../utils/helpers/export/excelHelpers";
+import { getTablasPoblacion } from "../../routes/api/controllers/tablasController";
 
 const TablaPoblacion = () => {
     const [heading, setHeading] = useState([]);
@@ -39,7 +40,6 @@ const TablaPoblacion = () => {
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
         setData(tabla);
-        console.log(data);
     };
 
     const getTable = async() => {
@@ -51,7 +51,7 @@ const TablaPoblacion = () => {
     const handlePrint = async() => {
         const tipoAlumno = (examenYConv && trasladoYEquiv) ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Poblacion', cohorte, numSemestres);
+            generatePDF('Poblacion', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv);
         } else if (exportar === 'Excel') {
              await generateExcel(heading, tabla, 'Poblacion', cohorte, numSemestres, tipoAlumno);
         }

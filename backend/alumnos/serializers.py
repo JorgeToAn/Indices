@@ -1,10 +1,8 @@
-from datetime import timedelta
-from django.utils.timezone import now
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from registros.models import Ingreso, Egreso, Titulacion, LiberacionIngles
-from registros.periodos import getPeriodoActual
+from registros.periodos import getPeriodoActual, calcularPeriodos
 from .models import Alumno
 
 class AlumnoSerializer(serializers.ModelSerializer):
@@ -21,7 +19,6 @@ class AlumnoSerializer(serializers.ModelSerializer):
 class HistorialSerializer(serializers.ModelSerializer):
     estatus = serializers.SerializerMethodField()
     registros = serializers.SerializerMethodField()
-    edad = serializers.SerializerMethodField()
 
     class Meta:
         model = Alumno
@@ -43,11 +40,18 @@ class HistorialSerializer(serializers.ModelSerializer):
             return "Baja"
 
     def get_registros(self, obj):
+        request = self.context['request']
+        semestres = request.query_params.get('semestres')
+        cohorte = request.query_params.get('cohorte')
+        periodos = []
         registros = {}
-
-        ingresos = Ingreso.objects.filter(alumno=obj.pk).values()
-        registros["ingresos"] = ingresos
-
+        if semestres is not None and cohorte is not None:
+            periodos = calcularPeriodos(cohorte, int(semestres))
+            ingresos = Ingreso.objects.filter(alumno=obj.pk, periodo__in=periodos).values()
+            registros["ingresos"] = ingresos
+        else:
+            ingresos = Ingreso.objects.filter(alumno=obj.pk).values()
+            registros["ingresos"] = ingresos
         egreso = Egreso.objects.filter(alumno=obj.pk).values()
         registros["egreso"] = egreso
 
@@ -57,6 +61,3 @@ class HistorialSerializer(serializers.ModelSerializer):
         liberacion_ingles = LiberacionIngles.objects.filter(alumno=obj.pk).values()
         registros["liberacion_ingles"] = liberacion_ingles
         return registros
-
-    def get_edad(self, obj):
-        return (now().date() - obj.curp.fecha_nacimiento) // timedelta(days=365.2425)

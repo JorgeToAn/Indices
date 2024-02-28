@@ -8,9 +8,11 @@ import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "./Indices.css";
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
-import { generatePDF } from '../../utils/helpers/pdfHelpers';
 import { Printer } from 'tabler-icons-react';
-import { generateExcel } from '../../utils/helpers/excelHelpers';
+import { buildTablaIndices } from '../../utils/helpers/indicesHelpers';
+import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
+import { generateExcel } from '../../utils/helpers/export/excelHelpers';
+import { getIndicesData } from './../../routes/api/controllers/indicesHelpers';
 
 const IndicePermanencia = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -24,17 +26,17 @@ const IndicePermanencia = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
-    const handleTable = () => {
-        const tabla = [];
+    const handleTable = async() => {
+        const tabla = await getIndicesData('permanencia', examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
         const headers = getIndicesHeaders(1, cohorte, carrera);
         setHeading(headers);
-        setData(tabla);
+        const datos = buildTablaIndices('permanencia',tabla, numSemestres);
+        setData(datos);
     };
-
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Permanencia', cohorte, numSemestres);
+            generatePDF('Permanencia', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera);
         } else if (exportar === 'Excel') {
             await generateExcel(heading, data, 'Indice Permanencia', cohorte, numSemestres, tipoAlumno);
         }
