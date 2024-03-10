@@ -30,7 +30,7 @@ class IngresoDetail(generics.RetrieveUpdateDestroyAPIView):
 class IngresoUpload(views.APIView):
     parser_classes = [FileUploadParser]
 
-    def post(self, request, filename, format=None):
+    def post(self, request, format=None):
         try:
             file_obj = request.data['file']
             wb = openpyxl.load_workbook(file_obj, data_only=True)
@@ -56,19 +56,18 @@ class IngresoUpload(views.APIView):
                     if alumno.plan.carrera.clave != row_dict['carrera']:
                         raise Exception(f'Carrera en archivo no concuerda con el plan registrado del alumno {alumno.no_control}')
 
-                    ingresos = []
-                    for periodo_tuple in row_dict['periodos']:
-                        ingreso = Ingreso(alumno=alumno, periodo=periodo_tuple[0], tipo=periodo_tuple[1])
-                        ingresos.append(ingreso)
-                    created_count = len(Ingreso.objects.bulk_create(ingresos))
-                    results['created'] += created_count
+                    for periodo, tipo in row_dict['periodos']:
+                        if not Ingreso.objects.filter(alumno=alumno, periodo=periodo, tipo=tipo).exists():
+                            ingreso = Ingreso(alumno=alumno, periodo=periodo, tipo=tipo)
+                            ingreso.save()
+                            results['created'] += 1
                 except Exception as ex:
                     results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
                     continue
             return Response(status=204, data=results)
         except Exception as e:
             error_message = str(e)
-            return Response({'status': 'error', 'message': error_message})
+            return Response(status=500, data={'message': error_message})
 
 ### EGRESO
 class EgresoList(generics.ListCreateAPIView):
@@ -109,10 +108,13 @@ def row_to_dict(header_row, data_row):
     for cell in data_row:
         index = cell.column - 1
         header = str(header_row[index].value).lower()
+        value = str(cell.value) if cell.value else None
         if header in keywords:
-            row_dict[header] = cell.value
-        elif re.match(r'^[12][0-9]{3}[123]$', header):
-            if cell.value: row_dict['periodos'].append((header, cell.value[0:2]))
+            row_dict[header] = value
+        elif re.match(r'^[12][0-9]{3}[13]$', header):
+            if value: row_dict['periodos'].append((header, value[0:2]))
         else:
             raise Exception(f'Campo "{header}" no es reconocido')
+    # ordenar periodos por fecha
+    row_dict['periodos'].sort(key=lambda x: x[0])
     return row_dict

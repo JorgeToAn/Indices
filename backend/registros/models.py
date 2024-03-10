@@ -53,7 +53,7 @@ class Ingreso(BaseRegistro):
     tipo = models.CharField(max_length=2, choices=TiposIngresos.choices, default=TiposIngresos.EXAMEN, null=False, blank=False)
     num_semestre = models.PositiveIntegerField(null=False, blank=False, validators=[MinValueValidator(1), MaxValueValidator(16)])
 
-    def save(self, *args, **kwargs):
+    def clean(self):
         exclusive_tipos = [
             Ingreso.TiposIngresos.EXAMEN.value,
             Ingreso.TiposIngresos.EQUIVALENCIA.value,
@@ -61,7 +61,7 @@ class Ingreso(BaseRegistro):
             Ingreso.TiposIngresos.CONVALIDACION.value
         ]
         if self.tipo in exclusive_tipos and Ingreso.objects.filter(alumno=self.alumno, tipo__in=exclusive_tipos).count() >= 1:
-            raise ValidationError('Solo puede existir un ingreso de EXAMEN, EQUIVALENCIA, TRASLADO o CONVALIDACION')
+            raise ValidationError({'tipo': 'Solo puede existir un ingreso de EXAMEN, EQUIVALENCIA, TRASLADO o CONVALIDACION'})
         if Egreso.objects.filter(alumno=self.alumno).exists():
             raise ValidationError('No se puede registrar un ingreso para un alumno egresado')
 
@@ -72,6 +72,9 @@ class Ingreso(BaseRegistro):
                 self.num_semestre = getNumSemestre(primer_ingreso.periodo, primer_ingreso.num_semestre, self.periodo)
             else:
                 self.num_semestre = 1
+
+    def save(self, *args, **kwargs):
+        self.clean()
         super(Ingreso, self).save(*args, **kwargs)
 
     class Meta(BaseRegistro.Meta):
@@ -82,13 +85,16 @@ class Ingreso(BaseRegistro):
 
 
 class Egreso(BaseRegistro):
-    def save(self, *args, **kwargs):
+    def clean(self):
         if not self.pk and Egreso.objects.filter(alumno=self.alumno).exists():
             raise ValidationError('Solo puede existir un egreso por alumno')
 
         ultimo_ingreso = Ingreso.objects.filter(alumno=self.alumno).order_by('periodo').last()
         if ultimo_ingreso is None or ultimo_ingreso.periodo > self.periodo:
-            raise ValidationError('El periodo de egreso debe ser igual o mayor al del último ingreso')
+            raise ValidationError({'periodo': 'El periodo de egreso debe ser igual o mayor al del último ingreso'})
+
+    def save(self, *args, **kwargs):
+        self.clean()
         super(Egreso, self).save(*args, **kwargs)
 
 class Titulacion(BaseRegistro):
@@ -99,7 +105,7 @@ class Titulacion(BaseRegistro):
 
     tipo = models.CharField(max_length=2, choices=TiposTitulaciones.choices, default=TiposTitulaciones.RESIDENCIA, null=False, blank=False)
 
-    def save(self, *args, **kwargs):
+    def clean(self):
         if not self.pk and Titulacion.objects.filter(alumno=self.alumno).exists():
             raise ValidationError('Solo puede existir una titulacion por alumno')
 
@@ -107,7 +113,10 @@ class Titulacion(BaseRegistro):
         if egreso is None:
             raise ValidationError('No se puede crear una titulacion sin un egreso existente')
         elif egreso.periodo > self.periodo:
-            raise ValidationError('El periodo de titulación debe ser igual o mayor al de egreso')
+            raise ValidationError({'periodo': 'El periodo de titulación debe ser igual o mayor al de egreso'})
+
+    def save(self, *args, **kwargs):
+        self.clean()
         super(Titulacion, self).save(*args, **kwargs)
 
     class Meta(BaseRegistro.Meta):
@@ -115,9 +124,12 @@ class Titulacion(BaseRegistro):
         verbose_name_plural = 'titulaciones'
 
 class LiberacionIngles(BaseRegistro):
-    def save(self, *args, **kwargs):
+    def clean(self):
         if not self.pk and LiberacionIngles.objects.filter(alumno=self.alumno).exists():
             raise ValidationError('Solo puede existir una liberación de inglés por alumno')
+
+    def save(self, *args, **kwargs):
+        self.clean()
         super(LiberacionIngles, self).save(*args, **kwargs)
 
     class Meta(BaseRegistro.Meta):
