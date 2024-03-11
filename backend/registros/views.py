@@ -21,12 +21,12 @@ import re
 
 ### INGRESO
 class IngresoList(generics.ListCreateAPIView):
-    query_existsset = Ingreso.objects.all()
+    queryset = Ingreso.objects.all()
     serializer_class = IngresoSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
 class IngresoDetail(generics.RetrieveUpdateDestroyAPIView):
-    query_existsset = Ingreso.objects.all()
+    queryset = Ingreso.objects.all()
     serializer_class = IngresoSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
@@ -76,12 +76,12 @@ class IngresoUpload(views.APIView):
 
 ### EGRESO
 class EgresoList(generics.ListCreateAPIView):
-    query_existsset = Egreso.objects.all()
+    queryset = Egreso.objects.all()
     serializer_class = EgresoSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
 class EgresoDetail(generics.RetrieveUpdateDestroyAPIView):
-    query_existsset = Egreso.objects.all()
+    queryset = Egreso.objects.all()
     serializer_class = EgresoSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
@@ -117,12 +117,12 @@ class EgresoUpload(views.APIView):
 
 ### TITULACION
 class TitulacionList(generics.ListCreateAPIView):
-    query_existsset = Titulacion.objects.all()
+    queryset = Titulacion.objects.all()
     serializer_class = TitulacionSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
 class TitulacionDetail(generics.RetrieveUpdateDestroyAPIView):
-    query_existsset = Titulacion.objects.all()
+    queryset = Titulacion.objects.all()
     serializer_class = TitulacionSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
@@ -158,12 +158,12 @@ class TitulacionUpload(views.APIView):
 
 ### LIBERACION DE INGLES
 class LiberacionInglesList(generics.ListCreateAPIView):
-    query_existsset = LiberacionIngles.objects.all()
+    queryset = LiberacionIngles.objects.all()
     serializer_class = LiberacionInglesSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
 class LiberacionInglesDetail(generics.RetrieveUpdateDestroyAPIView):
-    query_existsset = LiberacionIngles.objects.all()
+    queryset = LiberacionIngles.objects.all()
     serializer_class = LiberacionInglesSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
