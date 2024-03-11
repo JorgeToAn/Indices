@@ -80,6 +80,34 @@ class EgresoDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = EgresoSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
+class EgresoUpload(views.APIView):
+    parser_classes = [FileUploadParser]
+
+    def post(self, request, format=None):
+        try:
+            file_obj = request.data['file']
+            wb = openpyxl.load_workbook(file_obj, data_only=True)
+            ws = wb.active
+
+            results = { 'errors':[], 'created':0 }
+            header_row = ws[1]
+            for row in ws.iter_rows(min_row=2):
+                row_dict = row_to_dict(header_row, row)
+                try:
+                    alumno = Alumno.objects.get(pk=row_dict['no_control'])
+                    for periodo, _ in row_dict['periodos']:
+                        if not Egreso.objects.filter(periodo=periodo, alumno=alumno).exists():
+                            egreso = Egreso(periodo=periodo, alumno=alumno)
+                            egreso.save()
+                            results['created'] += 1
+                except Exception as ex:
+                    results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
+                    continue
+            return Response(status=204, data=results)
+        except Exception as e:
+            error_message = str(e)
+            return Response(status=500, data={'message': error_message})
+
 ### TITULACION
 class TitulacionList(generics.ListCreateAPIView):
     queryset = Titulacion.objects.all()
@@ -91,6 +119,34 @@ class TitulacionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TitulacionSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
+class TitulacionUpload(views.APIView):
+    parser_classes = [FileUploadParser]
+
+    def post(self, request, format=None):
+        try:
+            file_obj = request.data['file']
+            wb = openpyxl.load_workbook(file_obj, data_only=True)
+            ws = wb.active
+
+            results = { 'errors':[], 'created':0 }
+            header_row = ws[1]
+            for row in ws.iter_rows(min_row=2):
+                row_dict = row_to_dict(header_row, row)
+                try:
+                    alumno = Alumno.objects.get(pk=row_dict['no_control'])
+                    for periodo, tipo in row_dict['periodos']:
+                        if not Titulacion.objects.filter(periodo=periodo, alumno=alumno).exists():
+                            titulacion = Titulacion(periodo=periodo, alumno=alumno, tipo=tipo)
+                            titulacion.save()
+                            results['created'] += 1
+                except Exception as ex:
+                    results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
+                    continue
+            return Response(status=204, data=results)
+        except Exception as e:
+            error_message = str(e)
+            return Response(status=500, data={'message': error_message})
+
 ### LIBERACION DE INGLES
 class LiberacionInglesList(generics.ListCreateAPIView):
     queryset = LiberacionIngles.objects.all()
@@ -101,6 +157,34 @@ class LiberacionInglesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = LiberacionIngles.objects.all()
     serializer_class = LiberacionInglesSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
+
+class LiberacionInglesUpload(views.APIView):
+    parser_classes = [FileUploadParser]
+
+    def post(self, request, format=None):
+        try:
+            file_obj = request.data['file']
+            wb = openpyxl.load_workbook(file_obj, data_only=True)
+            ws = wb.active
+
+            results = { 'errors':[], 'created':0 }
+            header_row = ws[1]
+            for row in ws.iter_rows(min_row=2):
+                row_dict = row_to_dict(header_row, row)
+                try:
+                    alumno = Alumno.objects.get(pk=row_dict['no_control'])
+                    for periodo, _ in row_dict['periodos']:
+                        if not LiberacionIngles.objects.filter(periodo=periodo, alumno=alumno).exists():
+                            liberacion = LiberacionIngles(periodo=periodo, alumno=alumno)
+                            liberacion.save()
+                            results['created'] += 1
+                except Exception as ex:
+                    results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
+                    continue
+            return Response(status=204, data=results)
+        except Exception as e:
+            error_message = str(e)
+            return Response(status=500, data={'message': error_message})
 
 def row_to_dict(header_row, data_row):
     keywords = ['curp', 'no_control', 'paterno', 'materno', 'nombre', 'carrera']
