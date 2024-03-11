@@ -14,4 +14,5 @@ urlpatterns = [
     path('liberaciones-ingles/', views.LiberacionInglesList.as_view(), name='liberaciones-ingles-list'),
     path('liberaciones-ingles/<int:pk>/', views.LiberacionInglesDetail.as_view(), name='liberaciones-ingles-detail'),
     path('liberaciones-ingles/subir/', views.LiberacionInglesUpload.as_view(), name='liberaciones-ingles-upload'),
+    path('realizar-corte/', views.corte, name='corte'),
 ]

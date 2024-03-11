@@ -4,9 +4,12 @@ from backend.permissions import IsAdminUserOrReadOnly
 from rest_framework import generics, views
 from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from django.db.models import Q
 
 from .serializers import IngresoSerializer, EgresoSerializer, TitulacionSerializer, LiberacionInglesSerializer
 from .models import Ingreso, Egreso, Titulacion, LiberacionIngles
+from .periodos import getPeriodoActual
 
 from personal.models import Personal, obtenerFechaNac, obtenerGenero
 from alumnos.models import Alumno
@@ -18,17 +21,19 @@ import re
 
 ### INGRESO
 class IngresoList(generics.ListCreateAPIView):
-    queryset = Ingreso.objects.all()
+    query_existsset = Ingreso.objects.all()
     serializer_class = IngresoSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
 class IngresoDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Ingreso.objects.all()
+    query_existsset = Ingreso.objects.all()
     serializer_class = IngresoSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
+# FORMATO DE EXCEL [CURP, NO_CONTROL, PATERNO, MATERNO, NOMBRE, CARRERA, (PERIODO+TIPO)]
 class IngresoUpload(views.APIView):
     parser_classes = [FileUploadParser]
+    permission_classes = [IsAuthenticated&IsAdminUser]
 
     def post(self, request, format=None):
         try:
@@ -64,24 +69,26 @@ class IngresoUpload(views.APIView):
                 except Exception as ex:
                     results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
                     continue
-            return Response(status=204, data=results)
+            return Response(status=200, data=results)
         except Exception as e:
             error_message = str(e)
             return Response(status=500, data={'message': error_message})
 
 ### EGRESO
 class EgresoList(generics.ListCreateAPIView):
-    queryset = Egreso.objects.all()
+    query_existsset = Egreso.objects.all()
     serializer_class = EgresoSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
 class EgresoDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Egreso.objects.all()
+    query_existsset = Egreso.objects.all()
     serializer_class = EgresoSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
+# FORMATO DE EXCEL [NO_CONTROL, PERIODO]
 class EgresoUpload(views.APIView):
     parser_classes = [FileUploadParser]
+    permission_classes = [IsAuthenticated&IsAdminUser]
 
     def post(self, request, format=None):
         try:
@@ -103,24 +110,26 @@ class EgresoUpload(views.APIView):
                 except Exception as ex:
                     results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
                     continue
-            return Response(status=204, data=results)
+            return Response(status=200, data=results)
         except Exception as e:
             error_message = str(e)
             return Response(status=500, data={'message': error_message})
 
 ### TITULACION
 class TitulacionList(generics.ListCreateAPIView):
-    queryset = Titulacion.objects.all()
+    query_existsset = Titulacion.objects.all()
     serializer_class = TitulacionSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
 class TitulacionDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Titulacion.objects.all()
+    query_existsset = Titulacion.objects.all()
     serializer_class = TitulacionSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
+# FORMATO DE EXCEL [NO_CONTROL, (PERIODO+TIPO)]
 class TitulacionUpload(views.APIView):
     parser_classes = [FileUploadParser]
+    permission_classes = [IsAuthenticated&IsAdminUser]
 
     def post(self, request, format=None):
         try:
@@ -142,24 +151,26 @@ class TitulacionUpload(views.APIView):
                 except Exception as ex:
                     results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
                     continue
-            return Response(status=204, data=results)
+            return Response(status=200, data=results)
         except Exception as e:
             error_message = str(e)
             return Response(status=500, data={'message': error_message})
 
 ### LIBERACION DE INGLES
 class LiberacionInglesList(generics.ListCreateAPIView):
-    queryset = LiberacionIngles.objects.all()
+    query_existsset = LiberacionIngles.objects.all()
     serializer_class = LiberacionInglesSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
 class LiberacionInglesDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = LiberacionIngles.objects.all()
+    query_existsset = LiberacionIngles.objects.all()
     serializer_class = LiberacionInglesSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
+# FORMATO DE EXCEL [NO_CONTROL, PERIODO]
 class LiberacionInglesUpload(views.APIView):
     parser_classes = [FileUploadParser]
+    permission_classes = [[IsAuthenticated&IsAdminUser]]
 
     def post(self, request, format=None):
         try:
@@ -181,11 +192,26 @@ class LiberacionInglesUpload(views.APIView):
                 except Exception as ex:
                     results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
                     continue
-            return Response(status=204, data=results)
+            return Response(status=200, data=results)
         except Exception as e:
             error_message = str(e)
             return Response(status=500, data={'message': error_message})
 
+### CORTE
+@api_view
+@permission_classes([IsAuthenticated&IsAdminUser])
+def corte(request):
+    periodo = getPeriodoActual()
+    if not Ingreso.objects.contiene_corte(periodo) and not Egreso.objects.contiene_corte(periodo) and not Titulacion.objects.contiene_corte(periodo) and not LiberacionIngles.objects.contiene_corte(periodo):
+        ingresos = Ingreso.objects.realizar_corte(periodo)
+        egresos = Egreso.objects.realizar_corte(periodo)
+        titulaciones = Titulacion.objects.realizer_corte(periodo)
+        liberaciones = LiberacionIngles.objects.realizar_corte(periodo)
+        return Response(status=200, data={'periodo': periodo, 'updated': {'ingresos': ingresos, 'egresos': egresos, 'titulaciones': titulaciones, 'liberaciones-ingles': liberaciones}})
+    else:
+        return Response(status=400, data={'periodo': periodo ,'message': f'No se puede realizar un corte ya que existen registros que pertenecen a un corte para el periodo {periodo}.'})
+
+# Lee un renglon de excel y lo convierte a un diccionario de acuerdo a los campos del header_row
 def row_to_dict(header_row, data_row):
     keywords = ['curp', 'no_control', 'paterno', 'materno', 'nombre', 'carrera']
     row_dict = {'periodos': []}

@@ -4,6 +4,16 @@ from django.db import models
 from .periodos import getPeriodoActual, getNumSemestre
 import re
 
+class RegistroManager(models.Manager):
+    def contiene_corte(self, periodo):
+        return self.filter(periodo=periodo, es_corte=True).exists()
+
+    def realizar_corte(self, periodo):
+        registros = self.filter(periodo=periodo, es_corte=False)
+        for registro in registros:
+            registro.es_corte = True
+        return self.bulk_update(registros, ['es_corte'])
+
 class BaseRegistro(models.Model):
     def validate_registro(value):
         match = re.search(r'^[0-9]{4}[13]$', value)
@@ -22,6 +32,7 @@ class BaseRegistro(models.Model):
     periodo = models.CharField(max_length=5, null=False, blank=False, validators=[validate_registro])
     alumno = models.ForeignKey('alumnos.Alumno', on_delete=models.CASCADE, verbose_name='alumno')
     es_corte = models.BooleanField(default=False, null=False, blank=False)
+    objects = RegistroManager()
 
     def save(self, *args, **kwargs):
         if self.pk and self.es_corte:
