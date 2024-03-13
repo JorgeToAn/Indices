@@ -25,7 +25,7 @@ const SubirArchivos = () => {
     };
     const subirIngresos = async () => {
         const formData = new FormData();
-        formData.append('file', ingresos[0]);
+        formData.append('file', ingresos[0], ingresos[0].name);
         console.log(ingresos);
         const res = await subirIngresosExcel(formData);
         console.log(res);
