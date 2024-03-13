@@ -17,8 +17,6 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['gender'] = user.gender
         token['is_staff'] = user.is_staff
         token['is_superuser'] = user.is_superuser
-        token['groups'] = list(user.groups.values_list('name', flat = True))
-        token['perms'] = list(user.get_all_permissions())
 
         return token
 
