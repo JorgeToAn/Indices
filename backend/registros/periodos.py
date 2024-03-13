@@ -36,5 +36,23 @@ def calcularPeriodos(cohorte: str, semestres: int):
 # Ago-Dic ----> XXXX3
 def getPeriodoActual():
     date = now().today()
-    semestre = 1 if date.month < 6 else 3
+    semestre = 1 if date.month < 8 else 3
     return f"{date.year}{semestre}"
+
+# Calcula la diferencia entre dos periodos, se ajusta de acuerdo a un numero de semestre inicial
+def getNumSemestre(primer_periodo: str, primer_num_semestre: int, nuevo_periodo: str):
+    # divide la anualidad y semestre
+    primer_tuple = (int(primer_periodo[:4]), int(primer_periodo[4:]))
+    nuevo_tuple = (int(nuevo_periodo[:4]), int(nuevo_periodo[4:]))
+    if nuevo_tuple[0] < primer_tuple[0]:
+        return None
+
+    dif_anualidad = nuevo_tuple[0] - primer_tuple[0]
+    # cada año es una diferencia de dos semestres
+    num_semestre = primer_num_semestre + (dif_anualidad * 2)
+    # ajustar por diferencia en semestre
+    if nuevo_tuple[1] > primer_tuple[1]:
+        num_semestre += 1
+    elif nuevo_tuple[1] < primer_tuple[1]:
+        num_semestre -= 1
+    return num_semestre
