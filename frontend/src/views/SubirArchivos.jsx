@@ -40,6 +40,7 @@ const SubirArchivos = () => {
             <Group position='center'>
                 {/* Alumnos inscritos en el semestre */}
                 <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={(file) => {
+                    console.log(file);
                     setIngresos(file);
                     subirIngresos();
                 }
