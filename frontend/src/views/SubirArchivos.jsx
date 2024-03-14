@@ -12,24 +12,23 @@ import { Dropzone } from '@mantine/dropzone';
 import { ArrowLeft, FileUpload, Upload } from "tabler-icons-react";
 import { useDisclosure } from '@mantine/hooks';
 import ResultadosLog from '../components/modals/resultadosLog';
-import { subirIngresosExcel } from '../routes/api/controllers/archivosController';
+import { subirArchivosExcel } from '../routes/api/controllers/archivosController';
 import { useState } from 'react';
 
 const SubirArchivos = () => {
-    const [opened, { open, close }] = useDisclosure(false);
+    const [opened, handlers] = useDisclosure(false);
     const [ingresos, setIngresos] = useState(null);
-    const info = {
-        "errores": ["Z20490712 no es un numero de control valido", "87907 no es un numero de control de valido"],
-        "advertencias": ["Ya existe un registro de titulacion para el numero de control 20490213", "Ya existe un registro de titulacion para el numero de control 18490658"],
-        "guardados": "Se guardaron 845 registros correctamente"
-    };
-    const subirIngresos = async () => {
+    const [info, setInfo] = useState({'errors':[], 'created':0});
+    const subirArchivos = async (tipo) => {
         const formData = new FormData();
         formData.append('file', ingresos[0], ingresos[0].name);
-        console.log(ingresos);
-        const res = await subirIngresosExcel(formData);
+        const res = await subirArchivosExcel(formData, tipo);
         console.log(res);
+        setInfo(res.data);
+        handlers.open();
     };
+
+
     return (
         <Container>
             <ActionIcon color='naranja' variant='filled' radius='lg' mt={16} mb={16}>
@@ -40,9 +39,8 @@ const SubirArchivos = () => {
             <Group position='center'>
                 {/* Alumnos inscritos en el semestre */}
                 <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={(file) => {
-                    console.log(file);
                     setIngresos(file);
-                    subirIngresos();
+                    subirArchivos('ingresos');
                 }
                 }>
                     <Flex align="center" direction="column" position="center" gap="xl">
@@ -57,7 +55,10 @@ const SubirArchivos = () => {
                 </Dropzone>
 
                 {/* Alumnos egresados */}
-                <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={open}>
+                <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={(file) => {
+                    setIngresos(file);
+                    subirArchivos('egresos');
+                }}>
                     <Flex align="center" direction="column" position="center" gap="xl">
                         <Text fw={700} tt="capitalize">Egresados</Text>
                         {/* Es un icono */}
@@ -70,7 +71,10 @@ const SubirArchivos = () => {
                 </Dropzone>
 
                 {/* Alumnos titulados */}
-                <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={open}>
+                <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={(file) => {
+                    setIngresos(file);
+                    subirArchivos('titulaciones');
+                }}>
                     <Flex align="center" direction="column" position="center" gap="xl">
                         <Text fw={700} tt="capitalize">Titulados</Text>
                         {/* Es un icono */}
@@ -81,7 +85,7 @@ const SubirArchivos = () => {
                     </Flex>
 
                 </Dropzone>
-                <ResultadosLog opened={opened} close={close} info={info}/>
+                <ResultadosLog opened={opened} close={handlers.close} info={info}/>
             </Group>
         </Container>
     );
