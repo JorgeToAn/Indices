@@ -14,8 +14,6 @@ const useAuthStore = create((set, get) => ({
       gender:           get().userData?.gender  || null,
       is_staff:         get().userData?.is_staff || false,
       is_superuser:     get().userData?.is_superuser || false,
-      groups:           get().userData?.groups || [],
-      perms:            get().userData?.permissions || [],
     }),
     setUser: (user) => set({ userData: user }),
     setLoading: (loading) => set({ loading }),
