@@ -62,7 +62,7 @@ class Usuario(AbstractUser):
     @receiver(reset_password_token_created)
     def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
         # the below like concatinates your websites reset password url and the reset email token which will be required at a later stage
-        email_plaintext_message = "Da clic en el enlace para restablecer tu contraseña" + " " + "{}{}".format(instance.request.build_absolute_uri("http://localhost:3000/cambio-contrasena/"), reset_password_token.key)
+        email_plaintext_message = "Da clic en el enlace para restablecer tu contraseña" + " " + "{}{}".format(instance.request.build_absolute_uri("http://localhost:3000/restablecer-contrasena/"), reset_password_token.key)
         """
             this below line is the django default sending email function,
             takes up some parameter (title(email title), message(email body), from(email sender), to(recipient(s))
