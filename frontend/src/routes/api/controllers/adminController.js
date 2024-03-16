@@ -5,3 +5,11 @@ export const getListaUsuarios = async() => {
     console.log(listaUsuarios.data['results']);
     return listaUsuarios.data['results'];
 };
+
+export const cambiarContrasena = async(password1, password2) => {
+    const res = await API.post('usuario/contrasena/cambiar/', {
+            'new_password1': password1,
+            'new_password2': password2,
+        },);
+    return res;
+};
