@@ -170,7 +170,7 @@ class LiberacionInglesDetail(generics.RetrieveUpdateDestroyAPIView):
 # FORMATO DE EXCEL [NO_CONTROL, PERIODO]
 class LiberacionInglesUpload(views.APIView):
     parser_classes = [FileUploadParser]
-    permission_classes = [[IsAuthenticated&IsAdminUser]]
+    permission_classes = [IsAuthenticated&IsAdminUser]
 
     def post(self, request, filename, format=None):
         try:
