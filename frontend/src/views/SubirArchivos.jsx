@@ -20,12 +20,10 @@ import './SubirArchivos.css';
 
 const SubirArchivos = () => {
     const [opened, handlers] = useDisclosure(false);
-    const [ingresos, setIngresos] = useState(null);
     const [info, setInfo] = useState({'errors':[], 'created':0});
-    const subirArchivos = async (tipo) => {
+    const subirArchivos = async (file, tipo) => {
         const formData = new FormData();
-        console.log(ingresos[0]);
-        formData.append('file', ingresos[0], ingresos[0].name);
+        formData.append('file', file[0], file[0].name);
         const res = await subirArchivosExcel(formData, tipo);
         console.log(res);
         setInfo(res.data);
@@ -44,8 +42,7 @@ const SubirArchivos = () => {
                 <div>
                     {/* Alumnos inscritos en el semestre */}
                     <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={(file) => {
-                        setIngresos(file);
-                        subirArchivos('ingresos');
+                        subirArchivos(file, 'ingresos');
                     }
                     }>
                         <Flex align="center" direction="column" position="center" gap="xl">
@@ -65,8 +62,7 @@ const SubirArchivos = () => {
                 <div>
                     {/* Alumnos egresados */}
                     <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={(file) => {
-                        setIngresos(file);
-                        subirArchivos('egresos');
+                        subirArchivos(file, 'egresos');
                     }}>
                         <Flex align="center" direction="column" position="center" gap="xl">
                             <Text fw={700} tt="capitalize">Egresados</Text>
@@ -86,8 +82,7 @@ const SubirArchivos = () => {
                 <div>
                     {/* Alumnos titulados */}
                     <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={(file) => {
-                        setIngresos(file);
-                        subirArchivos('titulaciones');
+                        subirArchivos(file, 'titulaciones');
                     }}>
                         <Flex align="center" direction="column" position="center" gap="xl">
                             <Text fw={700} tt="capitalize">Titulados</Text>
@@ -107,8 +102,7 @@ const SubirArchivos = () => {
                 <div>
                     {/* Liberación de ingles */}
                     <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={(file) => {
-                    setIngresos(file);
-                    subirArchivos('liberaciones-ingles');
+                    subirArchivos(file, 'liberaciones-ingles');
                     }}>
                         <Flex align="center" direction="column" position="center" gap="xl">
                             <Text fw={700} tt="capitalize">Liberación de ingles</Text>

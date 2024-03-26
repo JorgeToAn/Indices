@@ -3,7 +3,8 @@ import {
     Group,
     Modal,
     List,
-    Button
+    Button,
+    Text
 } from "@mantine/core";
 import { CircleX, CircleCheck, AlertTriangle, DiscountCheck } from "tabler-icons-react";
 import { PropTypes } from 'prop-types';
@@ -22,15 +23,26 @@ function ResultadosLog ({opened, close, info}) {
                 <Modal.Body>
                     <Accordion>
                         <Accordion.Item value="errores">
-                            <Accordion.Control icon={<CircleX  color="#ED4333" strokeWidth={3}/>}><b>Errores</b></Accordion.Control>
+                            <Accordion.Control icon={<CircleX  color="#ED4333" strokeWidth={3}/>}>
+                                <Group>
+                                    <Text fw='bold'>Errores</Text>
+                                    <Text size='xs'>({info.errors.length})</Text>
+                                </Group>
+                                </Accordion.Control>
                             <Accordion.Panel>
                                 <List>
-                                    { info.errors.length > 0 ? info.erors.map( (error, index) => <List.Item key={index}>{error}</List.Item>) : <List.Item>No hubo ningún error</List.Item> }
+                                { info.errors.length > 0 ? info.errors.map((err) => <List.Item key={1}>{info.errors[0].message}</List.Item> )  : <List.Item>No hubo ningún error</List.Item> }
+                                    {/* { info.errors?.length > 0 ? info.erors.map( (error, index) => <List.Item key={index}>{error.message}</List.Item>) : <List.Item>No hubo ningún error</List.Item> } */}
                                 </List>
                             </Accordion.Panel>
                         </Accordion.Item>
                         <Accordion.Item value="advertencias">
-                            <Accordion.Control icon={<AlertTriangle  color="#FFD25A" strokeWidth={3}/>}><b>Advertencias</b></Accordion.Control>
+                            <Accordion.Control icon={<AlertTriangle  color="#FFD25A" strokeWidth={3}/>}>
+                            <Group>
+                                <Text fw='bold'>Advertencias</Text>
+                                <Text size='xs'>({info.created})</Text>
+                            </Group>
+                            </Accordion.Control>
                             <Accordion.Panel>
                                 <List>
                                     <List.Item>No hay ninguna advertencia</List.Item>
@@ -38,7 +50,12 @@ function ResultadosLog ({opened, close, info}) {
                             </Accordion.Panel>
                         </Accordion.Item>
                         <Accordion.Item value="guardados">
-                            <Accordion.Control icon={<DiscountCheck  color="#80ED99" strokeWidth={3}/>}><b>Guardados</b></Accordion.Control>
+                            <Accordion.Control icon={<DiscountCheck  color="#80ED99" strokeWidth={3}/>}>
+                            <Group>
+                                <Text fw='bold'>Guardados</Text>
+                                <Text size='xs'>({info.created})</Text>
+                            </Group>
+                            </Accordion.Control>
                             <Accordion.Panel>
                                 <List>
                                     <List.Item >Se crearon {info.created} registros</List.Item>
