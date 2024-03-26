@@ -1,9 +1,18 @@
-import { Button, Center, Flex, Group, Text, TextInput, createStyles } from "@mantine/core";
+import { Button, Flex, Group, PasswordInput, Popover, Progress, Text, createStyles } from "@mantine/core";
 import Header from "../../components/header";
-import { useDisclosure, useInputState } from "@mantine/hooks";
 import { cambiarContrasena } from "../../routes/api/controllers/adminController";
-import ModalRespuesta from "../../components/modals/ModalRespuesta";
 import { useState } from "react";
+import { useForm } from "@mantine/form";
+import { CircleX, ShieldCheck } from "tabler-icons-react";
+import { notifications } from "@mantine/notifications";
+import PasswordStrengthMeter from "../../components/PasswordStrengthMeter";
+
+const requirements = [
+    { re: /[0-9]/, label: 'Incluye 1 número' },
+    { re: /[a-z]/, label: 'Includes 1 letra minúscula' },
+    { re: /[A-Z]/, label: 'Includes 1 letra mayúscula' },
+    { re: /[$&+,:;=?@#|'<>.^*()%!-]/, label: 'Incluye caracter especial' },
+    ];
 
 const useStyles = createStyles((theme) => ({
     orangeInput: {
@@ -15,26 +24,53 @@ const useStyles = createStyles((theme) => ({
         color: '#FFAA5A',
     }
 }));
+function getStrength(password) {
+    let multiplier = password.length > 5 ? 0 : 1;
+    requirements.forEach((requirement) => {
+        if (!requirement.re.test(password)) {
+        multiplier += 1;
+        }
+    });
+
+    return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 10);
+}
+
 const CambioContrasena = () => {
     const { classes} = useStyles();
-    // Bloquear boton hasta que los 4 campos sean correctos
-    // const [password, setPassword] = useInputState('');
-    const [newPassword, setNewPassword] = useInputState('');
-    const [copyNewPassword, setCopyNewPassword] = useInputState('');
-    const [opened, handlers] = useDisclosure(false);
-    const [response, setResponse] = useState(false);
+    const [popoverOpened, setPopoverOpened] = useState(false);
 
+    const form = useForm({
+        initialValues: {
+            password: '',
+            copyPassword: '',
+        },
+        validate: {
+            password: ((value) => value.length < 8 ? 'La contraseña es demasiado corta': null),
+            copyPassword: ((value, values) => value !== values.password ? 'Las contraseñas deben ser iguales' : null),
+        }
+    });
+    const strength = getStrength(form.getInputProps('password').value);
+    const checks = requirements.map((requirement, index) => (
+        <PasswordStrengthMeter key={index} label={requirement.label} meets={requirement.re.test(form.getInputProps('password').value)} />
+    ));
 
-    const handleChange = () => {
-        return (newPassword === copyNewPassword) && newPassword && copyNewPassword ? true :  false;
-    };
-
-    const changePass = async() => {
-        const res = await cambiarContrasena(newPassword, copyNewPassword);
-        console.log(res);
-        if (res.status === 200)
-            setResponse(true);
-        handlers.open();
+    const changePassword = async (values) => {
+        if (form.validate() && strength === 100) {
+            const res = await cambiarContrasena(values.password, values.copyPassword);
+            if (res.status === 200) {
+                notifications.show({
+                    message: 'Enhorabuena, la contraseña de su cuenta ha sido cambiada exitosamente.',
+                    color: 'teal',
+                    icon: <ShieldCheck />,
+                  });
+            } else {
+                notifications.show({
+                    message: 'Lo sentimos, ocurrio un problema y no se pudo cambiar su contraseña.',
+                    color: 'red',
+                    icon: <CircleX />,
+                  });
+            }
+        }
     };
     return(
         <div style={{
@@ -45,19 +81,26 @@ const CambioContrasena = () => {
             <Group  align="center" justify="center" mt={20} spacing="xl" >
                 <Flex direction="column" align="center">
                 <Text>En seguida podrás cambiar tu contraseña actual del sistema, recuerda que debe tener 8 caracteres como mínimo, 1 número, 1 caracter especial, 1 letra minúscula y 1 letra mayúscula.</Text>
-                    <form>
+                <form onSubmit={form.onSubmit(changePassword)}>
                         <Group w='25vw' align="center" justify="center">
-                            {/* <TextInput id="password" classNames={{ input: classes.orangeInput, required: classes.orangeAsterisk}} value={password} onChange={setPassword} w="100%" color="naranja" label="Contraseña actual" withAsterisk/> */}
-                            <TextInput id="newPassword" classNames={{ input: classes.orangeInput, required: classes.orangeAsterisk}} value={newPassword} onChange={setNewPassword} w="100%" label="Contraseña nueva" withAsterisk />
-                            <TextInput id="copyNewPassword" classNames={{ input: classes.orangeInput, required: classes.orangeAsterisk}} value={copyNewPassword} onChange={setCopyNewPassword} w="100%" label="Repita la contraseña nueva" withAsterisk />
+                        <Popover opened={popoverOpened} position="bottom" width="target" transitionProps={{ transition: 'pop' }}>
+                            <Popover.Target>
+                                <div style={{ width: '100%'}} onFocusCapture={() => setPopoverOpened(true)} onBlurCapture={() => setPopoverOpened(false)} >
+                                    <PasswordInput  {...form.getInputProps('password')} classNames={{ input: classes.orangeInput, required: classes.orangeAsterisk}} w="100%" label="Contraseña nueva" withAsterisk />
+                                </div>
+                            </Popover.Target>
+                            <Popover.Dropdown>
+                                <Progress color='teal' value={strength} size={5} mb="xs" />
+                                <PasswordStrengthMeter label="Incluir al menos 8 caracteres" meets={form.getInputProps('password').value.length > 7} />
+                                {checks}
+                            </Popover.Dropdown>
+                        </Popover>
+                        <PasswordInput width={300} maw='100%' {...form.getInputProps('copyPassword')} classNames={{ input: classes.orangeInput, required: classes.orangeAsterisk}} w="100%" label="Repita la contraseña nueva" withAsterisk />
+                        <Button m='10px auto' disabled={!(strength === 100)} color="naranja" type="submit">Cambiar contraseña</Button>
                         </Group>
-                        <Center>
-                            <Button mt={10} color="naranja" onClick={changePass} disabled={!handleChange()}>Cambiar contraseña</Button>
-                        </Center>
                     </form>
                 </Flex>
             </Group>
-            <ModalRespuesta opened={opened} close={handlers.close} success={response}/>
         </div>
     );
 };
