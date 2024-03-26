@@ -35,7 +35,7 @@ class IngresoUpload(views.APIView):
     parser_classes = [FileUploadParser]
     permission_classes = [IsAuthenticated&IsAdminUser]
 
-    def post(self, request, format=None):
+    def post(self, request, filename, format=None):
         try:
             file_obj = request.data['file']
             wb = openpyxl.load_workbook(file_obj, data_only=True)
@@ -90,7 +90,7 @@ class EgresoUpload(views.APIView):
     parser_classes = [FileUploadParser]
     permission_classes = [IsAuthenticated&IsAdminUser]
 
-    def post(self, request, format=None):
+    def post(self, request, filename, format=None):
         try:
             file_obj = request.data['file']
             wb = openpyxl.load_workbook(file_obj, data_only=True)
@@ -131,7 +131,7 @@ class TitulacionUpload(views.APIView):
     parser_classes = [FileUploadParser]
     permission_classes = [IsAuthenticated&IsAdminUser]
 
-    def post(self, request, format=None):
+    def post(self, request, filename, format=None):
         try:
             file_obj = request.data['file']
             wb = openpyxl.load_workbook(file_obj, data_only=True)
@@ -170,9 +170,9 @@ class LiberacionInglesDetail(generics.RetrieveUpdateDestroyAPIView):
 # FORMATO DE EXCEL [NO_CONTROL, PERIODO]
 class LiberacionInglesUpload(views.APIView):
     parser_classes = [FileUploadParser]
-    permission_classes = [[IsAuthenticated&IsAdminUser]]
+    permission_classes = [IsAuthenticated&IsAdminUser]
 
-    def post(self, request, format=None):
+    def post(self, request, filename, format=None):
         try:
             file_obj = request.data['file']
             wb = openpyxl.load_workbook(file_obj, data_only=True)

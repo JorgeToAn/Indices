@@ -52,7 +52,7 @@ class IndicesPermanencia(APIView):
             else:
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno__plan__carrera__pk=carrera))
                 poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
-            inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos))
+            inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo))
             poblacion_egr = Egreso.objects.aggregate(egresados=inactivos)
             poblacion_titulo = Titulacion.objects.aggregate(titulados=inactivos)
             tasa_permanencia = Decimal((poblacion_act['poblacion']*100)/poblacion_nuevo_ingreso)
@@ -108,7 +108,7 @@ class IndicesEgreso(APIView):
             else:
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno__plan__carrera__pk=carrera))
                 poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
-            inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos))
+            inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo))
             poblacion_egr = Egreso.objects.aggregate(egresados=inactivos)
             poblacion_titulo = Titulacion.objects.aggregate(titulados=inactivos)
             tasa_egreso = Decimal((poblacion_egr['egresados']*100)/poblacion_nuevo_ingreso)
@@ -157,7 +157,7 @@ class IndicesTitulacion(APIView):
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno__plan__carrera__pk=carrera))
                 poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
             inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos))
-            poblacion_egr = Egreso.objects.aggregate(egresados=inactivos)
+            poblacion_egr = Egreso.objects.aggregate(egresados=inactivos, periodo=periodo)
             poblacion_titulo = Titulacion.objects.aggregate(titulados=inactivos)
             tasa_titulacion = Decimal((poblacion_titulo['titulados']*100)/poblacion_nuevo_ingreso)
             tasa_titulacion = round(tasa_titulacion, 2)
@@ -208,7 +208,7 @@ class IndicesDesercion(APIView):
             else:
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno__plan__carrera__pk=carrera))
                 poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
-            inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos))
+            inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo))
             poblacion_egr = Egreso.objects.aggregate(egresados=inactivos)
             desercion = alumnos_corte_anterior - poblacion_act['poblacion'] - poblacion_egr['egresados']
             if desercion < 0:
