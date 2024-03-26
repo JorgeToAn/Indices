@@ -1,8 +1,9 @@
-import { Button, Center, Flex, Group, Text, TextInput, createStyles } from "@mantine/core";
+import { Button, Center, Container, Flex, Group, Text, TextInput, createStyles } from "@mantine/core";
 import Header from "../../components/header";
-import { useInputState } from "@mantine/hooks";
 import { sendPasswordResetEmail } from "../../routes/api/controllers/restablecerController";
-import { useNavigate } from "react-router-dom";
+import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { CircleX, ShieldCheck } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
     orangeInput: {
@@ -15,37 +16,58 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 const EmailRestablecer = () => {
-    const navigate = useNavigate();
     const { classes} = useStyles();
-    const [email, setEmail] = useInputState('');
+    const form = useForm({
+        initialValues: {
+            email: ''
+        },
+        validate: {
+            email: (value) => (/^\S+@\S+$/.test(value) ? null : 'El email no es válido'),
+        }
+    });
 
-
-    const handleChange = async () => {
-        const res = await sendPasswordResetEmail(email);
-        if (res.status === 200) {
-            navigate('/iniciar-sesion');
+    const sendEmail = async (values) => {
+        if (form.validate()) {
+            const res = await sendPasswordResetEmail(values.email);
+            console.log(res.status);
+            if (res.status === 200) {
+                notifications.show({
+                    message: 'Se ha enviado un mensaje a la dirección de correo electrónico que ingreso, revise su bandeja de entrada y siga las instrucciones del correo.',
+                    color: 'teal',
+                    icon: <ShieldCheck />,
+                  });
+            } else {
+                notifications.show({
+                    message: 'Lo sentimos, el correo que ingreso no corresponde a ningun usuario.',
+                    color: 'red',
+                    icon: <CircleX />,
+                  });
+            }
         }
     };
     return(
-        <div style={{
-            align: "left",
+        <Container style={{
+            display: 'flex',
+            flexDirection: 'column',
+            align: "center",
+            justifyContent: "center",
             padding: "2vw"
         }}>
-            <Header color="naranja" route="/" section="Usuario" title="Cambio de contraseña" />
+            <Header color="naranja" route="/" section="Usuario" title="Restablecimiento de contraseña" />
             <Group  align="center" justify="center" mt={20} spacing="xl" >
                 <Flex direction="column" align="center">
-                <Text>En seguida podrás restablecer tu contraseña del sistema, recuerda que debe tener 8 caracteres como mínimo, 1 número, 1 caracter especial, 1 letra minúscula y 1 letra mayúscula.</Text>
-                    <form>
+                <Text>Ingresa el correo electrónico asociado a su cuenta, enseguida le enviaremos las instrucciones para restablecer su contraseña.</Text>
+                    <form onSubmit={form.onSubmit(sendEmail)}>
                         <Group w='25vw' align="center" justify="center">
-                            <TextInput id="newPassword" classNames={{ input: classes.orangeInput, required: classes.orangeAsterisk}} value={email} onChange={setEmail} w="100%" label="Correo electrónico" withAsterisk />
+                            <TextInput {...form.getInputProps('email')} classNames={{ input: classes.orangeInput, required: classes.orangeAsterisk}} w="100%" label="Correo electrónico" withAsterisk />
                         </Group>
                         <Center>
-                            <Button mt={10} color="naranja" onClick={handleChange}>Cambiar contraseña</Button>
+                            <Button mt={10} color="naranja" type="submit">Cambiar contraseña</Button>
                         </Center>
                     </form>
                 </Flex>
             </Group>
-        </div>
+        </Container>
     );
 };
 
