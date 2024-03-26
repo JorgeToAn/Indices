@@ -30,4 +30,5 @@ urlpatterns = [
     path('tablas/', include('tablas.urls')),
     path('indices/', include('indices.urls')),
     path('reportes/', include('reportes.urls')),
+    path('cedulas/', include('cedulas.urls')),
 ]
