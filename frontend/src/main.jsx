@@ -40,6 +40,8 @@ import SeleccionReportes from "./views/reportes/Seleccion";
 import ReportesTitulacion from "./views/reportes/Titulacion";
 import ReportesEgreso from "./views/reportes/Egreso";
 import ReportesNuevoIngreso from "./views/reportes/NuevoIngreso";
+import RestablecerContrasena from "./views/usuario/RestablecerContrasena";
+import EmailRestablecer from "./views/usuario/EmailRestablecer";
 
 const router = createBrowserRouter([
   {
@@ -167,6 +169,14 @@ const router = createBrowserRouter([
     path: '/iniciar-sesion',
     element: <Login />,
   },
+  {
+    path: '/restablecer-contrasena/:t',
+    element: <RestablecerContrasena />,
+  },
+  {
+    path: '/restablecer-contrasena/email',
+    element: <EmailRestablecer />,
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
