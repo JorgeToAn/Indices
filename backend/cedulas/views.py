@@ -6,10 +6,9 @@ from rest_framework.response import Response
 from rest_framework import permissions
 
 from registros.models import Ingreso, Egreso, Titulacion
-from registros.periodos import calcularPeriodos
+from registros.periodos import calcularPeriodos, getPeriodoActual
 
 from decimal import Decimal
-
 class CedulasCACEI(APIView):
     """
     Vista para generar la tabla de cédulas CACEI.
@@ -27,8 +26,7 @@ class CedulasCACEI(APIView):
     def get(self, request, format=None):
         nuevo_ingreso = request.GET.get('nuevo-ingreso')
         traslado_equivalencia = request.GET.get('traslado-equivalencia')
-        cohorte = request.GET.get('cohorte') if request.GET.get('cohorte') else '20241'
-        # semestres = request.GET.get('semestres') if request.GET.get('semestres') else '9'
+        cohorte = request.GET.get('cohorte') if request.GET.get('cohorte') else getPeriodoActual()
         carrera = request.GET.get('carrera')
 
         tipos = []
@@ -104,7 +102,7 @@ class CedulasCACECA(APIView):
     def get(self, request, format=None):
         nuevo_ingreso = request.GET.get('nuevo-ingreso')
         traslado_equivalencia = request.GET.get('traslado-equivalencia')
-        cohorte = request.GET.get('cohorte') if request.GET.get('cohorte') else '20241'
+        cohorte = request.GET.get('cohorte') if request.GET.get('cohorte') else getPeriodoActual()
         carrera = request.GET.get('carrera')
 
         tipos = []
