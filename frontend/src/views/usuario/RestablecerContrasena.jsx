@@ -1,11 +1,12 @@
-import { Button, Flex, Group, PasswordInput, Popover, Progress, Text, createStyles } from "@mantine/core";
+import { Button, Container, Flex, Group, PasswordInput, Popover, Progress, Text, createStyles } from "@mantine/core";
 import Header from "../../components/header";
-import { cambiarContrasena } from "../../routes/api/controllers/adminController";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "@mantine/form";
-import { CircleX, ShieldCheck } from "tabler-icons-react";
+import { sendNewPassword } from "../../routes/api/controllers/restablecerController";
+import PasswordStrengthMeter from './../../components/PasswordStrengthMeter';
+import { useState } from "react";
 import { notifications } from "@mantine/notifications";
-import PasswordStrengthMeter from "../../components/PasswordStrengthMeter";
+import { CircleX } from "tabler-icons-react";
 
 const requirements = [
     { re: /[0-9]/, label: 'Incluye 1 número' },
@@ -26,6 +27,7 @@ const useStyles = createStyles((theme) => ({
 }));
 function getStrength(password) {
     let multiplier = password.length > 5 ? 0 : 1;
+    console.log(password);
     requirements.forEach((requirement) => {
         if (!requirement.re.test(password)) {
         multiplier += 1;
@@ -34,15 +36,16 @@ function getStrength(password) {
 
     return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 10);
 }
-
-const CambioContrasena = () => {
+const RestablecerContrasena = () => {
+    const navigate = useNavigate();
     const { classes} = useStyles();
     const [popoverOpened, setPopoverOpened] = useState(false);
-
+    const { t } = useParams();
     const form = useForm({
         initialValues: {
             password: '',
             copyPassword: '',
+            token: t
         },
         validate: {
             password: ((value) => value.length < 8 ? 'La contraseña es demasiado corta': null),
@@ -54,15 +57,11 @@ const CambioContrasena = () => {
         <PasswordStrengthMeter key={index} label={requirement.label} meets={requirement.re.test(form.getInputProps('password').value)} />
     ));
 
-    const changePassword = async (values) => {
+    const sendPassword = async (values) => {
         if (form.validate() && strength === 100) {
-            const res = await cambiarContrasena(values.password, values.copyPassword);
+            const res = await sendNewPassword(t, values.password);
             if (res.status === 200) {
-                notifications.show({
-                    message: 'Enhorabuena, la contraseña de su cuenta ha sido cambiada exitosamente.',
-                    color: 'teal',
-                    icon: <ShieldCheck />,
-                  });
+                navigate('/iniciar-sesion');
             } else {
                 notifications.show({
                     message: 'Lo sentimos, ocurrio un problema y no se pudo cambiar su contraseña.',
@@ -72,16 +71,21 @@ const CambioContrasena = () => {
             }
         }
     };
+
+
     return(
-        <div style={{
-            align: "left",
+        <Container style={{
+            display: 'flex',
+            flexDirection: 'column',
+            align: "center",
+            justifyContent: "center",
             padding: "2vw"
         }}>
-            <Header color="naranja" route="/" section="Usuario" title="Cambio de contraseña" />
+            <Header color="naranja" route="/iniciar-sesion" section="Usuario" title="Restablecimiento de contraseña" />
             <Group  align="center" justify="center" mt={20} spacing="xl" >
                 <Flex direction="column" align="center">
-                <Text>En seguida podrás cambiar tu contraseña actual del sistema, recuerda que debe tener 8 caracteres como mínimo, 1 número, 1 caracter especial, 1 letra minúscula y 1 letra mayúscula.</Text>
-                <form onSubmit={form.onSubmit(changePassword)}>
+                <Text>En seguida podrás restablecer tu contraseña del sistema, recuerda que debe tener 8 caracteres como mínimo, 1 número, 1 caracter especial, 1 letra minúscula y 1 letra mayúscula.</Text>
+                    <form onSubmit={form.onSubmit(sendPassword)}>
                         <Group w='25vw' align="center" justify="center">
                         <Popover opened={popoverOpened} position="bottom" width="target" transitionProps={{ transition: 'pop' }}>
                             <Popover.Target>
@@ -101,8 +105,8 @@ const CambioContrasena = () => {
                     </form>
                 </Flex>
             </Group>
-        </div>
+        </Container>
     );
 };
 
-export default CambioContrasena;
+export default RestablecerContrasena;

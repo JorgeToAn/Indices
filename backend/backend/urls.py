@@ -31,4 +31,5 @@ urlpatterns = [
     path('indices/', include('indices.urls')),
     path('reportes/', include('reportes.urls')),
     path('cedulas/', include('cedulas.urls')),
+    path('password-reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]

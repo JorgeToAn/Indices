@@ -12,7 +12,7 @@ import { notifications } from '@mantine/notifications';
 import { MdError } from 'react-icons/md';
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '../store/auth';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from '@mantine/form';
 import { login } from '../utils/auth';
 
@@ -69,8 +69,11 @@ const Login = () => {
                   required
                   {...form.getInputProps('password')}
                 />
-                <Center mx={ "auto" } >
+                <Center mx={ "auto" }>
                   <Button type="submit" radius="lg" w={300} mt={ 16 } >Iniciar sesión</Button>
+                </Center>
+                <Center>
+                  <Link to='/restablecer-contrasena/email'>¿Olvidaste tu contraseña?</Link>
                 </Center>
               </form>
           </Box>
