@@ -6,10 +6,11 @@ import {  useEffect, useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
-import { Printer } from 'tabler-icons-react';
+import { Download, Printer, X } from 'tabler-icons-react';
 import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
 import { generateExcel } from '../../utils/helpers/export/excelHelpers';
 import { getCedulasTabla } from '../../routes/api/controllers/cedulaController';
+import { notifications } from '@mantine/notifications';
 
 
 const CedulaCacei = () => {
@@ -38,26 +39,40 @@ const CedulaCacei = () => {
         if (exportar === 'PDF') {
             generatePDF('Poblacion', cohorte, '15', carrera);
         } else if (exportar === 'Excel') {
-                await generateExcel(heading, data, 'CACEI', cohorte, '15', tipoAlumno, carrera);
+            await generateExcel(heading, data, 'CACEI', cohorte, '15', tipoAlumno, carrera);
         }
+        notifications.show({
+            message: 'Se ha enviado un mensaje a la dirección de correo electrónico que ingreso, revise su bandeja de entrada y siga las instrucciones del correo.',
+            color: 'teal',
+            icon: <Download size={20} />,
+          });
     };
 
     const handleTable = async() => {
         setIsLoading(true);
         const res = await getCedulasTabla('cacei', examenYConv, trasladoYEquiv, cohorte, carrera);
-        const tablaC =Object.entries(res.data);
-        const tabla = [];
-        tablaC.forEach((fila, index) => {
-            const row = [];
-            row.push(index);
-            row.push(fila[0]);
-            row.push(fila[1].poblacion_total, fila[1].poblacion, `${fila[1].porcentaje_alumnos_carrera}%`, fila[1].egresados, `${fila[1].tasa_egreso}%`, fila[1].titulados, `${fila[1].tasa_titulacion}%`);
-            tabla.push(row);
-        });
-        console.log(tablaC);
-        setHeading(header);
-        setData(tabla);
-        setIsLoading(false);
+        if (res.status === 200) {
+            const tablaC =Object.entries(res.data);
+            const tabla = [];
+            tablaC.forEach((fila, index) => {
+                const row = [];
+                row.push(index);
+                row.push(fila[0]);
+                row.push(fila[1].poblacion_total, fila[1].poblacion, `${fila[1].porcentaje_alumnos_carrera}%`, fila[1].egresados, `${fila[1].tasa_egreso}%`, fila[1].titulados, `${fila[1].tasa_titulacion}%`);
+                tabla.push(row);
+            });
+            setHeading(header);
+            setData(tabla);
+            setIsLoading(false);
+        } else {
+            setHeading([]);
+            setData([[]]);
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al obtener los datos',
+                color: 'red',
+                icon: <X />,
+              });
+        }
     };
 
     return(
