@@ -67,7 +67,7 @@ const CedulaCaceca = () => {
              await generateExcel(heading, data, 'CACECA', cohorte, '15', tipoAlumno, carrera);
         }
         notifications.show({
-            message: 'La descarga de tu docmento ha comenzado.',
+            message: 'La descarga de tu documento ha comenzado.',
             color: 'teal',
             icon: <Download size={20} />,
           });
