@@ -14,7 +14,7 @@ const Principal = () => {
     };
     return (
         <Container style={{
-            'max-width': '100vw',
+            maxWidth: '100vw',
             'padding': '0'
         }}>
             <Group position="center">
