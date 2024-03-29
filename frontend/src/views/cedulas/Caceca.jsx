@@ -80,7 +80,7 @@ const CedulaCaceca = () => {
                         <Checkbox labelPosition='left' color='naranja'  checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
-                        <Button  disabled={!cohorte || !carrera || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
+                        <Button  disabled={!cohorte || !carrera || !exportar || !(examenYConv || trasladoYEquiv) || data[0].length === 0} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
                         <Button disabled={(!cohorte || !carrera || !(examenYConv || trasladoYEquiv))&& !isLoading} onClick={handleTable} color='negro'>{isLoading ? <Loader size='sm' color='#FFFFFF'/>  : "Filtrar"}</Button>
                     </Group>
                 </fieldset>

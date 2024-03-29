@@ -38,7 +38,7 @@ const CedulaCacei = () => {
         if (exportar === 'PDF') {
             generatePDF('Poblacion', cohorte, '15', carrera);
         } else if (exportar === 'Excel') {
-             await generateExcel(heading, data, 'CACEI', cohorte, '15', tipoAlumno, carrera);
+                await generateExcel(heading, data, 'CACEI', cohorte, '15', tipoAlumno, carrera);
         }
     };
 
@@ -82,7 +82,7 @@ const CedulaCacei = () => {
                         <Checkbox labelPosition='left' checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
-                        <Button  disabled={!cohorte || !carrera || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
+                        <Button  disabled={!cohorte || !carrera || !exportar || !(examenYConv || trasladoYEquiv) || data[0].length === 0} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
                         <Button disabled={(!cohorte || !carrera || !(examenYConv || trasladoYEquiv))&& !isLoading} onClick={handleTable} color='negro'>{isLoading ? <Loader size='sm' color='#FFFFFF'/>  : "Filtrar"}</Button>
                     </Group>
                 </fieldset>
