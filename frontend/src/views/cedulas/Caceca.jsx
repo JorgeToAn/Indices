@@ -1,4 +1,4 @@
-import { Button, Checkbox, Flex, Group } from '@mantine/core';
+import { Button, Checkbox, Flex, Group, Loader } from '@mantine/core';
 import Header from '../../components/header';
 import Tabla from '../../components/Tabla';
 import Dropdown from '../../components/Dropdown';
@@ -9,8 +9,10 @@ import "../indices/Indices.css";
 import { Printer } from 'tabler-icons-react';
 import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
 import { generateExcel } from '../../utils/helpers/export/excelHelpers';
+import { getCedulasTabla } from '../../routes/api/controllers/cedulaController';
 
 const CedulaCaceca = () => {
+    const [isLoading, setIsLoading] = useState(false);
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
     const [heading, setHeading] = useState([]);
     const [data, setData] = useState([]);
@@ -20,16 +22,33 @@ const CedulaCaceca = () => {
     const [exportar, setExportar] = useInputState('');
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
+    const header = [
+        'Generaciones', 'Ingreso', 'Deserción', 'Indice de deserción', 'Reprobación', 'Indice de reprobación', 'Egreso', 'Titulación', 'Indice de titulación', 'Eficiencia terminal'
+    ];
 
     useEffect(() => {
-        const header = [
-            'Generaciones', 'Ingreso', 'Deserción', 'Indice de deserción', 'Reprobación', 'Indice de reprobación', 'Egreso', 'Titulación', 'Indice de titulación', 'Eficiencia terminal'
-        ];
-        setHeading(header);
         setData([
             []
         ]);
     }, []);
+
+    const handleTable = async() => {
+        setIsLoading(true);
+        const res = await getCedulasTabla('caceca', examenYConv, trasladoYEquiv, cohorte, carrera);
+        const tablaC =Object.entries(res.data);
+        const tabla = [];
+        console.log(tablaC);
+        tablaC.forEach((fila) => {
+            const row = [];
+            row.push(fila[0]);
+            row.push(fila[1].poblacion, fila[1].desercion, `${fila[1].tasa_desercion}%`, fila[1].reprobacion, `${fila[1].tasa_reprobacion}%`, fila[1].egresados, fila[1].titulados, `${fila[1].tasa_titulacion}%`, `${fila[1].tasa_egreso}%`);
+            tabla.push(row);
+        });
+        console.log(tabla);
+        setHeading(header);
+        setData(tabla);
+        setIsLoading(false);
+    };
 
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
@@ -62,7 +81,7 @@ const CedulaCaceca = () => {
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
                         <Button  disabled={!cohorte || !carrera || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
-                        <Button disabled={!cohorte || !carrera || !(examenYConv || trasladoYEquiv)} color='negro'>Filtrar</Button>
+                        <Button disabled={(!cohorte || !carrera || !(examenYConv || trasladoYEquiv))&& !isLoading} onClick={handleTable} color='negro'>{isLoading ? <Loader size='sm' color='#FFFFFF'/>  : "Filtrar"}</Button>
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-naranja" headers={heading} content={data} />
