@@ -42,7 +42,7 @@ const CedulaCacei = () => {
             await generateExcel(heading, data, 'CACEI', cohorte, '15', tipoAlumno, carrera);
         }
         notifications.show({
-            message: 'Se ha enviado un mensaje a la dirección de correo electrónico que ingreso, revise su bandeja de entrada y siga las instrucciones del correo.',
+            message: 'La descarga de tu docmento ha comenzado.',
             color: 'teal',
             icon: <Download size={20} />,
           });

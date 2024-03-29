@@ -6,7 +6,7 @@ import {  useEffect, useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
-import { Printer, X } from 'tabler-icons-react';
+import { Download, Printer, X } from 'tabler-icons-react';
 import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
 import { generateExcel } from '../../utils/helpers/export/excelHelpers';
 import { getCedulasTabla } from '../../routes/api/controllers/cedulaController';
@@ -66,6 +66,11 @@ const CedulaCaceca = () => {
         } else if (exportar === 'Excel') {
              await generateExcel(heading, data, 'CACECA', cohorte, '15', tipoAlumno, carrera);
         }
+        notifications.show({
+            message: 'La descarga de tu docmento ha comenzado.',
+            color: 'teal',
+            icon: <Download size={20} />,
+          });
     };
     return(
         <div style={{
