@@ -63,7 +63,6 @@ const CedulaCacei = () => {
             });
             setHeading(header);
             setData(tabla);
-            setIsLoading(false);
         } else {
             setHeading([]);
             setData([[]]);
@@ -73,6 +72,7 @@ const CedulaCacei = () => {
                 icon: <X />,
               });
         }
+        setIsLoading(false);
     };
 
     return(

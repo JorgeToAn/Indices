@@ -47,7 +47,6 @@ const CedulaCaceca = () => {
             });
             setHeading(header);
             setData(tabla);
-            setIsLoading(false);
         } else {
             setHeading([]);
             setData([[]]);
@@ -57,6 +56,7 @@ const CedulaCaceca = () => {
                 icon: <X />,
             });
         }
+        setIsLoading(false);
     };
 
     const handlePrint = async() => {
