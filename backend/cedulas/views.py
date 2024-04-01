@@ -81,7 +81,7 @@ class CedulasCACEI(APIView):
                 fin = "6/{p}".format(p=periodos[8])
             else:
                 fin = "12/{p}".format(p=periodos[8])
-            generacion = "{inicio}-{fin}".format(inicio=inicio, fin=fin)
+            generacion = "{inicio} - {fin}".format(inicio=inicio, fin=fin)
             response_data[generacion] = dict(poblacion_total=poblacion_total['poblacion'], poblacion=poblacion_nuevo_ingreso, porcentaje_alumnos_carrera=porcentaje_alumnos_carrera, egresados=poblacion_egr, tasa_egreso=tasa_egreso, titulados=poblacion_titulo, tasa_titulacion=tasa_titulo)
             periodoInicial = periodos[1]
         return Response(response_data)
@@ -155,7 +155,7 @@ class CedulasCACECA(APIView):
                 reprobacion = poblacion_nuevo_ingreso - poblacion_egr - desercion
                 tasa_reprobacion = Decimal((reprobacion*100)/poblacion_nuevo_ingreso)
                 tasa_reprobacion = round(tasa_reprobacion, 2)
-            generacion = "{inicio}-{fin}".format(inicio=periodos[0], fin=periodos[8])
+            generacion = "{inicio} - {fin}".format(inicio=periodos[0], fin=periodos[8])
             response_data[generacion] = dict(poblacion=poblacion_nuevo_ingreso, desercion=desercion, tasa_desercion=tasa_desercion, reprobacion=reprobacion, tasa_reprobacion=tasa_reprobacion, egresados=poblacion_egr, titulados=poblacion_titulo, tasa_titulacion=tasa_titulo, tasa_egreso=tasa_egreso)
             periodoInicial = periodos[8]
         return Response(response_data)
