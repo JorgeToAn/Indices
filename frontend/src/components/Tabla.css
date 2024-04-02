@@ -5,16 +5,46 @@
     background-color: #FFAA5A;
 }
 
+.tabla-naranja > thead  th {
+    background-color: #FFAA5A;
+}
 .tabla-negra > thead {
     background-color: #191919;
 }
-th {
+.tabla-negra > thead  th {
+    background-color: #191919;
+}
+.tabla-toronja > thead  th {
+    background-color: #FF785A;
+}
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+table tr {
+    border-collapse: separate;
+}
+thead:first-child  th {
+    border-top: none !important;
+    border-bottom: 0.0625rem solid white !important;
+
+    top: 0;
+}
+
+
+thead th {
+    position: sticky;
     color: white !important;
     text-transform: uppercase;
     width: max-content  !important;
     max-width: 250px !important;
     min-width: 70px;
+    /* border-right: 0.0625rem solid white !important;*/
+    border-top: 0.0625rem solid white !important; 
+    border-bottom: 0.0625rem solid white !important;
+    background-clip: padding-box
 }
+
 
 .tabla tr > td {
     max-width: 150px !important;

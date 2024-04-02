@@ -13,19 +13,17 @@ export const buildListaAlumnos = (lista, semestres, cohorte) => {
             if(dato !== undefined){
                 if (dato['periodo'] === `${periodo[0]}${periodo[1]}`) {
                     row.push(fila['plan']['carrera']);
-                } else {
-                    if (fila['registros']['egresos'] !== undefined) {
-                        if (fila['registros']['engresos']['periodo'] !== `${periodo[0]}${periodo[1]}`) {
-                        } else {
-                            row.push('EGR');
-                        }
-                    } else {
-                        row.push('BAJA');
-                    }
                 }
                 periodo = anioPeriodo(periodo);
             } else {
-                row.push('BAJA');
+                if (fila['registros']['egreso'][0] !== undefined) {
+                    console.log(fila['registros']['egreso'][0]['periodo']);
+                    if (fila['registros']['egreso'][0]['periodo'] === `${periodo[0]}${periodo[1]}`) {
+                        row.push('EGR');
+                    }
+                } else {
+                    row.push('BAJA');
+                }
             }
         }
         tabla.push(row);

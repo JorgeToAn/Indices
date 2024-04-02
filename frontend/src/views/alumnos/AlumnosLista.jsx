@@ -36,7 +36,7 @@ const AlumnosLista = () => {
 
     const handleTable = async() => {
         setIsLoading(true);
-        const res = await getAllAlumnosHistorial(examenYConv, trasladoYEquiv,cohorte, numSemestres, carrera, page, nextPage !== '' ? nextPage: '/alumnos/historial');
+        const res = await getAllAlumnosHistorial(examenYConv, trasladoYEquiv,cohorte, numSemestres, carrera, page, page > 1 ? nextPage: '/alumnos/historial');
         if (res.status === 200) {
             setNextPage(res.data['next']);
             const headers = getListaAlumnosHeaders(cohorte, numSemestres);
