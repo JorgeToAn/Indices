@@ -1,5 +1,5 @@
 
-import { Button, Checkbox, Flex, Group } from '@mantine/core';
+import { Button, Checkbox, Flex, Group, Loader } from '@mantine/core';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import Dropdown from './../../components/Dropdown';
@@ -7,13 +7,15 @@ import dropDownData from '../../mockup/dropDownData';
 import { useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
-import { Printer } from 'tabler-icons-react';
+import { Download, Printer, X } from 'tabler-icons-react';
 import { buildTablaIndices } from '../../utils/helpers/indicesHelpers';
 import { getIndicesData } from '../../routes/api/controllers/indicesHelpers';
 import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
 import { generateExcel } from '../../utils/helpers/export/excelHelpers';
+import { notifications } from '@mantine/notifications';
 
 const IndiceEgreso = () => {
+    const [isLoading, setIsLoading] = useState(false);
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
     const [heading, setHeading] = useState([[],[]]);
     const [data, setData] = useState([]);
@@ -26,11 +28,33 @@ const IndiceEgreso = () => {
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
     const handleTable = async() => {
-        const headers = getIndicesHeaders(4, cohorte, carrera);
-        setHeading(headers);
+        setIsLoading(true);
         const tabla = await getIndicesData('egreso', examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
-        const datos = buildTablaIndices('egreso', tabla, numSemestres);
-        setData(datos);
+        if (tabla.status === 200) {
+            const headers = getIndicesHeaders(4, cohorte, carrera);
+            setHeading(headers);
+            try {
+                const datos = buildTablaIndices('egreso', tabla.data, numSemestres);
+                setData(datos);
+            } catch (error) {
+                setHeading([[],[]]);
+                setData([]);
+                notifications.show({
+                    message: 'Lo sentimos, hubo un problema al generar la tabla',
+                    color: 'red',
+                    icon: <X />,
+                });
+            }
+        } else {
+            setHeading([[],[]]);
+            setData([]);
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al obtener los datos',
+                color: 'red',
+                icon: <X />,
+              });
+        }
+        setIsLoading(false);
     };
 
     const handlePrint = async() => {
@@ -40,6 +64,11 @@ const IndiceEgreso = () => {
         } else if (exportar === 'Excel') {
             await generateExcel(heading, data, 'Indice Egreso', cohorte, numSemestres, tipoAlumno);
         }
+        notifications.show({
+            message: 'La descarga de tu documento ha comenzado.',
+            color: 'teal',
+            icon: <Download size={20} />,
+          });
     };
 
     return(
@@ -65,8 +94,8 @@ const IndiceEgreso = () => {
                         <Checkbox labelPosition='left' color='naranja'  checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
-                        <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
-                        <Button onClick={handleTable} color='negro' disabled={!cohorte || !carrera || !numSemestres || !(examenYConv || trasladoYEquiv)} >Filtrar</Button>
+                        <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv) || data.length === 0} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
+                        <Button onClick={handleTable} color='negro' disabled={(!cohorte || !carrera || !numSemestres || !(examenYConv || trasladoYEquiv)) && !isLoading} >{isLoading ? <Loader size='sm' color='#FFFFFF'/>  : "Filtrar"}</Button>
                     </Group>
                 </fieldset>
                 <Tabla doubleHeader colors="tabla-naranja"  headers={heading} content={data} />

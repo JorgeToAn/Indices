@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 const token = Cookies.get('access_token');
 const API = axios.create({
-  baseURL: import.meta.env.BACKEND_URL,
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',

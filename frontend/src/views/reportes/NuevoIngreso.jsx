@@ -8,9 +8,11 @@ import dropDownData from '../../mockup/dropDownData';
 import "../indices/Indices.css";
 import { getNuevoIngresoHeaders } from '../../utils/helpers/headerHelpers';
 import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
-import { Printer } from 'tabler-icons-react';
+import { Download, Printer, X } from 'tabler-icons-react';
 import { generateExcel } from '../../utils/helpers/export/excelHelpers';
 import { getReportesNuevoIngreso } from '../../routes/api/controllers/reportesController';
+import { notifications } from '@mantine/notifications';
+import { buildTablaReportesNuevoIngreso } from '../../utils/helpers/reportesHelpers';
 
 const ReportesNuevoIngreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
@@ -28,13 +30,39 @@ const ReportesNuevoIngreso = () => {
     const handleTable = async() => {
         setIsLoading(true);
         const tabla = await getReportesNuevoIngreso(examenYConv, trasladoYEquiv, cohorte, numSemestres);
-        const header = getNuevoIngresoHeaders(cohorte, numSemestres);
-        setHeading(header);
-        setData(tabla);
+        if (tabla.status === 200) {
+            const header = getNuevoIngresoHeaders(cohorte, numSemestres);
+            setHeading(header);
+            try {
+                const reporte = buildTablaReportesNuevoIngreso(tabla.data);
+                setData(reporte);
+            } catch (error) {
+                setHeading([[], [], []]);
+                setData([]);
+                notifications.show({
+                    message: 'Lo sentimos, hubo un problema al generar la tabla',
+                    color: 'red',
+                    icon: <X />,
+                });
+            }
+        } else {
+            setHeading([[], [], []]);
+            setData([]);
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al obtener los datos',
+                color: 'red',
+                icon: <X />,
+              });
+        }
         setIsLoading(false);
     };
 
     const handlePrint = async() => {
+        notifications.show({
+            message: 'La descarga de tu documento ha comenzado.',
+            color: 'teal',
+            icon: <Download size={20} />,
+          });
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
             generatePDF('Nuevo Ingreso', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv);
@@ -64,8 +92,8 @@ const ReportesNuevoIngreso = () => {
                         <Checkbox color='naranja'  labelPosition='left' checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
-                        <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
-                        <Button onClick={handleTable} disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv) && !isLoading} color='negro'>{isLoading ? <Loader size='sm' color='#FFFFFF'/>  : "Filtrar"}</Button>
+                        <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv) || data.length === 0} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
+                        <Button onClick={handleTable} disabled={(!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)) && !isLoading} color='negro'>{isLoading ? <Loader size='sm' color='#FFFFFF'/>  : "Filtrar"}</Button>
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-naranja" doubleHeader  headers={heading} content={data} />

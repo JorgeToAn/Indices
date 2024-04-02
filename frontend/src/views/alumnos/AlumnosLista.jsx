@@ -8,11 +8,12 @@ import { useInputState } from "@mantine/hooks";
 import { useEffect, useRef, useState } from "react";
 import { getListaAlumnosHeaders } from "../../utils/helpers/headerHelpers";
 
-import { Printer } from "tabler-icons-react";
+import { Download, Printer, X } from "tabler-icons-react";
 import { getAllAlumnosHistorial, getFullHistorial } from "../../routes/api/controllers/alumnoController";
 import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
 import { generateExcel } from "../../utils/helpers/export/excelHelpers";
 import { buildListaAlumnos } from "../../utils/helpers/alumnoHelpers";
+import { notifications } from "@mantine/notifications";
 
 
 const AlumnosLista = () => {
@@ -36,14 +37,34 @@ const AlumnosLista = () => {
     const handleTable = async() => {
         setIsLoading(true);
         const res = await getAllAlumnosHistorial(examenYConv, trasladoYEquiv,cohorte, numSemestres, carrera, page, nextPage !== '' ? nextPage: '/alumnos/historial');
-        setNextPage(res['next']);
-        const headers = getListaAlumnosHeaders(cohorte, numSemestres);
-        setTableCount(res['count']);
-        setHeading(headers);
-        const tabla = buildListaAlumnos(res['results'],numSemestres, cohorte);
-        setData(tabla);
+        if (res.status === 200) {
+            setNextPage(res.data['next']);
+            const headers = getListaAlumnosHeaders(cohorte, numSemestres);
+            setTableCount(res.data['count']);
+            setHeading(headers);
+            try {
+                const tabla = buildListaAlumnos(res.data['results'],numSemestres, cohorte);
+                setData(tabla);
+                getFullTable();
+            } catch (err) {
+                setHeading([[],[]]);
+                setData([]);
+                setNextPage('');
+                setTableCount(0);
+            }
+        } else {
+            setHeading([[],[]]);
+            setData([]);
+            setNextPage('');
+            setTableCount(0);
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al obtener los datos',
+                color: 'red',
+                icon: <X />,
+              });
+        }
         setIsLoading(false);
-        getFullTable();
+
     };
 
     const getFullTable = async() => {
@@ -70,6 +91,11 @@ const AlumnosLista = () => {
         } else if (exportar === 'Excel') {
             await generateExcel(heading, data, 'Lista de Alumnos', cohorte, numSemestres, 0, carrera);
         }
+        notifications.show({
+            message: 'La descarga de tu documento ha comenzado.',
+            color: 'teal',
+            icon: <Download size={20} />,
+          });
     };
     return(
         <div style={{

@@ -1,18 +1,29 @@
 import API from "../../../utils/api";
-import { buildTablaReportes, buildTablaReportesNuevoIngreso } from "../../../utils/helpers/reportesHelpers";
 
 export const getReportesNuevoIngreso = async(nuevoIngreso, trasladoEquiv, cohorte, numSemestres) => {
-    const res =  await API.get('/reportes/nuevo-ingreso',  {
-        params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': numSemestres.toString()}
-    });
-    const reporte = buildTablaReportesNuevoIngreso(res.data);
-    return reporte;
+    try {
+        const res =  await API.get('/reportes/nuevo-ingreso',  {
+            params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': numSemestres.toString()}
+        });
+        return res;
+    } catch (err) {
+        return {
+            data: null,
+            status: 400,
+        };
+    }
 };
 
 export const getReportesEgresoTitulacion = async(tipo, nuevoIngreso, trasladoEquiv,cohorte,numSemestres) => {
-    const res =  await API.get(`/reportes/${tipo}`,  {
-        params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': numSemestres.toString()}
-    });
-    const tabla = buildTablaReportes(tipo, res.data);
-    return tabla;
+    try {
+        const res =  await API.get(`/reportes/${tipo}`,  {
+            params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': numSemestres.toString()}
+        });
+        return res;
+    } catch (err) {
+        return {
+            data: null,
+            status: 400,
+        };
+    }
 };

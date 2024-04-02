@@ -27,6 +27,6 @@ th {
 }
 .doble-encabezado {
     border: none !important;
-    border-bottom: 0.0625rem solid #dee2e6 !important;
+    /* border-bottom: 0.0625rem solid #dee2e6 !important; */
 }
 
