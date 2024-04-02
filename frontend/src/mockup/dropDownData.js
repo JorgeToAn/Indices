@@ -1,5 +1,4 @@
 const carreras = [
-    ['TODAS', 'Todas las carreras'],
     ['SYC','Ingenieria Sistemas Computacionales'],
     ['QUI','Ingenieria Quimica'],
     ['IND','Ingenieria Industrial'],
@@ -14,6 +13,21 @@ const carreras = [
     ['ENR','Ingenieria Energías Renovables'],
 ];
 
+const carrerasT = [
+    ['TODAS', 'Todas las carreras'],
+    ['SYC','Ingenieria Sistemas Computacionales'],
+    ['QUI','Ingenieria Quimica'],
+    ['IND','Ingenieria Industrial'],
+    ['LOG','Ingenieria Logística'],
+    ['MAT','Ingenieria en Materiales'],
+    ['GEM','Ingenieria Gestión Empresarial'],
+    ['ELN','Ingenieria Electrónica'],
+    ['ELE','Ingenieria Eléctrica'],
+    ['MKT','Ingenieria Mecatrónica'],
+    ['MEC','Ingenieria Mecánica'],
+    ['CP','Contador Público'],
+    ['ENR','Ingenieria Energías Renovables'],
+];
 const cohortes = [
     ['2024-1','2024-1'],
     ['2023-3','2023-3'],
@@ -65,6 +79,7 @@ const semestres = [
 ];
 const dropDownData = {
     carreras,
+    carrerasT,
     cohortes,
     numSemestres,
     semestres,
