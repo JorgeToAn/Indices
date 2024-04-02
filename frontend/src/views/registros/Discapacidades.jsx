@@ -1,10 +1,10 @@
 import { Button, Center, Flex, Group, TextInput, Textarea } from "@mantine/core";
 import { CirclePlus } from 'tabler-icons-react';
-import Header from './../../components/header';
-import Tabla from './../../components/Tabla';
+import Header from 'src/components/header';
+import Tabla from 'src/components/Tabla';
 import './Registro.css';
 import { useEffect, useState } from "react";
-import { getDiscapacidades } from "../../routes/api/controllers/discapacidadController";
+import { getDiscapacidades } from "src/routes/api/controllers/discapacidadController";
 
 
 const RegistroDiscapacidades = () => {

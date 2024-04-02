@@ -1,9 +1,9 @@
 import { Button, Container, Flex, Group, PasswordInput, Popover, Progress, Text, createStyles } from "@mantine/core";
-import Header from "../../components/header";
+import Header from "src/components/header";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "@mantine/form";
-import { sendNewPassword } from "../../routes/api/controllers/restablecerController";
-import PasswordStrengthMeter from './../../components/PasswordStrengthMeter';
+import { sendNewPassword } from "src/routes/api/controllers/restablecerController";
+import PasswordStrengthMeter from "src/components/PasswordStrengthMeter";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { CircleX } from "tabler-icons-react";

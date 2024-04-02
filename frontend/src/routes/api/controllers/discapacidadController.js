@@ -1,4 +1,4 @@
-import API from "../../../utils/api";
+import API from "src/utils/api";
 
 export const getDiscapacidades = async() => {
     const discapacidades = await API.get('discapacidades/');

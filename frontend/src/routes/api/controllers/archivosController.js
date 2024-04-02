@@ -1,4 +1,4 @@
-import API from "../../../utils/api";
+import API from "src/utils/api";
 
 export const subirArchivosExcel = async (archivo, tipo) => {
     const f = archivo.get('file');

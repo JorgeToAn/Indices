@@ -1,4 +1,4 @@
-import API from "../../../utils/api";
+import API from "src/utils/api";
 
 export const getListaUsuarios = async() => {
     const listaUsuarios = await API.get('usuario/lista/');

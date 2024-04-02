@@ -3,45 +3,45 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Notifications } from '@mantine/notifications';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import MainLayout from './layouts/MainLayout';
-import indicesTheme from "./CustomProvider";
+import MainLayout from 'src/layouts/MainLayout';
+import indicesTheme from "src/CustomProvider";
 
-import Login from './views/Login';
-import Inicio from './views/Inicio';
-import MiPerfil from "./views/usuario/MiPerfil";
+import Login from 'src/views/Login';
+import Inicio from 'src/views/Inicio';
+import MiPerfil from "src/views/usuario/MiPerfil";
 
-import SubirArchivos from "./views/SubirArchivos";
+import SubirArchivos from "src/views/SubirArchivos";
 
-import RegistroCarreras from './views/registros/Carreras';
-import RegistroPlanes from './views/registros/Planes';
-import RegistroDiscapacidades from './views/registros/Discapacidades';
-import IndicePermanencia from './views/indices/Permanencia';
-import IndiceEgreso from './views/indices/Egreso';
-import IndiceDesercion from './views/indices/Desercion';
-import IndiceTitulacion from './views/indices/Titulacion';
-import TablaPoblacion from "./views/tablas/Poblacion";
-import TablaCrecimiento from './views/tablas/Crecimiento';
-import SeleccionIndices from "./views/indices/Seleccion";
-import SeleccionTablas from './views/tablas/Seleccion';
-import SeleccionRegistros from "./views/registros/Seleccion";
-import CedulaCacei from "./views/cedulas/Cacei";
-import AlumnosLista from "./views/alumnos/AlumnosLista";
-import AlumnosHistorial from "./views/alumnos/AlumnosHistorial";
-import CedulaCaceca from "./views/cedulas/Caceca";
+import RegistroCarreras from 'src/views/registros/Carreras';
+import RegistroPlanes from 'src/views/registros/Planes';
+import RegistroDiscapacidades from 'src/views/registros/Discapacidades';
+import IndicePermanencia from 'src/views/indices/Permanencia';
+import IndiceEgreso from 'src/views/indices/Egreso';
+import IndiceDesercion from 'src/views/indices/Desercion';
+import IndiceTitulacion from 'src/views/indices/Titulacion';
+import TablaPoblacion from "src/views/tablas/Poblacion";
+import TablaCrecimiento from 'src/views/tablas/Crecimiento';
+import SeleccionIndices from "src/views/indices/Seleccion";
+import SeleccionTablas from 'src/views/tablas/Seleccion';
+import SeleccionRegistros from "src/views/registros/Seleccion";
+import CedulaCacei from "src/views/cedulas/Cacei";
+import AlumnosLista from "src/views/alumnos/AlumnosLista";
+import AlumnosHistorial from "src/views/alumnos/AlumnosHistorial";
+import CedulaCaceca from "src/views/cedulas/Caceca";
 
-import UsuariosLista from "./views/UsuariosLista";
+import UsuariosLista from "src/views/UsuariosLista";
 
-import CambioContrasena from "./views/usuario/CambioContrasena";
-import SeleccionAlumnos from "./views/alumnos/Seleccion";
-import SeleccionCedulas from "./views/cedulas/Seleccion";
-import Error404 from "./views/errores/Error404";
-import Error500 from "./views/errores/Error500";
-import SeleccionReportes from "./views/reportes/Seleccion";
-import ReportesTitulacion from "./views/reportes/Titulacion";
-import ReportesEgreso from "./views/reportes/Egreso";
-import ReportesNuevoIngreso from "./views/reportes/NuevoIngreso";
-import RestablecerContrasena from "./views/usuario/RestablecerContrasena";
-import EmailRestablecer from "./views/usuario/EmailRestablecer";
+import CambioContrasena from "src/views/usuario/CambioContrasena";
+import SeleccionAlumnos from "src/views/alumnos/Seleccion";
+import SeleccionCedulas from "src/views/cedulas/Seleccion";
+import Error404 from "src/views/errores/Error404";
+import Error500 from "src/views/errores/Error500";
+import SeleccionReportes from "src/views/reportes/Seleccion";
+import ReportesTitulacion from "src/views/reportes/Titulacion";
+import ReportesEgreso from "src/views/reportes/Egreso";
+import ReportesNuevoIngreso from "src/views/reportes/NuevoIngreso";
+import RestablecerContrasena from "src/views/usuario/RestablecerContrasena";
+import EmailRestablecer from "src/views/usuario/EmailRestablecer";
 
 const router = createBrowserRouter([
   {
