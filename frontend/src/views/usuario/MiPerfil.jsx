@@ -8,9 +8,9 @@ import {
     TextInput
 } from "@mantine/core";
 import { DeviceFloppy, Edit } from "tabler-icons-react";
-import Header from "../../components/header.jsx";
-import Permisos from "../../components/Permisos.jsx";
-import { useAuthStore } from "../../store/auth.js";
+import Header from "src/components/header.jsx";
+import Permisos from "src/components/permisos.jsx";
+import { useAuthStore } from "src/store/auth";
 
 
 const MiPerfil = () => {

@@ -1,18 +1,18 @@
 import { Button, Checkbox, Flex, Group } from '@mantine/core';
-import Header from './../../components/header';
-import Tabla from './../../components/Tabla';
-import Dropdown from './../../components/Dropdown';
+import Header from 'src/components/header';
+import Tabla from 'src/components/Tabla';
+import Dropdown from 'src/components/Dropdown';
 import {  useState } from 'react';
 import { useInputState } from '@mantine/hooks';
-// import dataService from '../../mockup/dataService';
-import dropDownData from '../../mockup/dropDownData';
+// import dataService from 'src/mockup/dataService';
+import dropDownData from 'src/mockup/dropDownData';
 import "./Indices.css";
-import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
+import { getIndicesHeaders } from 'src/utils/helpers/headerHelpers';
 import { Printer } from 'tabler-icons-react';
-import { buildTablaIndices } from '../../utils/helpers/indicesHelpers';
-import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
-import { generateExcel } from '../../utils/helpers/export/excelHelpers';
-import { getIndicesData } from './../../routes/api/controllers/indicesHelpers';
+import { buildTablaIndices } from 'src/utils/helpers/indicesHelpers';
+import { generatePDF } from 'src/utils/helpers/export/pdfHelpers';
+import { generateExcel } from 'src/utils/helpers/export/excelHelpers';
+import { getIndicesData } from 'src/routes/api/controllers/indicesHelpers';
 
 const IndicePermanencia = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente

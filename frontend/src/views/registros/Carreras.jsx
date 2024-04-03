@@ -1,10 +1,10 @@
 import { Button, Center, Flex, Group, Select, TextInput } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { CirclePlus } from 'tabler-icons-react';
-import Header from './../../components/header';
-import Tabla from './../../components/Tabla';
+import Header from 'src/components/header';
+import Tabla from 'src/components/Tabla';
 import './Registro.css';
-import { getCarreras } from "../../utils/helpers/carreraHelpers";
+import { getCarreras } from "src/utils/helpers/carreraHelpers";
 import { useState, useEffect } from "react";
 
 

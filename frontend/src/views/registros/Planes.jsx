@@ -1,10 +1,10 @@
 import { Button, Center, Flex, Group, TextInput } from "@mantine/core";
 import { CirclePlus } from 'tabler-icons-react';
 import { DateInput } from "@mantine/dates";
-import Header from './../../components/header';
-import Tabla from './../../components/Tabla';
+import Header from 'src/components/header';
+import Tabla from 'src/components/Tabla';
 import './Registro.css';
-import { getPlanes } from "../../utils/helpers/planesHelper";
+import { getPlanes } from "src/utils/helpers/planesHelper";
 import { useEffect, useState } from "react";
 
 const RegistroPlanes = () => {

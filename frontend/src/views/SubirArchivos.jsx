@@ -12,8 +12,8 @@ import {
 import { Dropzone } from '@mantine/dropzone';
 import { ArrowLeft, Download, FileUpload, Upload } from "tabler-icons-react";
 import { useDisclosure } from '@mantine/hooks';
-import ResultadosLog from '../components/modals/resultadosLog';
-import { subirArchivosExcel } from '../routes/api/controllers/archivosController';
+import ResultadosLog from 'src/components/modals/resultadosLog';
+import { subirArchivosExcel } from 'src/routes/api/controllers/archivosController';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './SubirArchivos.css';

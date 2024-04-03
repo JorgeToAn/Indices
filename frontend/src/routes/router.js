@@ -1,8 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Inicio from '../views/Inicio';
-import Login from '../views/Login';
-import MiPerfil from '../views/MiPerfil';
-import SubirArchivos from '../views/SubirArchivos';
+import Inicio from 'src/views/Inicio';
+import Login from 'src/views/Login';
+import MiPerfil from 'src/views/MiPerfil';
+import SubirArchivos from 'src/views/SubirArchivos';
 // import RegistroCarreras from './../views/RegCarreras';
 
 const router = createBrowserRouter([

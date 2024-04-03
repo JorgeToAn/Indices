@@ -1,8 +1,8 @@
 import {
     Group,
  } from "@mantine/core";
-import BoxOption from "../../components/BoxOption";
-import Header from './../../components/header';
+import BoxOption from "src/components/BoxOption";
+import Header from 'src/components/header';
 
 
 const SeleccionReportes = () => {

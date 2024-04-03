@@ -1,4 +1,4 @@
-import API from "../../../utils/api";
+import API from "src/utils/api";
 
 /*
 * @param {Boolean} nuevoIngreso - "true" si se incluyen alumnos que entraron por examen o convalidacion.

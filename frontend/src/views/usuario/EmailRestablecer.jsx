@@ -1,6 +1,6 @@
 import { Button, Center, Container, Flex, Group, Text, TextInput, createStyles } from "@mantine/core";
-import Header from "../../components/header";
-import { sendPasswordResetEmail } from "../../routes/api/controllers/restablecerController";
+import Header from "src/components/header";
+import { sendPasswordResetEmail } from "src/routes/api/controllers/restablecerController";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { CircleX, ShieldCheck } from "tabler-icons-react";

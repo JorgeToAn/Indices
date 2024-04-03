@@ -1,11 +1,11 @@
 import { Button, Flex, Group, PasswordInput, Popover, Progress, Text, createStyles } from "@mantine/core";
-import Header from "../../components/header";
-import { cambiarContrasena } from "../../routes/api/controllers/adminController";
+import Header from "src/components/header";
+import { cambiarContrasena } from "src/routes/api/controllers/adminController";
 import { useState } from "react";
 import { useForm } from "@mantine/form";
 import { CircleX, ShieldCheck } from "tabler-icons-react";
 import { notifications } from "@mantine/notifications";
-import PasswordStrengthMeter from "../../components/PasswordStrengthMeter";
+import PasswordStrengthMeter from "src/components/PasswordStrengthMeter";
 
 const requirements = [
     { re: /[0-9]/, label: 'Incluye 1 número' },

@@ -1,4 +1,4 @@
-import API from "../../../utils/api";
+import API from "src/utils/api";
 
 export const sendPasswordResetEmail = async (email) => {
     try {

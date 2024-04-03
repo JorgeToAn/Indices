@@ -1,18 +1,18 @@
-import "../indices/Indices.css";
+import "src/views/indices/Indices.css";
 import { Button, Checkbox, Flex, Group, Loader, Pagination } from "@mantine/core";
-import Header from "../../components/header";
-import Dropdown from "../../components/Dropdown";
-import Tabla from "../../components/Tabla";
-import dropDownData from '../../mockup/dropDownData';
+import Header from "src/components/header";
+import Dropdown from "src/components/Dropdown";
+import Tabla from "src/components/Tabla";
+import dropDownData from "src/mockup/dropDownData";
 import { useInputState } from "@mantine/hooks";
 import { useEffect, useRef, useState } from "react";
-import { getListaAlumnosHeaders } from "../../utils/helpers/headerHelpers";
+import { getListaAlumnosHeaders } from "src/utils/helpers/headerHelpers";
 
 import { Printer } from "tabler-icons-react";
-import { getAllAlumnosHistorial, getFullHistorial } from "../../routes/api/controllers/alumnoController";
-import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
-import { generateExcel } from "../../utils/helpers/export/excelHelpers";
-import { buildListaAlumnos } from "../../utils/helpers/alumnoHelpers";
+import { getAllAlumnosHistorial, getFullHistorial } from "src/routes/api/controllers/alumnoController";
+import { generatePDF } from "src/utils/helpers/export/pdfHelpers";
+import { generateExcel } from "src/utils/helpers/export/excelHelpers";
+import { buildListaAlumnos } from "src/utils/helpers/alumnoHelpers";
 
 
 const AlumnosLista = () => {

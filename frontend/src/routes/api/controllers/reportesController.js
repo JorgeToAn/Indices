@@ -1,5 +1,6 @@
-import API from "../../../utils/api";
-import { buildTablaReportes, buildTablaReportesNuevoIngreso } from "../../../utils/helpers/reportesHelpers";
+import API from "src/utils/api";
+// import { buildTablaReportes, buildTablaReportesNuevoIngreso } from "../../../utils/helpers/reportesHelpers";
+import { buildTablaReportes, buildTablaReportesNuevoIngreso } from "src/utils/helpers/reportesHelpers";
 
 export const getReportesNuevoIngreso = async(nuevoIngreso, trasladoEquiv, cohorte, numSemestres) => {
     const res =  await API.get('/reportes/nuevo-ingreso',  {

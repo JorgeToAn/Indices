@@ -1,16 +1,16 @@
 import { Button, Checkbox, Flex, Group } from "@mantine/core";
-import Header from "../../components/header";
-import Dropdown from "../../components/Dropdown";
-import Tabla from "../../components/Tabla";
+import Header from "src/components/header";
+import Dropdown from "src/components/Dropdown";
+import Tabla from "src/components/Tabla";
 import { useInputState } from "@mantine/hooks";
-import dropDownData from "../../mockup/dropDownData";
-import { getTablasHeaders } from "../../utils/helpers/headerHelpers";
+import dropDownData from "src/mockup/dropDownData";
+import { getTablasHeaders } from "src/utils/helpers/headerHelpers";
 import { useState } from "react";
 import { Printer } from "tabler-icons-react";
-import { buildTable } from "../../utils/helpers/tablasHelpers";
-import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
-import { generateExcel } from "../../utils/helpers/export/excelHelpers";
-import { getTablasPoblacion } from "../../routes/api/controllers/tablasController";
+import { buildTable } from "src/utils/helpers/tablasHelpers";
+import { generatePDF } from "src/utils/helpers/export/pdfHelpers";
+import { generateExcel } from "src/utils/helpers/export/excelHelpers";
+import { getTablasPoblacion } from "src/routes/api/controllers/tablasController";
 
 const TablaPoblacion = () => {
     const [heading, setHeading] = useState([]);
