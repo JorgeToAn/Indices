@@ -6,14 +6,20 @@ import Tabla from './../../components/Tabla';
 import './Registro.css';
 import { getCarreras } from "../../utils/helpers/carreraHelpers";
 import { useState, useEffect } from "react";
+import dropDownData from "../../mockup/dropDownData";
 
 
 const RegistroCarreras = () => {
+    const [carreras, setCarreras] = useState([]);
+    const [planes, setPlanes] = useState([]);
+    const fetchPlanes = async() => {
+        const c = await dropDownData.getListaPlanes();
+        setPlanes(c);
+    };
 
     const headers = [
         'CLAVE', 'NOMBRE'
     ];
-    const [carreras, setCarreras] = useState([]);
 
     const obtenerCarreras = async() => {
         const listaCarreras = await getCarreras();
@@ -27,6 +33,7 @@ const RegistroCarreras = () => {
 
     useEffect(() => {
         obtenerCarreras();
+        fetchPlanes();
     }, []);
     return(
         <div style={{
@@ -40,16 +47,7 @@ const RegistroCarreras = () => {
                         <TextInput label="Nombre" withAsterisk/>
                         <Group className="input-group">
                             <TextInput label="Clave" withAsterisk width="45%"/>
-                            <Select
-                                width="45%"
-                                label="Plan de estudios"
-                                placeholder="Seleccione un plan de estudios"
-                                data={[
-                                    {value: 'ISIC-2010', label: 'ISIC-2010'},
-                                    {value: 'ISIC-2011', label: 'ISic-2011'}
-                                ]}
-                                withAsterisk
-                            />
+                            { planes.length > 0 ? <Select width="45%" label="Plan de estudios" placeholder="Seleccione un plan de estudios" data={planes} withAsterisk/> : null }
                         </Group>
                         <Center>
                             <Button type="button" mt={16} leftIcon={<CirclePlus />} onClick={obtenerCarreras}>Crear Carrera</Button>

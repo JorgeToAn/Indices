@@ -1,5 +1,6 @@
 import { getCarreras } from "../utils/helpers/carreraHelpers";
 import { anioPeriodo } from "../utils/helpers/headerHelpers";
+import { getPlanes } from "../utils/helpers/planesHelper";
 
 const getListaCarreras = async () => {
     const carreras = await getCarreras();
@@ -8,6 +9,18 @@ const getListaCarreras = async () => {
         lista.push({
             'value': c['clave'],
             'label': c['nombre']
+        });
+    });
+    return lista;
+};
+
+const getListaPlanes = async () => {
+    const planes = await getPlanes();
+    const lista = [];
+    planes.forEach((p) => {
+        lista.push({
+            'value': p['clave'],
+            'label': p['clave']
         });
     });
     return lista;
@@ -62,6 +75,7 @@ const semestres = [
 const dropDownData = {
     getCohortes,
     getListaCarreras,
+    getListaPlanes,
     numSemestres,
     semestres,
 };

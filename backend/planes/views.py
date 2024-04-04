@@ -16,6 +16,6 @@ class PlanDetail(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
 
 class CarreraPlanList(ListCreateAPIView):
+    permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
     queryset = Plan.objects.select_related('carrera')
     serializer_class =  PlanSerializer
-    # permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
