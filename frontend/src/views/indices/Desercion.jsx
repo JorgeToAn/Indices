@@ -2,7 +2,7 @@ import { Button, Checkbox, Flex, Group, Loader } from '@mantine/core';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import Dropdown from './../../components/Dropdown';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import dropDownData from '../../mockup/dropDownData';
 import { getIndicesHeaders } from '../../utils/helpers/headerHelpers';
@@ -26,13 +26,23 @@ const IndiceDesercion = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
+    const [carreras, setCarreras] = useState([]);
+    const fetchCarreras = async() => {
+        const c = await dropDownData.getListaCarreras();
+        c.push({'value': 'TODAS', 'label': 'TODAS LAS CARRERAS'});
+        setCarreras(c);
+    };
+
+    useEffect(() => {
+        fetchCarreras();
+    }, []);
     const handleTable = async() => {
         setIsLoading(true);
         const tabla = await getIndicesData('desercion', examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
         if (tabla.status === 200) {
-            const headers = getIndicesHeaders(2, cohorte, carrera);
-            setHeading(headers);
             try {
+                const headers = await getIndicesHeaders(2, cohorte, carrera);
+                setHeading(headers);
                 const datos = buildTablaIndices('desercion', tabla.data, numSemestres);
                 setData(datos);
             } catch (error) {
@@ -58,16 +68,24 @@ const IndiceDesercion = () => {
 
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
-        if (exportar === 'PDF') {
-            generatePDF('Deserción', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera);
-        } else if (exportar === 'Excel') {
-            await generateExcel(heading, data, 'Indice Desercion', cohorte, numSemestres, tipoAlumno);
+        try {
+            if (exportar === 'PDF') {
+                await generatePDF('Deserción', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera);
+            } else if (exportar === 'Excel') {
+                await generateExcel(heading, data, 'Indice Desercion', cohorte, numSemestres, tipoAlumno);
+            }
+            notifications.show({
+                message: 'La descarga de tu documento ha comenzado.',
+                color: 'teal',
+                icon: <Download size={20} />,
+              });
+        } catch (e) {
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al generar su documento',
+                color: 'red',
+                icon: <X />,
+                });
         }
-        notifications.show({
-            message: 'La descarga de tu documento ha comenzado.',
-            color: 'teal',
-            icon: <Download size={20} />,
-          });
     };
 
     return(
@@ -80,12 +98,12 @@ const IndiceDesercion = () => {
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={dropDownData.carreras} />
-                        <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
+                        { carreras.length > 0 ? <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={carreras} /> : null }
+                        <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.getCohortes()} />
                         <Dropdown  label="Cálculo de semestres" color="#FFAA5A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
                         <Dropdown  label="Exportar" color="#FFAA5A" handleChangeFn={setExportar} data={[
-                            ['Excel','Excel'],
-                            ['PDF','PDF'],
+                            {'value':'Excel','label':'Excel'},
+                            {'value':'PDF','label':'PDF'},
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >

@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import './Tabla.css';
 import { useState } from 'react';
 
-function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, row}) {
+function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, row, smallSize}) {
     const [selectedRow, setSelectedRow] = useState([]);
     const getBlankSpaces = (index) => {
         for (let i = index+1; i < headers[0].length; i++) {
@@ -16,7 +16,7 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
     };
     return(
 
-        <ScrollArea w="80vw" h="50vh" mah={500} maw={1500} type='always' >
+        <ScrollArea w={smallSize ? '45vw': '80vw'} h="50vh" mah={500} maw={smallSize? 800: 1500} type='always' >
             <Table highlightOnHover withBorder withColumnBorders horizontalSpacing='xs' verticalSpacing='xs' className={colors+" tabla"} id='tabla'>
                 {/* Si la propiedad "doubleHeader" es true, entonces la primer celda del primer renglon
                 tendra una longitud de toda la tabla, si no, entonces solo habra un renglon en donde cada
@@ -89,5 +89,6 @@ Tabla.propTypes = {
     tripleHeader: PropTypes.bool,
     select: PropTypes.bool,
     row: PropTypes.func,
+    smallSize: PropTypes.bool,
 };
 export default Tabla;

@@ -31,9 +31,9 @@ const ReportesNuevoIngreso = () => {
         setIsLoading(true);
         const tabla = await getReportesNuevoIngreso(examenYConv, trasladoYEquiv, cohorte, numSemestres);
         if (tabla.status === 200) {
-            const header = getNuevoIngresoHeaders(cohorte, numSemestres);
-            setHeading(header);
             try {
+                const header = await getNuevoIngresoHeaders(cohorte, numSemestres);
+                setHeading(header);
                 const reporte = buildTablaReportesNuevoIngreso(tabla.data);
                 setData(reporte);
             } catch (error) {
@@ -58,16 +58,24 @@ const ReportesNuevoIngreso = () => {
     };
 
     const handlePrint = async() => {
-        notifications.show({
-            message: 'La descarga de tu documento ha comenzado.',
-            color: 'teal',
-            icon: <Download size={20} />,
-          });
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
-        if (exportar === 'PDF') {
-            generatePDF('Nuevo Ingreso', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv);
-        } else if (exportar === 'Excel') {
-            await generateExcel(heading, data, 'Nuevo Ingreso', cohorte, numSemestres, tipoAlumno);
+        try {
+            if (exportar === 'PDF') {
+                await generatePDF('Nuevo Ingreso', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv);
+            } else if (exportar === 'Excel') {
+                await generateExcel(heading, data, 'Nuevo Ingreso', cohorte, numSemestres, tipoAlumno);
+            }
+            notifications.show({
+                message: 'La descarga de tu documento ha comenzado.',
+                color: 'teal',
+                icon: <Download size={20} />,
+              });
+        } catch (e) {
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al generar su documento',
+                color: 'red',
+                icon: <X />,
+                });
         }
     };
     return(
@@ -80,11 +88,11 @@ const ReportesNuevoIngreso = () => {
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
+                        <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.getCohortes()} />
                         <Dropdown  label="Cálculo de semestres" color="#FFAA5A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
                         <Dropdown  label="Exportar" color="#FFAA5A" handleChangeFn={setExportar} data={[
-                            ['Excel','Excel'],
-                            ['PDF','PDF'],
+                            {'value':'Excel','label':'Excel'},
+                            {'value':'PDF','label':'PDF'},
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >

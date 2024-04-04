@@ -31,10 +31,10 @@ const ReportesEgreso = () => {
         setIsLoading(true);
         const tabla = await getReportesEgresoTitulacion('egreso', examenYConv, trasladoYEquiv, cohorte, numSemestres);
         if (tabla.status === 200) {
-            const headers = getReportesHeaders(2, cohorte, numSemestres);
-            setHeading(headers);
             try {
-                const reporte = buildTablaReportes('egreso', tabla.data);
+                const headers = await getReportesHeaders(2, cohorte, numSemestres);
+                setHeading(headers);
+                const reporte = buildTablaReportes(tabla.data);
                 setData(reporte);
             } catch (error) {
                 setHeading([[],[], []]);
@@ -59,16 +59,24 @@ const ReportesEgreso = () => {
 
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
-        if (exportar === 'PDF') {
-            generatePDF('Egreso', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv);
-        } else if (exportar === 'Excel') {
-            await generateExcel(heading, data, 'Egreso', cohorte, numSemestres, tipoAlumno);
+        try {
+            if (exportar === 'PDF') {
+                await generatePDF('Egreso', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv);
+            } else if (exportar === 'Excel') {
+                await generateExcel(heading, data, 'Egreso', cohorte, numSemestres, tipoAlumno);
+            }
+            notifications.show({
+                message: 'La descarga de tu documento ha comenzado.',
+                color: 'teal',
+                icon: <Download size={20} />,
+              });
+        } catch (e) {
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al generar su documento',
+                color: 'red',
+                icon: <X />,
+                });
         }
-        notifications.show({
-            message: 'La descarga de tu documento ha comenzado.',
-            color: 'teal',
-            icon: <Download size={20} />,
-          });
     };
     return(
         <div style={{
@@ -80,11 +88,11 @@ const ReportesEgreso = () => {
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
+                        <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.getCohortes()} />
                         <Dropdown  label="Cálculo de semestres" color="#FF785A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
                         <Dropdown  label="Exportar" color="#FF785A" handleChangeFn={setExportar} data={[
-                            ['Excel','Excel'],
-                            ['PDF','PDF'],
+                            {'value':'Excel','label':'Excel'},
+                            {'value':'PDF','label':'PDF'},
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >
@@ -93,7 +101,7 @@ const ReportesEgreso = () => {
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
                         <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv) || data.length === 0} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
-                        <Button onClick={handleTable} disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv) && !isLoading} color='negro'>{isLoading ? <Loader size='sm'  color='#FFFFFF' /> : 'Filtrar'}</Button>
+                        <Button onClick={handleTable} disabled={(!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)) && !isLoading} color='negro'>{isLoading ? <Loader size='sm'  color='#FFFFFF' /> : 'Filtrar'}</Button>
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-toronja" tripleHeader  headers={heading} content={data} />

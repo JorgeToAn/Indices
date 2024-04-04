@@ -4,7 +4,7 @@ import Dropdown from "../../components/Dropdown";
 import Tabla from "../../components/Tabla";
 import dropDownData from "../../mockup/dropDownData";
 import { useInputState } from "@mantine/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getCrecimientoHeaders } from "../../utils/helpers/headerHelpers";
 import { Download, Printer, X } from "tabler-icons-react";
 import { generatePDF } from "../../utils/helpers/export/pdfHelpers";
@@ -20,6 +20,7 @@ const TablaCrecimiento = () => {
     const [data, setData] = useState([]);
 
     const handleTable = async() => {
+        console.log(await dropDownData.getListaCarreras());
         setIsLoading(true);
         const header = getCrecimientoHeaders(cohorte, numSemestres);
         const table = await getTablasCrecimiento(examenYConv, trasladoYEquiv, cohorte, numSemestres, carrera);
@@ -41,16 +42,24 @@ const TablaCrecimiento = () => {
     };
     const handlePrint = async() => {
         const tipoAlumno = (examenYConv && trasladoYEquiv) ? 1 : examenYConv ? 2 : 3;
-        if (exportar === 'PDF') {
-            generatePDF('Poblacion', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera !== 'TODAS' ? carrera : 'Población general');
-        } else if (exportar === 'Excel') {
-             await generateExcel(heading, data, 'Crecimiento', cohorte, numSemestres, tipoAlumno);
+        try {
+            if (exportar === 'PDF') {
+                await generatePDF('Poblacion', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera !== 'TODAS' ? carrera : 'Población general');
+            } else if (exportar === 'Excel') {
+                 await generateExcel(heading, data, 'Crecimiento', cohorte, numSemestres, tipoAlumno);
+            }
+            notifications.show({
+                message: 'La descarga de tu documento ha comenzado.',
+                color: 'teal',
+                icon: <Download size={20} />,
+              });
+        } catch (e) {
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al generar su documento',
+                color: 'red',
+                icon: <X />,
+                });
         }
-        notifications.show({
-            message: 'La descarga de tu documento ha comenzado.',
-            color: 'teal',
-            icon: <Download size={20} />,
-          });
     };
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
@@ -59,6 +68,16 @@ const TablaCrecimiento = () => {
     const [exportar, setExportar] = useInputState('');
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
+    const [carreras, setCarreras] = useState([]);
+    const fetchCarreras = async() => {
+        const c = await dropDownData.getListaCarreras();
+        c.push({'value': 'TODAS', 'label': 'TODAS LAS CARRERAS'});
+        setCarreras(c);
+    };
+
+    useEffect(() => {
+        fetchCarreras();
+    }, []);
 
     return(
         <div style={{
@@ -70,12 +89,12 @@ const TablaCrecimiento = () => {
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={dropDownData.carrerasT} />
-                        <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
+                        { carreras.length > 0 ? <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={carreras} /> : null }
+                        <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.getCohortes()} />
                         <Dropdown  label="Cálculo de semestres" color="#FFAA5A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
                         <Dropdown  label="Exportar" color="#FFAA5A" handleChangeFn={setExportar} data={[
-                            ['Excel','Excel'],
-                            ['PDF','PDF'],
+                            {'value':'Excel','label':'Excel'},
+                            {'value':'PDF','label':'PDF'},
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >

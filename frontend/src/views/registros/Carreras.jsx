@@ -17,10 +17,11 @@ const RegistroCarreras = () => {
 
     const obtenerCarreras = async() => {
         const listaCarreras = await getCarreras();
-        let listaC = Object.entries(listaCarreras);
-        listaC = listaC.map((carrera) => Object.entries(carrera[1]));
-        listaC = listaC.map((carrera) => carrera.filter((dato, index)=> index > 0));
-        listaC = listaC.map((carrera) => carrera.map((c) => c.filter((dato, index) => index > 0)));
+        const listaC = [];
+        console.log(listaCarreras);
+        listaCarreras.forEach((c) => {
+            listaC.push([c['clave'], c['nombre']]);
+        });
         setCarreras(listaC);
     };
 
@@ -61,7 +62,7 @@ const RegistroCarreras = () => {
                     </Flex>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >
-                    <Tabla headers={headers} content={carreras} colors="tabla-toronja" />
+                    <Tabla headers={headers} content={carreras} smallSize colors="tabla-toronja" />
                 </Flex>
             </Group>
         </div>

@@ -3,7 +3,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { getNombreCarrera } from "../carreraHelpers";
 
-export function generatePDF(titulo, cohorte, numSemestres, heading, content, multiPagina, examenYConv, tasladoYEquiv, carrera="") {
+export async function generatePDF(titulo, cohorte, numSemestres, heading, content, multiPagina, examenYConv, tasladoYEquiv, carrera="") {
     const tipoAlumnos = (examenYConv && tasladoYEquiv) ? 1 : (examenYConv) ? 2 : 3;
     let filtroAlumnos = "Examen, convalidación, traslado y equivalencia";
     switch (tipoAlumnos){
@@ -40,7 +40,8 @@ export function generatePDF(titulo, cohorte, numSemestres, heading, content, mul
     doc.text(`Reporte de ${titulo} a ${numSemestres} semestres`, 297.5, 165, null, null,  'center');
     doc.text(`Alumnos de ingreso por ${filtroAlumnos}`, 297.5, 185, null, null,  'center');
     if(carrera !== ""){
-        doc.text(getNombreCarrera(carrera), 297.5, 205, null, null,  'center');
+        const nombreC = await getNombreCarrera(carrera);
+        doc.text(nombreC, 297.5, 205, null, null,  'center');
         doc.text(`Cohorte generacional ${cohorte}`, 297.5, 225, null, null,  'center');
     } else {
         doc.text(`Cohorte generacional ${cohorte}`, 297.5, 205, null, null,  'center');

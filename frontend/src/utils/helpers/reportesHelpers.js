@@ -14,7 +14,7 @@ export const buildTablaReportesNuevoIngreso = (data) => {
     return tabla;
 };
 
-export const buildTablaReportes = (tipo, data) => {
+export const buildTablaReportes = (data) => {
     const datos= Object.entries(data);
     // console.log(datos);
     const tabla = [];

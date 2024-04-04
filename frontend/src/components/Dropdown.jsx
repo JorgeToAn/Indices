@@ -11,7 +11,8 @@ function Dropdown ({label, color, data, handleChangeFn}) {
             name={label}
             label={label}
             placeholder={label}
-            data={ data.map((fila) => ({"value":fila[0], "label":fila[1]})) }
+            // data={ data.map((fila) => ({"value":fila[0], "label":fila[1]})) }
+            data={data}
             rightSection={
                 <Selector color={'#FFF'}/>
             }
