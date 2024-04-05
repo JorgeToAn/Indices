@@ -25,7 +25,7 @@ const RegistroPlanes = () => {
         const listaPlanes = await getPlanes();
         const listaP = [];
         listaPlanes.forEach((p) => {
-            listaP.push([p.clave, p['fecha_inicio'], p['fecha_final'], p['carrera_id']]);
+            listaP.push([p.clave, p['fecha_inicio'], p['fecha_final'], p['carrera']['nombre']]);
         });
         setPlanes(listaP);
     };
@@ -49,9 +49,12 @@ const RegistroPlanes = () => {
     const crearPlan = async(values) => {
         if (form.validate()){
             const fechaInicio = values.fechaInicio.toISOString().split('T');
-            const fechaFin = values.fechaFinal.toISOString().split('T');
+            let fechaFin = [null, null];
+            if (values.fechaFinal !== null) {
+                fechaFin = values.fechaFinal.toISOString().split('T');
+            }
             const res = await createPlan(values.clave, fechaInicio[0], fechaFin[0], values.carrera);
-            if (res.status === 200){
+            if (res.status === 201){
                 notifications.show({
                     message: 'El registro fue creado con éxito.',
                     color: 'teal',
@@ -66,7 +69,7 @@ const RegistroPlanes = () => {
             }
             form.reset();
         }
-        form.onReset(obtenerPlanes());
+        obtenerPlanes();
     };
     return(
         <div style={{

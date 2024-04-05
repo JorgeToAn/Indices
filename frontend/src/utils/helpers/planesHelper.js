@@ -12,7 +12,7 @@ export const createPlan = async(nombre, fechaInicio, fechaFin, carrera) =>{
             clave:nombre,
             fecha_inicio:fechaInicio,
             fecha_final:fechaFin,
-            carrera_id:carrera
+            carrera:carrera
         });
         return plan;
     } catch (err) {

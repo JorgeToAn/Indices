@@ -2,9 +2,15 @@ import API from '../../../utils/api';
 import { buildListaAlumnos } from './../../../utils/helpers/alumnoHelpers';
 
 export const getAlumnoInfo = async(numControl) => {
-    const res = await API.get('/alumnos/historial/'+numControl);
-    const alumnoData = res.data;
-    return alumnoData;
+    try {
+        const res = await API.get('/alumnos/historial/'+numControl);
+        return res;
+    } catch (err) {
+        return {
+            data: null,
+            status: 400,
+        };
+    }
 };
 
 export const updateAlumnoInfo = async(alumno, curp) => {

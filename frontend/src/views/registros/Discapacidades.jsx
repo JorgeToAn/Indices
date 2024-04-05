@@ -34,10 +34,9 @@ const RegistroDiscapacidades = () => {
         }
     });
     const crearDiscapacidad = async(values) => {
-        console.log(values);
         if (form.validate()){
             const res = await createDiscapacidad(values.nombre, values.descripcion);
-            if (res.status === 200){
+            if (res.status === 201){
                 notifications.show({
                     message: 'El registro fue creado con éxito.',
                     color: 'teal',
@@ -52,7 +51,7 @@ const RegistroDiscapacidades = () => {
             }
             form.reset();
         }
-        form.onReset(obtenerDiscapacidades());
+        obtenerDiscapacidades();
     };
     useEffect(() => {
         obtenerDiscapacidades();

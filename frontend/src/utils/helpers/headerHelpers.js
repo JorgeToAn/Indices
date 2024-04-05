@@ -129,5 +129,11 @@ export function getListaAlumnosHeaders(cohorte, numSemestres) {
         tabla[1].push(periodo[0]+"-"+periodo[1]);
         periodo = anioPeriodo(periodo);
     }
+    tabla[0].push('EGRESO');
+    tabla[1].push('PERIODO');
+    tabla[0].push('TITULACION');
+    tabla[1].push('PERIODO');
+    tabla[0].push('INGLES');
+    tabla[1].push('PERIODO');
     return tabla;
 }

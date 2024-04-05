@@ -43,7 +43,7 @@ const RegistroCarreras = () => {
     const crearCarrera = async(values) => {
         if (form.validate()){
             const res = await createCarrera(values.clave, values.nombre);
-            if (res.status === 200){
+            if (res.status === 201){
                 notifications.show({
                     message: 'El registro fue creado con éxito.',
                     color: 'teal',
@@ -58,7 +58,7 @@ const RegistroCarreras = () => {
             }
             form.reset();
         }
-        form.onReset(obtenerCarreras());
+        obtenerCarreras();
     };
 
     return(

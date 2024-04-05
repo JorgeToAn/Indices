@@ -33,7 +33,14 @@ const AlumnosLista = () => {
     const [exportar, setExportar] = useInputState('');
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
-
+    const [carreras, setCarreras] = useState([]);
+    const fetchCarreras = async() => {
+        const c = await dropDownData.getListaCarreras();
+        setCarreras(c);
+    };
+    useEffect(() => {
+        fetchCarreras();
+    }, []);
     const handleTable = async() => {
         setIsLoading(true);
         const res = await getAllAlumnosHistorial(examenYConv, trasladoYEquiv,cohorte, numSemestres, carrera, page, page > 1 ? nextPage: '/alumnos/historial');
@@ -107,12 +114,12 @@ const AlumnosLista = () => {
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={dropDownData.carreras} />
-                        <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
+                        { carreras.length > 0 ? <Dropdown  label="Programa educativo" color="#FFAA5A" handleChangeFn={setCarrera} data={carreras} /> : null }
+                        <Dropdown  label="Cohorte generacional" color="#FFAA5A" handleChangeFn={setCohorte} data={dropDownData.getCohortes()} />
                         <Dropdown  label="Cálculo de semestres" color="#FFAA5A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
                         <Dropdown  label="Exportar" color="#FFAA5A" handleChangeFn={setExportar} data={[
-                            ['Excel','Excel'],
-                            ['PDF','PDF'],
+                            {'value':'Excel','label':'Excel'},
+                            {'value':'PDF','label':'PDF'},
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >
@@ -120,7 +127,7 @@ const AlumnosLista = () => {
                         <Checkbox labelPosition='left' color='naranja'  checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end"}} >
-                        <Button  disabled={!cohorte || !numSemestres || !exportar} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
+                        <Button  disabled={!cohorte || !numSemestres || !exportar || data.length === 0} onClick={handlePrint} leftIcon={<Printer />} color='toronja'>Imprimir</Button>
                         <Button onClick={handleTable} disabled={!cohorte || !carrera || !numSemestres || isLoading} color="negro">{isLoading ? <Loader size="sm" color="#FFFFFF" /> : "Filtrar"}</Button>
                     </Group>
                 </fieldset>

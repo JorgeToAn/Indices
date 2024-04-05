@@ -19,7 +19,7 @@ export async function generatePDF(titulo, cohorte, numSemestres, heading, conten
         default:
             filtroAlumnos = "sin filtro";
     }
-    const doc = new jsPDF('p', 'pt', 'letter');
+    const doc = new jsPDF(titulo === 'Lista de Alumnos' ? 'l' : 'p', 'pt', 'letter');
     doc.setFont('Helvetica', 'Bold');
     const eduLogo = new Image();
     const tecLogo = new Image();
@@ -78,5 +78,53 @@ export async function generatePDF(titulo, cohorte, numSemestres, heading, conten
         });
     }
     doc.save('reporte.pdf');
+    return "Good";
+}
+
+export async function generatePDFReporte(alumno, fechaNac, heading, content) {
+    const doc = new jsPDF('p', 'pt', 'letter');
+    doc.setFont('Helvetica', 'Bold');
+    const eduLogo = new Image();
+    const tecLogo = new Image();
+    const itmLogo = new Image();
+    doc.setFontSize(12);
+    tecLogo.src = "/img/logo/Logo-TecNM.png";
+    eduLogo.src = "/img/logo/sep_logo.png";
+    itmLogo.src = "/img/logo/itmlogo.png";
+    doc.addImage(eduLogo, 'PNG', 50, 50, 160, 45);
+    doc.setDrawColor(179, 142,93);
+    doc.line(220, 60, 220, 90, 'S');
+    doc.addImage(tecLogo, 'PNG', 230, 50, 100, 45);
+    doc.line(340, 60, 340, 90, 'S');
+    doc.addImage(itmLogo, 'PNG', 350, 57, 21.6, 36);
+    doc.setDrawColor(0, 0,0);
+    doc.text('Instituto Tecnológico de Mexicali', 297.5, 130, null, null, 'center');
+    doc.line(60, 140, 550, 140);
+    doc.text(`Historial de alumno`, 297.5, 165, null, null,  'center');
+    doc.setFontSize(10);
+    doc.text(`Nombre: ${alumno.nombre} ${alumno.paterno} ${alumno.materno}`, 60, 185);
+    doc.text(`No. de control: ${alumno['no_control']}`, 60, 205);
+    const nombreC = await getNombreCarrera(alumno.carrera);
+    doc.text(`Carrera: ${nombreC}`, 60, 225);
+    doc.text(`Fecha de nacimiento: ${fechaNac}`, 60, 245);
+    doc.text(`Sexo: ${alumno.genero}`, 60, 265);
+    doc.text(`Estatus: ${alumno.estatus}`, 60, 285);
+    let  header = heading;
+    if (!Array.isArray(heading[1])){
+        header = [];
+        header.push(heading);
+    }
+    autoTable(doc, {
+        headStyles: {
+            fillColor: '#1B396A',
+            fontSize: 9,
+        },
+        bodyStyles: {
+            fontSize: 8,
+        },
+        margin: { top: 300 },
+        html: '#tabla ',
+    });
+    doc.save(`reporte_${alumno['no_control']}.pdf`);
     return "Good";
 }

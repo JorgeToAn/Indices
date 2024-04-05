@@ -1,5 +1,5 @@
 import "./NavBar.css";
-import { ChevronDown, Home, Search, UserCircle } from "tabler-icons-react";
+import { ChevronDown, Home, Search, UserCircle, X } from "tabler-icons-react";
 import {
     Header,
     Menu,
@@ -12,11 +12,14 @@ import {
     Text,
     SimpleGrid,
     UnstyledButton,
-    Divider
+    Divider,
+    Tooltip
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useInputState } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
 import ModalLogout from './modals/ModalLogout';
+import { getAlumnoInfo } from "../routes/api/controllers/alumnoController";
+import { notifications } from '@mantine/notifications';
 
 const useStyles = createStyles((theme) => ({
     burger: {
@@ -73,7 +76,7 @@ const useStyles = createStyles((theme) => ({
 }));
 const NavBar = () => {
     const { classes } = useStyles();
-
+    const [buscar, setBuscar] = useInputState('');
     const [opened, {open, close}] = useDisclosure(false);
     const navigate = useNavigate();
     const handleMiPerfil = () => {
@@ -81,17 +84,37 @@ const NavBar = () => {
     };
 
     const [opend, { toggle }] = useDisclosure(false);
+
+    const handleSearch = async(event) => {
+        if(event.key === 'Enter') {
+            await searchAlumno();
+        }
+    };
+
+    const searchAlumno = async () => {
+        const alumnoData = await getAlumnoInfo(buscar);
+        if (alumnoData.status === 200) {
+            navigate(`/alumnos/historial/${buscar}`);
+        } else {
+            notifications.show({
+                message: 'No existe un alumno asociado a esa matrícula.',
+                color: 'red',
+                icon: <X size={20} />,
+              });
+        }
+    };
     return (
         <Header bg="negro" height={40}>
             <div className="nav">
-
                 <Group>
                     <Button color="negro" leftIcon={<Home />} uppercase={true} onClick={()=> {
                         navigate('/');
                     }}>
                         <span className={classes.spanMenu}>Inicio</span>
                     </Button>
-                    <TextInput placeholder="BUSCAR" icon={<Search />} className={classes.searchBar}  size="xs"/>
+                    <Tooltip multiline w={220} withArrow transitionProps={{ duration: 200 }} label="Escribe la matrícula de un estudiante para ver su historial">
+                        <TextInput placeholder="BUSCAR" icon={<Search />} value={buscar} onChange={setBuscar} onKeyUp={handleSearch} className={classes.searchBar}  size="xs"/>
+                    </Tooltip>
                 </Group>
 
                 <Group>
