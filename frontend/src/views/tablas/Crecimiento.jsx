@@ -20,7 +20,6 @@ const TablaCrecimiento = () => {
     const [data, setData] = useState([]);
 
     const handleTable = async() => {
-        console.log(await dropDownData.getListaCarreras());
         setIsLoading(true);
         const header = getCrecimientoHeaders(cohorte, numSemestres);
         const table = await getTablasCrecimiento(examenYConv, trasladoYEquiv, cohorte, numSemestres, carrera);

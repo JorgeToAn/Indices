@@ -5,6 +5,21 @@ export const getCarreras = async() =>{
     const sortedCarreras = carreras.data['results'].sort((first, second) => (first['clave']  < second['clave']) ? -1 : (first['clave']  > second['clave']) ? 1 : 0);
     return sortedCarreras;
 };
+
+export const createCarrera = async(clave, nombre) =>{
+    try {
+        const carrera = await API.post('carreras/', {
+            nombre:nombre,
+            clave:clave
+        });
+        return carrera;
+    } catch (err) {
+        return {
+            data: null,
+            status: 400,
+        };
+    }
+};
 export const getNombreCarrera = async(clave) => {
     const carreras = await getCarreras();
     let nombreCarrera = "";

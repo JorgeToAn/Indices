@@ -5,3 +5,20 @@ export const getPlanes = async() => {
     console.log(planes.data['results']);
     return planes.data['results'];
 };
+
+export const createPlan = async(nombre, fechaInicio, fechaFin, carrera) =>{
+    try {
+        const plan = await API.post('planes/', {
+            clave:nombre,
+            fecha_inicio:fechaInicio,
+            fecha_final:fechaFin,
+            carrera_id:carrera
+        });
+        return plan;
+    } catch (err) {
+        return {
+            data: null,
+            status: 400,
+        };
+    }
+};

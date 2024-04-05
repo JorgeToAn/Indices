@@ -1,22 +1,17 @@
-import { Button, Center, Flex, Group, Select, TextInput } from "@mantine/core";
+import { Button, Center, Flex, Group, TextInput } from "@mantine/core";
 import { Link } from "react-router-dom";
-import { CirclePlus } from 'tabler-icons-react';
+import { Check, CirclePlus, X } from 'tabler-icons-react';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import './Registro.css';
-import { getCarreras } from "../../utils/helpers/carreraHelpers";
+import { createCarrera, getCarreras } from "../../utils/helpers/carreraHelpers";
 import { useState, useEffect } from "react";
-import dropDownData from "../../mockup/dropDownData";
+import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 
 
 const RegistroCarreras = () => {
     const [carreras, setCarreras] = useState([]);
-    const [planes, setPlanes] = useState([]);
-    const fetchPlanes = async() => {
-        const c = await dropDownData.getListaPlanes();
-        setPlanes(c);
-    };
-
     const headers = [
         'CLAVE', 'NOMBRE'
     ];
@@ -24,17 +19,48 @@ const RegistroCarreras = () => {
     const obtenerCarreras = async() => {
         const listaCarreras = await getCarreras();
         const listaC = [];
-        console.log(listaCarreras);
         listaCarreras.forEach((c) => {
             listaC.push([c['clave'], c['nombre']]);
         });
         setCarreras(listaC);
     };
 
+
+    const form = useForm({
+        initialValues: {
+            'nombre': '',
+            'clave': ''
+        }, validate: {
+            'clave': ((value) => value === '' ? 'La clave no es válida' : null),
+            'nombre': ((value) => value === '' ? 'El nombre no es válido' : null)
+        }
+    });
+
     useEffect(() => {
         obtenerCarreras();
-        fetchPlanes();
     }, []);
+
+    const crearCarrera = async(values) => {
+        if (form.validate()){
+            const res = await createCarrera(values.clave, values.nombre);
+            if (res.status === 200){
+                notifications.show({
+                    message: 'El registro fue creado con éxito.',
+                    color: 'teal',
+                    icon: <Check size={20} />,
+                  });
+            } else {
+                notifications.show({
+                    message: 'Lo sentimos, hubo un problema al crear el registro',
+                    color: 'red',
+                    icon: <X />,
+                });
+            }
+            form.reset();
+        }
+        form.onReset(obtenerCarreras());
+    };
+
     return(
         <div style={{
             width: '100vw',
@@ -43,14 +69,11 @@ const RegistroCarreras = () => {
             <Header color="toronja" section="Registro" title="Carreras" route="/"/>
             <Group align="flex-start" spacing="3vw">
                 <Flex direction="column">
-                    <form>
-                        <TextInput label="Nombre" withAsterisk/>
-                        <Group className="input-group">
-                            <TextInput label="Clave" withAsterisk width="45%"/>
-                            { planes.length > 0 ? <Select width="45%" label="Plan de estudios" placeholder="Seleccione un plan de estudios" data={planes} withAsterisk/> : null }
-                        </Group>
+                    <form onSubmit={form.onSubmit(crearCarrera)}>
+                        <TextInput {...form.getInputProps('nombre')} label="Nombre" withAsterisk/>
+                        <TextInput {...form.getInputProps('clave')} label="Clave" withAsterisk/>
                         <Center>
-                            <Button type="button" mt={16} leftIcon={<CirclePlus />} onClick={obtenerCarreras}>Crear Carrera</Button>
+                            <Button mt={16} leftIcon={<CirclePlus />} type='submit' >Crear Carrera</Button>
                         </Center>
                     </form>
                     <Flex direction="column" justify="center" align="center" mt={16} p={10} style={{backgroundColor: '#EBEBEB', borderRadius: '20px'}}>
