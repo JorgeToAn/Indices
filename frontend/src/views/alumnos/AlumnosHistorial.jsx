@@ -31,24 +31,28 @@ const AlumnosHistorial = () => {
 
     const handleSearch = async(event) => {
         if(event.key === 'Enter') {
-            const alumnoData = await getAlumnoInfo(buscar);
-            const alumnoInfo = {...alumnoData['curp']};
-            const fechaNac = new Date(alumnoInfo['fecha_nacimiento']);
-            alumnoInfo['fecha_nac'] = fechaNac;
-            alumnoInfo['no_control'] = alumnoData['no_control'];
-            alumnoInfo['estatus'] = alumnoData['estatus'];
-            alumnoInfo['semestres'] = alumnoData['registros']['ingresos'].length.toString();
-            alumnoInfo['carrera'] = alumnoData['plan']['carrera'];
-            setLenguaInd(alumnoInfo['habla_lengua_indigena']);
-            alumnoInfo['plan'] = alumnoData['plan']['clave'];
-            setLiberacionIng(alumnoData['registros']['liberacion_ingles'].length > 0 ? true : false);
-            setAlumno(alumnoInfo);
-            setFechaNac(alumnoInfo['fecha_nac']);
-            setSexo(alumnoData['curp']['genero']);
-            setEditar(false);
-            const reg = await ordenarRegistros(alumnoData['registros']['ingresos'], alumnoInfo['carrera']);
-            setRegistros(reg);
+            await searchAlumno();
         }
+    };
+
+    const searchAlumno = async () => {
+        const alumnoData = await getAlumnoInfo(buscar);
+        const alumnoInfo = {...alumnoData['curp']};
+        const fechaNac = new Date(alumnoInfo['fecha_nacimiento']);
+        alumnoInfo['fecha_nac'] = fechaNac;
+        alumnoInfo['no_control'] = alumnoData['no_control'];
+        alumnoInfo['estatus'] = alumnoData['estatus'];
+        alumnoInfo['semestres'] = alumnoData['registros']['ingresos'].length.toString();
+        alumnoInfo['carrera'] = alumnoData['plan']['carrera'];
+        setLenguaInd(alumnoInfo['habla_lengua_indigena']);
+        alumnoInfo['plan'] = alumnoData['plan']['clave'];
+        setLiberacionIng(alumnoData['registros']['liberacion_ingles'].length > 0 ? true : false);
+        setAlumno(alumnoInfo);
+        setFechaNac(alumnoInfo['fecha_nac']);
+        setSexo(alumnoData['curp']['genero']);
+        setEditar(false);
+        const reg = await ordenarRegistros(alumnoData['registros']['ingresos'], alumnoInfo['carrera']);
+        setRegistros(reg);
     };
 
     const updateAlumno = async() => {
@@ -95,7 +99,10 @@ const AlumnosHistorial = () => {
             <Group align="flex-start" spacing="3vw">
                 <Flex direction="column">
                     <form id="form-alumno">
-                        <TextInput label="Buscar" value={buscar} onChange={setBuscar} onKeyUp={handleSearch}  icon={<Search width={20} />} />
+                        <Group align='end' mt={10}>
+                            <TextInput placeholder="Buscar por matrícula" w='65%' value={buscar} onChange={setBuscar} onKeyUp={handleSearch}  icon={<Search width={20} />} />
+                            <Button w='30%' onClick={searchAlumno}>Buscar</Button>
+                        </Group>
                         <TextInput label="Nombre" value={alumno.nombre} name="nombre" onChange={handleInputChange} disabled={!editar} withAsterisk/>
                         <TextInput label="Apellido paterno" name="paterno" onChange={handleInputChange} value={alumno.paterno} disabled={!editar} withAsterisk/>
                         <TextInput label="Apellido materno" name="materno" onChange={handleInputChange} value={alumno.materno} disabled={!editar} withAsterisk/>
@@ -148,7 +155,7 @@ const AlumnosHistorial = () => {
                     </form>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >
-                    <Tabla headers={headers} content={registros} colors="tabla-toronja" />
+                    <Tabla headers={headers} smallSize content={registros} colors="tabla-toronja" />
                 </Flex>
             </Group>
             <ModalRespuesta opened={opened} close={handlers.close} success={response}/>

@@ -1,12 +1,14 @@
 import { Button, Center, Flex, Group, Select, TextInput } from "@mantine/core";
-import { CirclePlus } from 'tabler-icons-react';
+import { Check, CirclePlus, X } from 'tabler-icons-react';
 import { DateInput } from "@mantine/dates";
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import './Registro.css';
-import { getPlanes } from "../../utils/helpers/planesHelper";
+import { createPlan, getPlanes } from "../../utils/helpers/planesHelper";
 import { useEffect, useState } from "react";
 import dropDownData from "../../mockup/dropDownData";
+import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 
 const RegistroPlanes = () => {
     const [carreras, setCarreras] = useState([]);
@@ -23,7 +25,7 @@ const RegistroPlanes = () => {
         const listaPlanes = await getPlanes();
         const listaP = [];
         listaPlanes.forEach((p) => {
-            listaP.push([p.clave, p['fecha_inicio'], p['fecha_final'], p['carrera']['nombre']]);
+            listaP.push([p.clave, p['fecha_inicio'], p['fecha_final'], p['carrera_id']]);
         });
         setPlanes(listaP);
     };
@@ -32,6 +34,40 @@ const RegistroPlanes = () => {
         obtenerPlanes();
         fetchCarreras();
     }, []);
+
+    const form = useForm({
+        initialValues: {
+            'clave': '',
+            'fechaInicio': null,
+            'fechaFinal': null,
+            'carrera': '',
+        }, validate: {
+            'clave': ((value) => value === '' ? 'La clave no es válida' : null)
+        }
+    });
+
+    const crearPlan = async(values) => {
+        if (form.validate()){
+            const fechaInicio = values.fechaInicio.toISOString().split('T');
+            const fechaFin = values.fechaFinal.toISOString().split('T');
+            const res = await createPlan(values.clave, fechaInicio[0], fechaFin[0], values.carrera);
+            if (res.status === 200){
+                notifications.show({
+                    message: 'El registro fue creado con éxito.',
+                    color: 'teal',
+                    icon: <Check size={20} />,
+                  });
+            } else {
+                notifications.show({
+                    message: 'Lo sentimos, hubo un problema al crear el registro',
+                    color: 'red',
+                    icon: <X />,
+                });
+            }
+            form.reset();
+        }
+        form.onReset(obtenerPlanes());
+    };
     return(
         <div style={{
             width: '100vw',
@@ -40,15 +76,15 @@ const RegistroPlanes = () => {
             <Header color="naranja" section="Registro" title="Planes de Estudio" route="/"/>
             <Group align="flex-start" spacing="3vw">
                 <Flex direction="column" >
-                    <form>
-                        <TextInput label="Nombre" withAsterisk/>
+                    <form onSubmit={form.onSubmit(crearPlan)}>
+                        <TextInput label="Clave" {...form.getInputProps('clave')} withAsterisk/>
                         <Group className="input-group">
-                            <DateInput label="Fecha de inicio" width="45%" withAsterisk/>
-                            <DateInput label="Fecha de terminación" width="45%" />
+                            <DateInput label="Fecha de inicio" valueFormat="YYYY-MM-DD" {...form.getInputProps('fechaInicio')} width="45%" withAsterisk/>
+                            <DateInput label="Fecha de terminación" valueFormat="YYYY-MM-DD" {...form.getInputProps('fechaFinal')} width="45%" />
                         </Group>
-                        { carreras.length > 0 ? <Select width="100%" label="Carrera" placeholder="Seleccione una carrera" data={carreras} withAsterisk/> : null }
+                        { carreras.length > 0 ? <Select width="100%" label="Carrera" {...form.getInputProps('carrera')} placeholder="Seleccione una carrera" data={carreras} withAsterisk/> : null }
                         <Center>
-                            <Button type="button" mt={16} leftIcon={<CirclePlus />} onClick={obtenerPlanes} color="naranja">Crear Plan</Button>
+                            <Button type="submit" mt={16} leftIcon={<CirclePlus />} color="naranja">Crear Plan</Button>
                         </Center>
                     </form>
                 </Flex>

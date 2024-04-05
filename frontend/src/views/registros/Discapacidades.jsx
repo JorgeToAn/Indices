@@ -1,27 +1,59 @@
 import { Button, Center, Flex, Group, TextInput, Textarea } from "@mantine/core";
-import { CirclePlus } from 'tabler-icons-react';
+import { Check, CirclePlus, X } from 'tabler-icons-react';
 import Header from './../../components/header';
 import Tabla from './../../components/Tabla';
 import './Registro.css';
 import { useEffect, useState } from "react";
-import { getDiscapacidades } from "../../routes/api/controllers/discapacidadController";
+import { createDiscapacidad, getDiscapacidades } from "../../routes/api/controllers/discapacidadController";
+import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
 
 
 const RegistroDiscapacidades = () => {
     const headers = [
         'NOMBRE', 'DESCRIPCION'
     ];
-
     const [discapacidades, setDiscapacidades] = useState([]);
+
     const obtenerDiscapacidades = async() => {
         const listaDisc = await getDiscapacidades();
-        let listaD = Object.entries(listaDisc);
-        listaD = listaD.map((disc) => Object.entries(disc[1]));
-        listaD = listaD.map((disc) => disc.filter((dato, index)=> index > 0));
-        listaD = listaD.map((disc) => disc.map((c) => c.filter((dato, index) => index > 0)));
+        const listaD = [];
+        listaDisc.forEach((p) => {
+            listaD.push([p.nombre, p.descripcion]);
+        });
         setDiscapacidades(listaD);
     };
+    const form = useForm({
+        initialValues: {
+            'nombre': '',
+            'deescripcion': '',
 
+        }, validate: {
+            'clave': ((value) => value === '' ? 'La clave no es válida' : null),
+            'descripcion': ((value) => value === '' ? 'La descripción no es válida' : null)
+        }
+    });
+    const crearDiscapacidad = async(values) => {
+        console.log(values);
+        if (form.validate()){
+            const res = await createDiscapacidad(values.nombre, values.descripcion);
+            if (res.status === 200){
+                notifications.show({
+                    message: 'El registro fue creado con éxito.',
+                    color: 'teal',
+                    icon: <Check size={20} />,
+                  });
+            } else {
+                notifications.show({
+                    message: 'Lo sentimos, hubo un problema al crear el registro',
+                    color: 'red',
+                    icon: <X />,
+                });
+            }
+            form.reset();
+        }
+        form.onReset(obtenerDiscapacidades());
+    };
     useEffect(() => {
         obtenerDiscapacidades();
     }, []);
@@ -33,16 +65,16 @@ const RegistroDiscapacidades = () => {
             <Header color="toronja" section="Registro" title="Discapacidades" route="/"/>
             <Group align="flex-start" spacing="3vw">
                 <Flex direction="column" className="col-input">
-                    <form>
-                        <TextInput label="Nombre" withAsterisk/>
-                        <Textarea withAsterisk label="Descripción" autosize/>
+                    <form onSubmit={form.onSubmit(crearDiscapacidad)}>
+                        <TextInput {...form.getInputProps('nombre')} label="Nombre" withAsterisk/>
+                        <Textarea withAsterisk  {...form.getInputProps('descripcion')} label="Descripción" autosize/>
                         <Center>
-                            <Button type="button" mt={16} leftIcon={<CirclePlus />} onClick={obtenerDiscapacidades}>Agregar Discapacidad</Button>
+                            <Button type="submit" mt={16} leftIcon={<CirclePlus />} >Agregar Discapacidad</Button>
                         </Center>
                     </form>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" w="50%" maw='40vw' >
-                    <Tabla headers={headers} content={discapacidades} colors="tabla-toronja" />
+                    <Tabla headers={headers} smallSize content={discapacidades} colors="tabla-toronja" />
                 </Flex>
             </Group>
         </div>
