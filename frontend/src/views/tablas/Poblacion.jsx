@@ -1,4 +1,4 @@
-import { Button, Checkbox, Flex, Group } from "@mantine/core";
+import { Button, Checkbox, Flex, Group, Loader } from "@mantine/core";
 import Header from "src/components/header";
 import Dropdown from "src/components/Dropdown";
 import Tabla from "src/components/Tabla";
@@ -6,28 +6,17 @@ import { useInputState } from "@mantine/hooks";
 import dropDownData from "src/mockup/dropDownData";
 import { getTablasHeaders } from "src/utils/helpers/headerHelpers";
 import { useState } from "react";
-import { Printer } from "tabler-icons-react";
+import { Download, Printer, X } from "tabler-icons-react";
 import { buildTable } from "src/utils/helpers/tablasHelpers";
 import { generatePDF } from "src/utils/helpers/export/pdfHelpers";
 import { generateExcel } from "src/utils/helpers/export/excelHelpers";
 import { getTablasPoblacion } from "src/routes/api/controllers/tablasController";
+import { notifications } from "@mantine/notifications";
 
 const TablaPoblacion = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const [heading, setHeading] = useState([]);
     const [data, setData] = useState([]);
-    const tabla = [
-        ['Contador Público', 'CP', '14','16','25','30','27'],
-        ['Ingeniería Electrica', 'ELE', '14','16','25','30','27'],
-        ['Ingeniería Electronica', 'ELN', '14','16','25','30','27'],
-        ['Ingeniería Mecatronica', 'MKT', '14','16','25','30','27'],
-        ['Ingeniería Industrial', 'IND', '14','16','25','30','27'],
-        ['Ingeniería Mecanica', 'MEC', '14','16','25','30','27'],
-        ['Ingeniería en Energias Renovables','ENR', '14','16','25','30','27'],
-        ['Ingeniería en Gestion Empresarial','GEM', '14','16','25','30','27'],
-        ['Ingeniería en Sistemas Computacionales','SYC', '14','16','25','30','27'],
-        ['Ingeniería Quimica','QUI','14','16','25','30','27'],
-        ['Ingeniería en Logistica','LOG', '14','16','25','30','27']
-    ];
     // Cohorte, carrera y numSemestres son los datos de los Select
     const [cohorte, setCohorte] = useInputState('');
     const [numSemestres, setNumSemestre] = useInputState(0);
@@ -36,24 +25,51 @@ const TablaPoblacion = () => {
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
     const handleTable = async() => {
+        setIsLoading(true);
         const tabla =  await getTable();
         const header = getTablasHeaders(cohorte, numSemestres);
         setHeading(header);
         setData(tabla);
+        setIsLoading(false);
     };
 
     const getTable = async() => {
         const tabla = await getTablasPoblacion(examenYConv, trasladoYEquiv, cohorte, numSemestres);
-        const table = await buildTable(tabla);
-        return table;
+        if (tabla.status === 200) {
+            const table = await buildTable(tabla.data);
+            return table;
+        } else {
+            setHeading([]);
+            setData([[]]);
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al obtener los datos',
+                color: 'red',
+                icon: <X />,
+              });
+              return [];
+        }
+
     };
 
     const handlePrint = async() => {
         const tipoAlumno = (examenYConv && trasladoYEquiv) ? 1 : examenYConv ? 2 : 3;
-        if (exportar === 'PDF') {
-            generatePDF('Poblacion', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv);
-        } else if (exportar === 'Excel') {
-             await generateExcel(heading, tabla, 'Poblacion', cohorte, numSemestres, tipoAlumno);
+        try {
+            if (exportar === 'PDF') {
+                await generatePDF('Poblacion', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv);
+            } else if (exportar === 'Excel') {
+                 await generateExcel(heading, data, 'Poblacion', cohorte, numSemestres, tipoAlumno);
+            }
+            notifications.show({
+                message: 'La descarga de tu documento ha comenzado.',
+                color: 'teal',
+                icon: <Download size={20} />,
+              });
+        } catch (e) {
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al generar su documento',
+                color: 'red',
+                icon: <X />,
+                });
         }
     };
     return(
@@ -66,12 +82,11 @@ const TablaPoblacion = () => {
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        {/* <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera} data={dropDownData.carreras} /> */}
-                        <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes} />
+                        <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.getCohortes()} />
                         <Dropdown  label="Cálculo de semestres" color="#FF785A" handleChangeFn={setNumSemestre} data={dropDownData.numSemestres} />
                         <Dropdown  label="Exportar" color="#FF785A" handleChangeFn={setExportar} data={[
-                            ['Excel','Excel'],
-                            ['PDF','PDF'],
+                            {'value':'Excel','label':'Excel'},
+                            {'value':'PDF','label':'PDF'},
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >
@@ -79,8 +94,8 @@ const TablaPoblacion = () => {
                         <Checkbox labelPosition='left' checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
-                        <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
-                        <Button  disabled={!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)} onClick={handleTable} color='negro'>Filtrar</Button>
+                        <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv)|| data.length === 0} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
+                        <Button  disabled={(!cohorte || !numSemestres || !(examenYConv || trasladoYEquiv)) && !isLoading} onClick={handleTable} color='negro'>{isLoading ? <Loader size='sm' color='#FFFFFF'/>  : "Filtrar"}</Button>
                     </Group>
                 </fieldset>
                 <Tabla headers={heading} content={data} colors="tabla-toronja" />

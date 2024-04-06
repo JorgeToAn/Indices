@@ -2,9 +2,15 @@ import API from 'src/utils/api';
 import { buildListaAlumnos } from 'src/utils/helpers/alumnoHelpers';
 
 export const getAlumnoInfo = async(numControl) => {
-    const res = await API.get('/alumnos/historial/'+numControl);
-    const alumnoData = res.data;
-    return alumnoData;
+    try {
+        const res = await API.get('/alumnos/historial/'+numControl);
+        return res;
+    } catch (err) {
+        return {
+            data: null,
+            status: 400,
+        };
+    }
 };
 
 export const updateAlumnoInfo = async(alumno, curp) => {
@@ -24,11 +30,17 @@ export const updateAlumnoInfo = async(alumno, curp) => {
 };
 
 export const getAllAlumnosHistorial = async(nuevoIngreso, trasladoEquiv, cohorte, semestres, carrera, pagina, link='/alumnos/historial') => {
-    const res = await API.get(link, {
-        params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': semestres.toString(), 'carrera': carrera}
-    });
-    const data = res.data;
-    return data;
+    try {
+        const res = await API.get(link, {
+            params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': semestres.toString(), 'carrera': carrera}
+        });
+        return res;
+    } catch (err) {
+        return {
+            data: null,
+            status: 400,
+        };
+    }
 };
 
 export const getFullHistorial = async(nuevoIngreso, trasladoEquiv, cohorte, semestres, carrera) => {

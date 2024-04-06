@@ -27,7 +27,6 @@ const useStyles = createStyles((theme) => ({
 }));
 function getStrength(password) {
     let multiplier = password.length > 5 ? 0 : 1;
-    console.log(password);
     requirements.forEach((requirement) => {
         if (!requirement.re.test(password)) {
         multiplier += 1;

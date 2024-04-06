@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import './Tabla.css';
 import { useState } from 'react';
 
-function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, row}) {
+function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, row, smallSize}) {
     const [selectedRow, setSelectedRow] = useState([]);
     const getBlankSpaces = (index) => {
         for (let i = index+1; i < headers[0].length; i++) {
@@ -16,7 +16,7 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
     };
     return(
 
-        <ScrollArea w="80vw" h="50vh" mah={500} maw={1200} type='always' >
+        <ScrollArea w={smallSize ? '45vw': '80vw'} h="50vh" mah={500} maw={smallSize? 800: 1500} type='always' >
             <Table highlightOnHover withBorder withColumnBorders horizontalSpacing='xs' verticalSpacing='xs' className={colors+" tabla"} id='tabla'>
                 {/* Si la propiedad "doubleHeader" es true, entonces la primer celda del primer renglon
                 tendra una longitud de toda la tabla, si no, entonces solo habra un renglon en donde cada
@@ -28,10 +28,10 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                             { headers[0].filter((cell, i) => cell !== '').map((cells, index) => headers[2][headers[0].indexOf(cells)] === '' ? <th key={index} rowSpan="3">{ cells }</th> : <th key={index} colSpan={getBlankSpaces(cells.startsWith('Año  de') ? headers[0].lastIndexOf(cells) : headers[0].indexOf(cells))}>{ cells }</th>)}
                         </tr>
                         <tr>
-                            { headers[1].filter((cell, index) => cell !== '').map((cell, index) => headers[2][headers[1].indexOf(cell)] === '' ? <th key={index} rowSpan="2">{ cell }</th> : <th key={index}>{ cell }</th>)}
+                            { headers[1].filter((cell, index) => cell !== '').map((cell, index) => headers[2][headers[1].indexOf(cell)] === '' ? <th style={{top: '42.7px'}} key={index} rowSpan="2">{ cell }</th> : <th style={{top: '42.7px'}} key={index}>{ cell }</th>)}
                         </tr>
                         <tr>
-                            { headers[2].filter((cell, index) => cell !== '').map((cell, index) => <th key={index}>{ cell }</th>)}
+                            { headers[2].filter((cell, index) => cell !== '').map((cell, index) => <th style={{top: '85.4px'}} key={index}>{ cell }</th>)}
                         </tr>
                     </thead>
                 :
@@ -43,17 +43,8 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                         </tr>
                         <tr>
                             { select ? <td></td> : null}
-                            { headers[1].filter((cell, i) => cell !== '').map((cell, index) => cell === 'Nombre' ? <th key={index} className='celda-nombre'>{cell}</th> : <th key={index}>{cell}</th>) }
+                            { headers[1].filter((cell, i) => cell !== '').map((cell, index) => cell === 'Nombre' ? <th style={{top: '42px'}} key={index} className='celda-nombre'>{cell}</th> : <th style={{top: '42px'}} key={index}>{cell}</th>) }
                         </tr>
-                        {/* { headers.map( (fila, index) => index === 0 ? (fila[4] === "" || fila[0] !== "") ? <tr key={index}><th colSpan={headers[index+1].length}>{fila[0]}</th></tr> :
-                        <tr key={index}>
-                            { select ? <td></td> : null}
-                            { fila.map( (celda, i) => <th key={i} className='doble-encabezado'>{celda}</th>)}
-                        </tr> :
-                        <tr key={index}>
-                            { select ? <td></td> : null}
-                            { fila.map( (celda, i) => celda === 'Nombre' ? <th key={i} className='celda-nombre'>{celda}</th> : <th key={i}>{celda}</th>)}
-                        </tr> )} */}
                     </thead>
                 :
                     <thead>
@@ -98,5 +89,6 @@ Tabla.propTypes = {
     tripleHeader: PropTypes.bool,
     select: PropTypes.bool,
     row: PropTypes.func,
+    smallSize: PropTypes.bool,
 };
 export default Tabla;

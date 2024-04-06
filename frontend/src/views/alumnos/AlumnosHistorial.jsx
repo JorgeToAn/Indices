@@ -1,6 +1,6 @@
 import { Button, Checkbox, Flex, Group, Select, TextInput } from "@mantine/core";
 import Header from "src/components/header";
-import { DeviceFloppy, Edit, FileExport, Search } from "tabler-icons-react";
+import { DeviceFloppy, Download, Edit, FileExport, Search, X } from "tabler-icons-react";
 import dropDownData from "src/mockup/dropDownData";
 import Tabla from "src/components/Tabla";
 import { useEffect, useState } from "react";
@@ -9,8 +9,12 @@ import { ordenarRegistros } from "src/utils/helpers/historialHelpers";
 import { DateInput } from "@mantine/dates";
 import { getAlumnoInfo, updateAlumnoInfo } from "src/routes/api/controllers/alumnoController";
 import ModalRespuesta from "src/components/modals/ModalRespuesta";
+import { useParams } from 'react-router-dom';
+import { notifications } from '@mantine/notifications';
+import { generatePDFReporte } from "../../utils/helpers/export/pdfHelpers";
 
 const AlumnosHistorial = () => {
+    const { control } = useParams();
     const [opened, handlers] = useDisclosure(false);
     const [response, setResponse] = useState(false);
     const [editar, setEditar] = useState(false);
@@ -31,26 +35,62 @@ const AlumnosHistorial = () => {
 
     const handleSearch = async(event) => {
         if(event.key === 'Enter') {
-            const alumnoData = await getAlumnoInfo(buscar);
-            const alumnoInfo = {...alumnoData['curp']};
-            const fechaNac = new Date(alumnoInfo['fecha_nacimiento']);
-            alumnoInfo['fecha_nac'] = fechaNac;
-            alumnoInfo['no_control'] = alumnoData['no_control'];
-            alumnoInfo['estatus'] = alumnoData['estatus'];
-            alumnoInfo['semestres'] = alumnoData['registros']['ingresos'].length.toString();
-            alumnoInfo['carrera'] = alumnoData['plan']['carrera'];
-            setLenguaInd(alumnoInfo['habla_lengua_indigena']);
-            alumnoInfo['plan'] = alumnoData['plan']['clave'];
-            setLiberacionIng(alumnoData['registros']['liberacion_ingles'].length > 0 ? true : false);
-            setAlumno(alumnoInfo);
-            setFechaNac(alumnoInfo['fecha_nac']);
-            setSexo(alumnoData['curp']['genero']);
-            setEditar(false);
-            const reg = await ordenarRegistros(alumnoData['registros']['ingresos'], alumnoInfo['carrera']);
-            setRegistros(reg);
+            await searchAlumno('');
         }
     };
-
+    const searchAl = async () => {
+        await searchAlumno('');
+    };
+    const searchAlumno = async (numControl) => {
+        let alumnoData = {};
+        if (numControl !== '') {
+            console.log(numControl);
+            alumnoData = await getAlumnoInfo(numControl);
+        } else {
+            alumnoData = await getAlumnoInfo(buscar);
+        }
+        if (alumnoData.status === 200) {
+            const alumnoInfo = {...alumnoData.data['curp']};
+            const fechaNac = new Date(alumnoInfo['fecha_nacimiento']);
+            alumnoInfo['fecha_nac'] = fechaNac;
+            alumnoInfo['no_control'] = alumnoData.data['no_control'];
+            alumnoInfo['estatus'] = alumnoData.data['estatus'];
+            alumnoInfo['semestres'] = alumnoData.data['registros']['ingresos'].length.toString();
+            alumnoInfo['carrera'] = alumnoData.data['plan']['carrera'];
+            setLenguaInd(alumnoInfo['habla_lengua_indigena']);
+            alumnoInfo['plan'] = alumnoData.data['plan']['clave'];
+            setLiberacionIng(alumnoData.data['registros']['liberacion_ingles'].length > 0 ? true : false);
+            setAlumno(alumnoInfo);
+            setFechaNac(alumnoInfo['fecha_nac']);
+            setSexo(alumnoData.data['curp']['genero']);
+            setEditar(false);
+            const reg = await ordenarRegistros(alumnoData.data['registros']['ingresos'], alumnoInfo['carrera']);
+            setRegistros(reg);
+        } else {
+            notifications.show({
+                message: 'No existe un alumno asociado a esa matrícula.',
+                color: 'red',
+                icon: <X size={20} />,
+              });
+        }
+    };
+    const handlePrint = async() => {
+        try {
+            const fechaN = fechaNac.toISOString().split('T');
+            await generatePDFReporte(alumno, fechaN[0], headers, registros);
+            notifications.show({
+                message: 'La descarga de tu documento ha comenzado.',
+                color: 'teal',
+                icon: <Download size={20} />,
+              });
+        } catch (e) {
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al generar su documento',
+                color: 'red',
+                icon: <X />,
+                });
+        }
+    };
     const updateAlumno = async() => {
         const alumnoForm = new FormData(document.getElementById('form-alumno'));
         alumnoForm.append('curp', alumno['curp']);
@@ -73,18 +113,26 @@ const AlumnosHistorial = () => {
         copyAlumno[name] = value;
         setAlumno(copyAlumno);
     };
+    const initialCheck = async () => {
+        if (control) {
+            setBuscar(control);
+            await searchAlumno(control);
+        } else {
+            const alumnoInicial = {
+                'nombre': '',
+                'paterno': '',
+                'materno': '',
+                'control': '',
+                'genero': '',
+                'semestres': '1',
+                'carrera': '',
+            };
+            setAlumno(alumnoInicial);
+            setRegistros([]);
+        }
+    };
     useEffect(() => {
-        const alumnoInicial = {
-            'nombre': '',
-            'paterno': '',
-            'materno': '',
-            'control': '',
-            'genero': '',
-            'semestres': '1',
-            'carrera': '',
-        };
-        setAlumno(alumnoInicial);
-        setRegistros([]);
+        initialCheck();
     },[]);
     return(
         <div style={{
@@ -95,7 +143,10 @@ const AlumnosHistorial = () => {
             <Group align="flex-start" spacing="3vw">
                 <Flex direction="column">
                     <form id="form-alumno">
-                        <TextInput label="Buscar" value={buscar} onChange={setBuscar} onKeyUp={handleSearch}  icon={<Search width={20} />} />
+                        <Group align='end' mt={10}>
+                            <TextInput placeholder="Buscar por matrícula" w='65%' value={buscar} onChange={setBuscar} onKeyUp={handleSearch}  icon={<Search width={20} />} />
+                            <Button w='30%' onClick={searchAl}>Buscar</Button>
+                        </Group>
                         <TextInput label="Nombre" value={alumno.nombre} name="nombre" onChange={handleInputChange} disabled={!editar} withAsterisk/>
                         <TextInput label="Apellido paterno" name="paterno" onChange={handleInputChange} value={alumno.paterno} disabled={!editar} withAsterisk/>
                         <TextInput label="Apellido materno" name="materno" onChange={handleInputChange} value={alumno.materno} disabled={!editar} withAsterisk/>
@@ -142,13 +193,13 @@ const AlumnosHistorial = () => {
                         :
                             <Group className="input-group">
                                 <Button type="button" mt={16} leftIcon={<Edit />} onClick={handleEdit}>Editar</Button>
-                                <Button type="button" mt={16} color="naranja" leftIcon={<FileExport />} >Exportar</Button>
+                                <Button type="button" mt={16} color="naranja" onClick={handlePrint} leftIcon={<FileExport />} >Exportar</Button>
                             </Group>
                         }
                     </form>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >
-                    <Tabla headers={headers} content={registros} colors="tabla-toronja" />
+                    <Tabla headers={headers} smallSize content={registros} colors="tabla-toronja" />
                 </Flex>
             </Group>
             <ModalRespuesta opened={opened} close={handlers.close} success={response}/>

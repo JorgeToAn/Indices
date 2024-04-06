@@ -1,8 +1,8 @@
 import { getNombreCarrera } from "./carreraHelpers";
 
-export function getIndicesHeaders(tipo, cohorte, carrera) {
+export async function getIndicesHeaders(tipo, cohorte, carrera) {
     const tabla = [];
-    const nombreCarrera = getNombreCarrera(carrera);
+    const nombreCarrera = await getNombreCarrera(carrera);
     tabla.push(["Indices de rendimiento escolar cohorte generacional"+' '+cohorte+' '+nombreCarrera]);
     switch(tipo) {
         case 1:
@@ -129,5 +129,11 @@ export function getListaAlumnosHeaders(cohorte, numSemestres) {
         tabla[1].push(periodo[0]+"-"+periodo[1]);
         periodo = anioPeriodo(periodo);
     }
+    tabla[0].push('EGRESO');
+    tabla[1].push('PERIODO');
+    tabla[0].push('TITULACION');
+    tabla[1].push('PERIODO');
+    tabla[0].push('INGLES');
+    tabla[1].push('PERIODO');
     return tabla;
 }

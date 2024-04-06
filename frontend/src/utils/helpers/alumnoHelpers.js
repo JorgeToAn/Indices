@@ -14,19 +14,53 @@ export const buildListaAlumnos = (lista, semestres, cohorte) => {
                 if (dato['periodo'] === `${periodo[0]}${periodo[1]}`) {
                     row.push(fila['plan']['carrera']);
                 } else {
-                    if (fila['registros']['egresos'] !== undefined) {
-                        if (fila['registros']['engresos']['periodo'] !== `${periodo[0]}${periodo[1]}`) {
-                        } else {
+                    let found = false;
+                    fila['registros']['ingresos'].forEach((ing) => {
+                        if (ing['periodo'] === `${periodo[0]}${periodo[1]}`){
+                            found = true;
+                            row.push(fila['plan']['carrera']);
+                        }
+                    });
+                    if (!found) {
+                        row.push('BAJA');
+                    }
+                }
+            } else {
+                let found = false;
+                fila['registros']['ingresos'].forEach((ing) => {
+                    if (ing['periodo'] === `${periodo[0]}${periodo[1]}`){
+                        found = true;
+                        row.push(fila['plan']['carrera']);
+                    }
+                });
+                if (!found) {
+                    if (fila['registros']['egreso'][0] !== undefined) {
+                        if (Number(fila['registros']['egreso'][0]['periodo']) <= Number(`${periodo[0]}${periodo[1]}`)) {
                             row.push('EGR');
+                        } else {
+                            row.push('BAJA');
                         }
                     } else {
                         row.push('BAJA');
                     }
                 }
-                periodo = anioPeriodo(periodo);
-            } else {
-                row.push('BAJA');
             }
+            periodo = anioPeriodo(periodo);
+        }
+        if (fila['registros']['egreso'][0] !== undefined) {
+            row.push(fila['registros']['egreso'][0]['periodo']);
+        } else {
+            row.push('-');
+        }
+        if (fila['registros']['titulacion'][0] !== undefined) {
+            row.push(fila['registros']['titulacion'][0]['periodo']);
+        } else {
+            row.push('-');
+        }
+        if (fila['registros']['liberacion_ingles'][0] !== undefined) {
+            row.push(fila['registros']['liberacion_ingles'][0]['periodo']);
+        } else {
+            row.push('-');
         }
         tabla.push(row);
         periodo = cohorte.split("-");

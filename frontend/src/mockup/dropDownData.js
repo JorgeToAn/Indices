@@ -1,49 +1,58 @@
-const carreras = [
-    ['TODAS', 'Todas las carreras'],
-    ['SYC','Ingenieria Sistemas Computacionales'],
-    ['QUI','Ingenieria Quimica'],
-    ['IND','Ingenieria Industrial'],
-    ['LOG','Ingenieria Logística'],
-    ['MAT','Ingenieria en Materiales'],
-    ['GEM','Ingenieria Gestión Empresarial'],
-    ['ELN','Ingenieria Electrónica'],
-    ['ELE','Ingenieria Eléctrica'],
-    ['MKT','Ingenieria Mecatrónica'],
-    ['MEC','Ingenieria Mecánica'],
-    ['CP','Contador Público'],
-    ['ENR','Ingenieria Energías Renovables'],
-];
+import { getCarreras } from "../utils/helpers/carreraHelpers";
+import { anioPeriodo } from "../utils/helpers/headerHelpers";
+import { getPlanes } from "../utils/helpers/planesHelper";
 
-const cohortes = [
-    ['2024-1','2024-1'],
-    ['2023-3','2023-3'],
-    ['2023-1','2023-1'],
-    ['2022-3','2022-3'],
-    ['2022-1','2022-1'],
-    ['2021-3','2021-3'],
-    ['2021-1','2021-1'],
-    ['2020-3','2020-3'],
-    ['2020-1','2020-1'],
-    ['2019-3','2019-3'],
-    ['2019-1','2019-1'],
-    ['2018-3','2018-3'],
-    ['2018-1','2018-1'],
-    ['2017-3','2017-3'],
-    ['2017-1','2017-1'],
-    ['2016-3','2016-3'],
-    ['2016-1','2016-1'],
-    ['2015-3','2015-3'],
-    ['2015-1','2015-1'],
-];
+const getListaCarreras = async () => {
+    const carreras = await getCarreras();
+    const lista = [];
+    carreras.forEach((c) => {
+        lista.push({
+            'value': c['clave'],
+            'label': c['nombre']
+        });
+    });
+    return lista;
+};
+
+const getListaPlanes = async () => {
+    const planes = await getPlanes();
+    const lista = [];
+    planes.forEach((p) => {
+        lista.push({
+            'value': p['clave'],
+            'label': p['clave']
+        });
+    });
+    return lista;
+};
+
+const getCohortes = () => {
+    const cohorts = [];
+    const fecha = new Date();
+    const periodoFinal = [];
+    let periodo = ['2015', '1'];
+    periodoFinal.push(fecha.getFullYear().toString());
+    if (fecha.getMonth() > 7)
+        periodoFinal.push('3');
+    else
+        periodoFinal.push('1');
+    do {
+        cohorts.push({'value':`${periodo[0]}-${periodo[1]}`, 'label':`${periodo[0]}-${periodo[1]}`});
+        periodo = anioPeriodo(periodo);
+    } while (`${periodoFinal[0]}-${periodoFinal[1]}` !== `${periodo[0]}-${periodo[1]}`);
+    cohorts.push({'value':`${periodoFinal[0]}-${periodoFinal[1]}`, 'label':`${periodoFinal[0]}-${periodoFinal[1]}`});
+    cohorts.sort((a, b) => a < b ? -1 : 1);
+    return cohorts;
+};
 
 const numSemestres = [
-    ['9','9 semestres'],
-    ['10','10 semestres'],
-    ['11','11 semestres'],
-    ['12','12 semestres'],
-    ['13','13 semestres'],
-    ['14','14 semestres'],
-    ['15','15 semestres'],
+    {'value':'9', 'label':'9 semestres'},
+    {'value':'10','label':'10 semestres'},
+    {'value':'11','label':'11 semestres'},
+    {'value':'12', 'label':'12 semestres'},
+    {'value':'13', 'label':'13 semestres'},
+    {'value':'14', 'label':'14 semestres'},
+    {'value':'15', 'label':'15 semestres'},
 ];
 
 const semestres = [
@@ -64,8 +73,9 @@ const semestres = [
     ['15','15vo'],
 ];
 const dropDownData = {
-    carreras,
-    cohortes,
+    getCohortes,
+    getListaCarreras,
+    getListaPlanes,
     numSemestres,
     semestres,
 };

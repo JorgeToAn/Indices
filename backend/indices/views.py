@@ -156,8 +156,8 @@ class IndicesTitulacion(APIView):
             else:
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno__plan__carrera__pk=carrera))
                 poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
-            inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos))
-            poblacion_egr = Egreso.objects.aggregate(egresados=inactivos, periodo=periodo)
+            inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo))
+            poblacion_egr = Egreso.objects.aggregate(egresados=inactivos)
             poblacion_titulo = Titulacion.objects.aggregate(titulados=inactivos)
             tasa_titulacion = Decimal((poblacion_titulo['titulados']*100)/poblacion_nuevo_ingreso)
             tasa_titulacion = round(tasa_titulacion, 2)
@@ -218,8 +218,5 @@ class IndicesDesercion(APIView):
             tasa_desercion = round(tasa_desercion, 2)
             alumnos_corte_anterior = poblacion_act['poblacion']
             response_data[periodo] = dict(poblacion=poblacion_act['poblacion'], egresados=poblacion_egr['egresados'], desercion=desercion, tasa_desercion=tasa_desercion)
-            # filter(tipo__in=tipos, periodo=periodo, alumno__plan__carrera__pk=carrera).annotate(
-            #     clave=F("alumno__plan__carrera__pk")
-            #     ).values("clave").
 
         return Response(response_data)

@@ -27,8 +27,14 @@ const CedulaCacei = () => {
     const header = [
         'Cohortes equivalentes a 5 años', 'Periodo de cohorte', 'Número de estudiantes en el cohorte', 'Número de estudiantes que pertenecen al PE', 'Porcentaje de estudiantes que pertenecen al PE', 'Número de egresados del cohorte', 'Eficiencia terminal', 'Número de titulados del cohorte', 'Porcentaje de titulacion'
     ];
+    const [carreras, setCarreras] = useState([]);
+    const fetchCarreras = async() => {
+        const c = await dropDownData.getListaCarreras();
+        setCarreras(c);
+    };
 
     useEffect(() => {
+        fetchCarreras();
         setData([
             []
         ]);
@@ -37,7 +43,7 @@ const CedulaCacei = () => {
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
         if (exportar === 'PDF') {
-            generatePDF('Poblacion', cohorte, '15', carrera);
+            generatePDF('Cédulas CACEI', cohorte, '15', carrera);
         } else if (exportar === 'Excel') {
             await generateExcel(heading, data, 'CACEI', cohorte, '15', tipoAlumno, carrera);
         }
@@ -85,11 +91,10 @@ const CedulaCacei = () => {
                 <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera}  data={dropDownData.carreras}/>
-                        <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.cohortes}/>
+                        { carreras.length > 0 ? <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera} data={carreras} /> : null }                        <Dropdown  label="Cohorte generacional" color="#FF785A" handleChangeFn={setCohorte} data={dropDownData.getCohortes()}/>
                         <Dropdown  label="Exportar" color="#FF785A" handleChangeFn={setExportar} data={[
-                            ['Excel','Excel'],
-                            ['PDF','PDF'],
+                            {'value':'Excel','label':'Excel'},
+                            {'value':'PDF','label':'PDF'},
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >

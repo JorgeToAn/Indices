@@ -25,7 +25,6 @@ const SubirArchivos = () => {
         const formData = new FormData();
         formData.append('file', file[0], file[0].name);
         const res = await subirArchivosExcel(formData, tipo);
-        console.log(res);
         setInfo(res.data);
         handlers.open();
     };

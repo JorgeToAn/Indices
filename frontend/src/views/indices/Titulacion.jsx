@@ -1,18 +1,20 @@
-import { Button, Checkbox, Flex, Group } from '@mantine/core';
+import { Button, Checkbox, Flex, Group, Loader } from '@mantine/core';
 import Header from 'src/components/header';
 import Tabla from 'src/components/Tabla';
 import Dropdown from 'src/components/Dropdown';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInputState } from '@mantine/hooks';
 import dropDownData from 'src/mockup/dropDownData';
 import { getIndicesHeaders } from 'src/utils/helpers/headerHelpers';
-import { Printer } from 'tabler-icons-react';
+import { Download, Printer, X } from 'tabler-icons-react';
 import { buildTablaIndices } from 'src/utils/helpers/indicesHelpers';
 import { getIndicesData } from 'src/routes/api/controllers/indicesHelpers';
 import { generatePDF } from 'src/utils/helpers/export/pdfHelpers';
 import { generateExcel } from 'src/utils/helpers/export/excelHelpers';
+import { notifications } from '@mantine/notifications';
 
 const IndiceTitulacion = () => {
+    const [isLoading, setIsLoading] = useState(false);
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente
     const [heading, setHeading] = useState([[],[]]);
     const [data, setData] = useState([]);
@@ -24,20 +26,66 @@ const IndiceTitulacion = () => {
     const [examenYConv, setExamenYConv] = useState(true);
     const [trasladoYEquiv, setTrasladoYEquiv] = useState(false);
 
+    const [carreras, setCarreras] = useState([]);
+    const fetchCarreras = async() => {
+        const c = await dropDownData.getListaCarreras();
+        c.push({'value': 'TODAS', 'label': 'TODAS LAS CARRERAS'});
+        setCarreras(c);
+    };
+
+    useEffect(() => {
+        fetchCarreras();
+    }, []);
+
     const handleTable = async() => {
-        const headers = getIndicesHeaders(3, cohorte, carrera);
-        setHeading(headers);
+        setIsLoading(true);
         const tabla = await getIndicesData('titulacion', examenYConv, trasladoYEquiv, cohorte, carrera, numSemestres);
-        const datos = buildTablaIndices('titulacion', tabla, numSemestres);
-        setData(datos);
+        if (tabla.status === 200) {
+            try {
+                const headers = await getIndicesHeaders(3, cohorte, carrera);
+                setHeading(headers);
+                const datos = buildTablaIndices('titulacion', tabla.data, numSemestres);
+                setData(datos);
+            } catch (error) {
+                setHeading([[],[]]);
+                setData([]);
+                notifications.show({
+                    message: 'Lo sentimos, hubo un problema al generar la tabla',
+                    color: 'red',
+                    icon: <X />,
+                });
+            }
+        } else {
+            setHeading([[],[]]);
+            setData([]);
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al obtener los datos',
+                color: 'red',
+                icon: <X />,
+              });
+        }
+        setIsLoading(false);
     };
 
     const handlePrint = async() => {
         const tipoAlumno = examenYConv && trasladoYEquiv ? 1 : examenYConv ? 2 : 3;
-        if (exportar === 'PDF') {
-            generatePDF('Titulación', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera);
-        } else if (exportar === 'Excel') {
-            await generateExcel(heading, data, 'Indice Titulacion', cohorte, numSemestres, tipoAlumno);
+        try {
+            if (exportar === 'PDF') {
+                await generatePDF('Titulación', cohorte, numSemestres, heading, data, false, examenYConv, trasladoYEquiv, carrera);
+            } else if (exportar === 'Excel') {
+                await generateExcel(heading, data, 'Indice Titulacion', cohorte, numSemestres, tipoAlumno);
+            }
+            notifications.show({
+                message: 'La descarga de tu documento ha comenzado.',
+                color: 'teal',
+                icon: <Download size={20} />,
+              });
+        } catch (e) {
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al generar su documento',
+                color: 'red',
+                icon: <X />,
+                });
         }
     };
 
@@ -51,12 +99,12 @@ const IndiceTitulacion = () => {
             <fieldset className='filtros'>
                     <legend>Filtros</legend>
                     <Group mt={0} mb={16} color='gris'>
-                        <Dropdown  label="Programa educativo" color="#FF785A" data={dropDownData.carreras} handleChangeFn={setCarrera} />
-                        <Dropdown  label="Cohorte generacional" color="#FF785A" data={dropDownData.cohortes} handleChangeFn={setCohorte} />
+                        { carreras.length > 0 ? <Dropdown  label="Programa educativo" color="#FF785A" handleChangeFn={setCarrera} data={carreras} /> : null }
+                        <Dropdown  label="Cohorte generacional" color="#FF785A" data={dropDownData.getCohortes()} handleChangeFn={setCohorte} />
                         <Dropdown  label="Cálculo de semestres" color="#FF785A" data={dropDownData.numSemestres} handleChangeFn={setNumSemestre} />
                         <Dropdown  label="Exportar" color="#FF785A" handleChangeFn={setExportar} data={[
-                            ['Excel','Excel'],
-                            ['PDF','PDF'],
+                            {'value':'Excel','label':'Excel'},
+                            {'value':'PDF','label':'PDF'},
                         ]} />
                     </Group>
                     <Group mt={0} mb={16} >
@@ -64,8 +112,8 @@ const IndiceTitulacion = () => {
                         <Checkbox labelPosition='left' checked={trasladoYEquiv} onChange={(event) => setTrasladoYEquiv(event.currentTarget.checked)} label='Traslado y Equivalencia' radius='sm' />
                     </Group>
                     <Group style={{ justifyContent: "flex-end" }} >
-                        <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv)} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
-                        <Button onClick={handleTable} color='negro' disabled={!cohorte || !carrera || !numSemestres || !(examenYConv || trasladoYEquiv)} >Filtrar</Button>
+                        <Button  disabled={!cohorte || !numSemestres || !exportar || !(examenYConv || trasladoYEquiv) || data.length === 0} onClick={handlePrint} leftIcon={<Printer />} color='naranja'>Imprimir</Button>
+                        <Button onClick={handleTable} color='negro' disabled={(!cohorte || !carrera || !numSemestres || !(examenYConv || trasladoYEquiv)) && !isLoading} >{isLoading ? <Loader size='sm' color='#FFFFFF'/>  : "Filtrar"}</Button>
                     </Group>
                 </fieldset>
                 <Tabla doubleHeader colors="tabla-toronja"  headers={heading} content={data} />

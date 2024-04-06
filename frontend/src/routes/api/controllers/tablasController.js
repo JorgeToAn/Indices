@@ -7,11 +7,17 @@ import API from "src/utils/api";
 * @param {Number} numSemestres - Idica el numero de periodos que se incluyen en la tabla.
 */
 export const getTablasPoblacion = async(nuevoIngreso, trasladoEquiv, cohorte, numSemestres) => {
-
-    const response =  await API.get('tablas/poblacion', {
-        params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': numSemestres.toString()}
-    });
-    return response.data;
+    try {
+        const response =  await API.get('tablas/poblacion', {
+            params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': numSemestres.toString()}
+        });
+        return response;
+    } catch (err) {
+        return {
+            data: null,
+            status: 400,
+        };
+    }
 };
 
 /*
@@ -21,10 +27,15 @@ export const getTablasPoblacion = async(nuevoIngreso, trasladoEquiv, cohorte, nu
 * @param {Number} numSemestres - Idica el numero de periodos que se incluyen en la tabla.
 */
 export const getTablasCrecimiento = async(nuevoIngreso, trasladoEquiv, cohorte, numSemestres, carrera) => {
-
-    const response =  await API.get('tablas/crecimiento', {
-        params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': numSemestres.toString(), 'carrera': carrera}
-    });
-    console.log(response);
-    return response.data;
+    try {
+        const response =  await API.get('tablas/crecimiento', {
+            params: {'nuevo-ingreso':nuevoIngreso, 'traslado-equivalencia':trasladoEquiv, 'cohorte': cohorte.replace('-',''), 'semestres': numSemestres.toString(), 'carrera': carrera}
+        });
+        return response;
+    } catch (err) {
+        return {
+            data: null,
+            status: 400,
+        };
+    }
 };

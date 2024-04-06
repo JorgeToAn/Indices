@@ -120,7 +120,7 @@ const router = createBrowserRouter([
         element: <AlumnosLista />,
       },
       {
-        path: '/alumnos/historial',
+        path: '/alumnos/historial/:control?',
         element: <AlumnosHistorial />,
       },
       {

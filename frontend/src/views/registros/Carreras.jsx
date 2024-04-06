@@ -1,32 +1,66 @@
-import { Button, Center, Flex, Group, Select, TextInput } from "@mantine/core";
+import { Button, Center, Flex, Group, TextInput } from "@mantine/core";
 import { Link } from "react-router-dom";
-import { CirclePlus } from 'tabler-icons-react';
+import { Check, CirclePlus, X } from 'tabler-icons-react';
 import Header from 'src/components/header';
 import Tabla from 'src/components/Tabla';
 import './Registro.css';
-import { getCarreras } from "src/utils/helpers/carreraHelpers";
+import { createCarrera, getCarreras } from "src/utils/helpers/carreraHelpers";
 import { useState, useEffect } from "react";
+import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
 
 
 const RegistroCarreras = () => {
-
+    const [carreras, setCarreras] = useState([]);
     const headers = [
         'CLAVE', 'NOMBRE'
     ];
-    const [carreras, setCarreras] = useState([]);
 
     const obtenerCarreras = async() => {
         const listaCarreras = await getCarreras();
-        let listaC = Object.entries(listaCarreras);
-        listaC = listaC.map((carrera) => Object.entries(carrera[1]));
-        listaC = listaC.map((carrera) => carrera.filter((dato, index)=> index > 0));
-        listaC = listaC.map((carrera) => carrera.map((c) => c.filter((dato, index) => index > 0)));
+        const listaC = [];
+        listaCarreras.forEach((c) => {
+            listaC.push([c['clave'], c['nombre']]);
+        });
         setCarreras(listaC);
     };
+
+
+    const form = useForm({
+        initialValues: {
+            'nombre': '',
+            'clave': ''
+        }, validate: {
+            'clave': ((value) => value === '' ? 'La clave no es válida' : null),
+            'nombre': ((value) => value === '' ? 'El nombre no es válido' : null)
+        }
+    });
 
     useEffect(() => {
         obtenerCarreras();
     }, []);
+
+    const crearCarrera = async(values) => {
+        if (form.validate()){
+            const res = await createCarrera(values.clave, values.nombre);
+            if (res.status === 201){
+                notifications.show({
+                    message: 'El registro fue creado con éxito.',
+                    color: 'teal',
+                    icon: <Check size={20} />,
+                  });
+            } else {
+                notifications.show({
+                    message: 'Lo sentimos, hubo un problema al crear el registro',
+                    color: 'red',
+                    icon: <X />,
+                });
+            }
+            form.reset();
+        }
+        obtenerCarreras();
+    };
+
     return(
         <div style={{
             width: '100vw',
@@ -35,23 +69,11 @@ const RegistroCarreras = () => {
             <Header color="toronja" section="Registro" title="Carreras" route="/"/>
             <Group align="flex-start" spacing="3vw">
                 <Flex direction="column">
-                    <form>
-                        <TextInput label="Nombre" withAsterisk/>
-                        <Group className="input-group">
-                            <TextInput label="Clave" withAsterisk width="45%"/>
-                            <Select
-                                width="45%"
-                                label="Plan de estudios"
-                                placeholder="Seleccione un plan de estudios"
-                                data={[
-                                    {value: 'ISIC-2010', label: 'ISIC-2010'},
-                                    {value: 'ISIC-2011', label: 'ISic-2011'}
-                                ]}
-                                withAsterisk
-                            />
-                        </Group>
+                    <form onSubmit={form.onSubmit(crearCarrera)}>
+                        <TextInput {...form.getInputProps('nombre')} label="Nombre" withAsterisk/>
+                        <TextInput {...form.getInputProps('clave')} label="Clave" withAsterisk/>
                         <Center>
-                            <Button type="button" mt={16} leftIcon={<CirclePlus />} onClick={obtenerCarreras}>Crear Carrera</Button>
+                            <Button mt={16} leftIcon={<CirclePlus />} type='submit' >Crear Carrera</Button>
                         </Center>
                     </form>
                     <Flex direction="column" justify="center" align="center" mt={16} p={10} style={{backgroundColor: '#EBEBEB', borderRadius: '20px'}}>
@@ -61,7 +83,7 @@ const RegistroCarreras = () => {
                     </Flex>
                 </Flex>
                 <Flex direction="column" align="flex-start" justify="flex-start" >
-                    <Tabla headers={headers} content={carreras} colors="tabla-toronja" />
+                    <Tabla headers={headers} content={carreras} smallSize colors="tabla-toronja" />
                 </Flex>
             </Group>
         </div>
