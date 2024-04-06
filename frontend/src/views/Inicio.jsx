@@ -1,7 +1,7 @@
 import "./Inicio.css";
 import { Button, Center, Container, Group, Title } from "@mantine/core";
-import { useAuthStore } from '../store/auth';
-import { toTitle } from '../utils/helpers';
+import { useAuthStore } from "src/store/auth";
+import { toTitle } from "src/utils/helpers";
 import { Upload } from "tabler-icons-react";
 import { useNavigate } from "react-router-dom";
 

@@ -11,10 +11,10 @@ import {
 import { notifications } from '@mantine/notifications';
 import { MdError } from 'react-icons/md';
 import { useEffect, useState } from 'react';
-import { useAuthStore } from '../store/auth';
+import { useAuthStore } from "src/store/auth";
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from '@mantine/form';
-import { login } from '../utils/auth';
+import { login } from "src/utils/auth";
 
 const Login = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);

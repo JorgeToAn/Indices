@@ -1,18 +1,18 @@
 import { Button, Checkbox, Flex, Group, Loader } from '@mantine/core';
-import Header from '../../components/header';
-import Tabla from '../../components/Tabla';
-import Dropdown from '../../components/Dropdown';
+import Header from 'src/components/header';
+import Tabla from 'src/components/Tabla';
+import Dropdown from 'src/components/Dropdown';
 import {  useState } from 'react';
 import { useInputState } from '@mantine/hooks';
-import dropDownData from '../../mockup/dropDownData';
-import "../indices/Indices.css";
-import { getNuevoIngresoHeaders } from '../../utils/helpers/headerHelpers';
-import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
+import dropDownData from 'src/mockup/dropDownData';
+import "src/views/indices/Indices.css";
+import { getNuevoIngresoHeaders } from 'src/utils/helpers/headerHelpers';
+import { generatePDF } from 'src/utils/helpers/export/pdfHelpers';
 import { Download, Printer, X } from 'tabler-icons-react';
-import { generateExcel } from '../../utils/helpers/export/excelHelpers';
-import { getReportesNuevoIngreso } from '../../routes/api/controllers/reportesController';
+import { generateExcel } from 'src/utils/helpers/export/excelHelpers';
+import { getReportesNuevoIngreso } from 'src/routes/api/controllers/reportesController';
 import { notifications } from '@mantine/notifications';
-import { buildTablaReportesNuevoIngreso } from '../../utils/helpers/reportesHelpers';
+import { buildTablaReportesNuevoIngreso } from 'src/utils/helpers/reportesHelpers';
 
 const ReportesNuevoIngreso = () => {
     // Heading y data almacenan la informacion de los encabezados y el contenido de la tabla, respectivamente

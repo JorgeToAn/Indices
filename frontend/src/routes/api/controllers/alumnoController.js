@@ -1,5 +1,5 @@
-import API from '../../../utils/api';
-import { buildListaAlumnos } from './../../../utils/helpers/alumnoHelpers';
+import API from 'src/utils/api';
+import { buildListaAlumnos } from 'src/utils/helpers/alumnoHelpers';
 
 export const getAlumnoInfo = async(numControl) => {
     try {

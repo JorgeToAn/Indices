@@ -1,4 +1,4 @@
-import "./NavBar.css";
+import "./navbar.css";
 import { ChevronDown, Home, Search, UserCircle, X } from "tabler-icons-react";
 import {
     Header,

@@ -1,10 +1,10 @@
 import { Button, Center, Flex, Group, Select, TextInput } from "@mantine/core";
 import { Check, CirclePlus, X } from 'tabler-icons-react';
 import { DateInput } from "@mantine/dates";
-import Header from './../../components/header';
-import Tabla from './../../components/Tabla';
+import Header from 'src/components/header';
+import Tabla from 'src/components/Tabla';
 import './Registro.css';
-import { createPlan, getPlanes } from "../../utils/helpers/planesHelper";
+import { createPlan, getPlanes } from "src/utils/helpers/planesHelper";
 import { useEffect, useState } from "react";
 import dropDownData from "../../mockup/dropDownData";
 import { useForm } from "@mantine/form";

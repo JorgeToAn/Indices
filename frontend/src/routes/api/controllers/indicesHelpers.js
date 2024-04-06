@@ -1,4 +1,4 @@
-import API from "../../../utils/api";
+import API from "src/utils/api";
 
 export const getIndicesData = async(tipo, nuevoIngreso, trasladoEquiv, cohorte, carrera, numSemestres) => {
     try {

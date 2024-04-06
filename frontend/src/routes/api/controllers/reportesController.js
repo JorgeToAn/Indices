@@ -1,4 +1,4 @@
-import API from "../../../utils/api";
+import API from "src/utils/api";
 
 export const getReportesNuevoIngreso = async(nuevoIngreso, trasladoEquiv, cohorte, numSemestres) => {
     try {

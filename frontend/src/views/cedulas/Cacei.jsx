@@ -1,15 +1,15 @@
 import { Button, Checkbox, Flex, Group, Loader } from '@mantine/core';
-import Header from './../../components/header';
-import Tabla from './../../components/Tabla';
-import Dropdown from './../../components/Dropdown';
+import Header from 'src/components/header';
+import Tabla from 'src/components/Tabla';
+import Dropdown from 'src/components/Dropdown';
 import {  useEffect, useState } from 'react';
 import { useInputState } from '@mantine/hooks';
-import dropDownData from '../../mockup/dropDownData';
-import "../indices/Indices.css";
+import dropDownData from 'src/mockup/dropDownData';
+import "src/views/indices/Indices.css";
 import { Download, Printer, X } from 'tabler-icons-react';
-import { generatePDF } from '../../utils/helpers/export/pdfHelpers';
-import { generateExcel } from '../../utils/helpers/export/excelHelpers';
-import { getCedulasTabla } from '../../routes/api/controllers/cedulaController';
+import { generatePDF } from 'src/utils/helpers/export/pdfHelpers';
+import { generateExcel } from 'src/utils/helpers/export/excelHelpers';
+import { getCedulasTabla } from 'src/routes/api/controllers/cedulaController';
 import { notifications } from '@mantine/notifications';
 
 

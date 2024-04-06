@@ -1,4 +1,4 @@
-import API from "../../../utils/api";
+import API from "src/utils/api";
 
 export const getCedulasTabla = async(tipo, nuevoIngreso, trasladoEquiv, cohorte, carrera, numSemestres) => {
     try {

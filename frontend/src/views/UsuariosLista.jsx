@@ -1,11 +1,11 @@
 import { Button, Flex, TextInput } from '@mantine/core';
-import Header from '../components/header';
+import Header from 'src/components/header';
 import { Edit, Search } from 'tabler-icons-react';
 import { Group } from '@mantine/core';
-import Tabla from '../components/Tabla';
+import Tabla from 'src/components/Tabla';
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { getListaUsuarios } from '../routes/api/controllers/adminController';
+import { getListaUsuarios } from 'src/routes/api/controllers/adminController';
 import ModalEditarUsuario from './ModalEditarUsuario';
 
 const UsuariosLista = () => {
