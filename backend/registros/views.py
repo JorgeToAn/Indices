@@ -198,14 +198,14 @@ class LiberacionInglesUpload(views.APIView):
             return Response(status=500, data={'message': error_message})
 
 ### CORTE
-@api_view(['POST',])
+@api_view
 @permission_classes([IsAuthenticated&IsAdminUser])
 def corte(request):
     periodo = getPeriodoActual()
     if not Ingreso.objects.contiene_corte(periodo) and not Egreso.objects.contiene_corte(periodo) and not Titulacion.objects.contiene_corte(periodo) and not LiberacionIngles.objects.contiene_corte(periodo):
         ingresos = Ingreso.objects.realizar_corte(periodo)
         egresos = Egreso.objects.realizar_corte(periodo)
-        titulaciones = Titulacion.objects.realizar_corte(periodo)
+        titulaciones = Titulacion.objects.realizer_corte(periodo)
         liberaciones = LiberacionIngles.objects.realizar_corte(periodo)
         return Response(status=200, data={'periodo': periodo, 'updated': {'ingresos': ingresos, 'egresos': egresos, 'titulaciones': titulaciones, 'liberaciones-ingles': liberaciones}})
     else:
