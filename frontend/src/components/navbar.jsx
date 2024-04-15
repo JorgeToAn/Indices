@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import ModalLogout from './modals/ModalLogout';
 import { getAlumnoInfo } from "../routes/api/controllers/alumnoController";
 import { notifications } from '@mantine/notifications';
+import ModalCorte from "./modals/ModalCorte";
 
 const useStyles = createStyles((theme) => ({
     burger: {
@@ -78,6 +79,8 @@ const NavBar = () => {
     const { classes } = useStyles();
     const [buscar, setBuscar] = useInputState('');
     const [opened, {open, close}] = useDisclosure(false);
+    const [isOpen, handlers] = useDisclosure(false);
+
     const navigate = useNavigate();
     const handleMiPerfil = () => {
       navigate('mi-perfil');
@@ -354,7 +357,7 @@ const NavBar = () => {
                         <Menu.Item onClick={()=>{
                                 navigate('/usuarios/lista');
                                 }}>LISTA DE USUARIOS</Menu.Item>
-
+                        <Menu.Item onClick={handlers.open} >REALIZAR CORTE</Menu.Item>
                         <Menu.Item onClick={()=>{
                                 navigate('/cambio-contrasena');
                                 }}>CAMBIO DE CONTRASEÑA</Menu.Item>
@@ -363,6 +366,7 @@ const NavBar = () => {
                 </Menu>
             </div>
             <ModalLogout opened={opened} close={close} />
+            <ModalCorte opened={isOpen} close={handlers.close} />
         </Header>
     );
 };

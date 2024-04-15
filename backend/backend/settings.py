@@ -31,6 +31,7 @@ SECRET_KEY = config['SECRET_KEY']
 DEBUG = config['DEBUG']
 
 ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 
 
 # Application definition
