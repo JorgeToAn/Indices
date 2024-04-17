@@ -36,58 +36,59 @@ Table personal {
   Note: 'Contiene la información personal del alumno'
 }
 
-Table alumnos {
-  id int [pk, increment]
-  no_control varchar(10) [not null]
-  semestre_inicio int [not null]
-  personal_id varchar(18) [not null]
+Table alumnos_alumno {
+  no_control varchar(10) [pk, not null]
+  curp_id varchar(18) [not null]
   plan_id int [not null]
   Note: 'Contiene la información asociada al número de control del alumno'
 }
 
-Table carreras {
-  id int [pk, increment]
-  clave varchar [not null, unique]
+Table carreras_carrera {
+  clave varchar [pk, not null]
   nombre varchar [not null]
   Note: 'Información general de una carrera'
 }
 
-Table planes {
-  id int [pk, increment]
-  clave varchar [not null, unique]
+Table planes_plan {
+  clave varchar [pk, not null]
   fecha_inicio date [not null]
   fecha_final date
   carrera_id int [not null]
   Note: 'Plan de estudios, solo puede existir un plan de estudios activo a la vez'
 }
 
-Table ingresos {
+Table registros_ingreso {
   id int [pk, increment]
   periodo varchar(5) [not null]
   tipo tipos_ingresos
   alumno_id int [not null]
+  es_corte bool [default: false]
+  num_semestre [not null]
 }
 
-Table egresos {
+Table registros_egresos {
   id int [pk, increment]
   periodo varchar(5) [not null]
   alumno_id int [not null]
+  es_corte bool [default: false]
 }
 
-Table titulaciones {
+Table registros_titulaciones {
   id int [pk, increment]
   periodo varchar(5) [not null]
   tipo tipos_titulaciones
   alumno_id int [not null]
+  es_corte bool [default: false]
 }
 
-Table liberacioningles {
+Table registros_liberacioningles {
   id int [pk, increment]
   periodo varchar(5) [not null]
   alumno_id int [not null]
+  es_corte bool [default: false]
 }
 
-Table discapacidades {
+Table discapacidades_discapacidad {
   id int [pk, increment]
   nombre varchar [not null]
   descripcion varchar
