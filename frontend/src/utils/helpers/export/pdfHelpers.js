@@ -52,18 +52,35 @@ export async function generatePDF(titulo, cohorte, numSemestres, heading, conten
         header.push(heading);
     }
     if(multiPagina){
+        /*
+        Crear tabla de la primera pagina - con los indices o a 19
+        agregar otra pagina
+        Crear otra tabla con los registros restantes y ponerla desde el inicio de las paginas
+        */
         autoTable(doc, {
             headStyles: {
                 fillColor: '#1B396A',
-                fontSize: 9,
+                fontSize: numSemestres > 10 ? 5 : 7,
             },
             bodyStyles: {
-                fontSize: 8,
+                fontSize: numSemestres > 10 ? 5 : 7,
             },
             margin: { top: 215 },
             head:  header,
-            body: content,
+            body: content.filter((row, index) => index < 17),
         });
+        doc.addPage();
+        autoTable(doc,{
+            headStyles: {
+            fillColor: '#1B396A',
+            fontSize: numSemestres > 10 ? 5 : 7,
+            },
+            bodyStyles: {
+                fontSize: numSemestres > 10 ? 5 : 7,
+            },
+            margin: { top: 50 },
+            head:  header,
+            body: content.filter((row, index) => index >= 17),});
     } else {
         autoTable(doc, {
             headStyles: {
