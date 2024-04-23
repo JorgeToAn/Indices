@@ -43,7 +43,7 @@ class Personal(models.Model):
 
     curp = models.CharField(verbose_name='CURP', primary_key=True, max_length=18, blank=False, validators=[validate_curp])
     nombre = models.CharField(max_length=150, null=False, blank=False, validators=[validate_solo_letras])
-    paterno = models.CharField(verbose_name=_('apellido paterno'), max_length=150, null=False, blank=False, validators=[validate_solo_letras])
+    paterno = models.CharField(verbose_name=_('apellido paterno'), max_length=150, null=True, blank=True, validators=[validate_solo_letras])
     materno = models.CharField(verbose_name=_('apellido materno'), max_length=150, null=True, blank=True, validators=[validate_solo_letras])
     fecha_nacimiento = models.DateField(null=False, blank=False)
     genero = models.CharField(choices=Gender.choices, default=Gender.OTHER, max_length=1, null=False)
@@ -60,12 +60,14 @@ class Personal(models.Model):
     def save(self, *args, **kwargs):
         self.curp = self.curp.upper()
         self.nombre = self.nombre.upper()
-        self.paterno = self.paterno.upper()
+        self.paterno = self.paterno.upper() if self.paterno else None
         self.materno = self.materno.upper() if self.materno else None
         super().save(*args, **kwargs)
 
     def __str__(self):
-        fullname = f'{self.nombre} {self.paterno}'
+        fullname = self.nombre
+        if self.paterno:
+            fullname += f' {self.paterno}'
         if self.materno:
             fullname += f' {self.materno}'
         return f'[{self.pk}] {fullname}'
@@ -73,3 +75,6 @@ class Personal(models.Model):
     class Meta:
         verbose_name = 'información personal'
         verbose_name_plural = 'informaciones personales'
+        constraints = [
+            models.CheckConstraint(name="%(class)s_paterno_o_materno", check=(models.Q(paterno__isnull=True, materno__isnull=False) | models.Q(paterno__isnull=False, materno__isnull=True)),)
+        ]
