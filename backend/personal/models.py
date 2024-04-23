@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.db import models
 
 import datetime
@@ -74,7 +75,11 @@ class Personal(models.Model):
 
     class Meta:
         verbose_name = 'información personal'
-        verbose_name_plural = 'informaciones personales'
+        verbose_name_plural = 'información personal'
         constraints = [
-            models.CheckConstraint(name="%(class)s_paterno_o_materno", check=(models.Q(paterno__isnull=True, materno__isnull=False) | models.Q(paterno__isnull=False, materno__isnull=True)),)
+            models.CheckConstraint(
+                name="%(class)s_paterno_o_materno",
+                check=(Q(paterno__isnull=True, materno__isnull=False) | Q(paterno__isnull=False, materno__isnull=True) | Q(paterno__isnull=False, materno__isnull=False)),
+                violation_error_message="Necesita por lo menos un apellido paterno o materno",
+            ),
         ]
