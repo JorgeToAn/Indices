@@ -34,13 +34,17 @@ export const buildTable = async(data) => {
     carreras.forEach((row, index) => {
         const fila = [row['nombre'],row['clave']];
         datos.forEach((periodo) => {
+            let found = false;
             periodo.forEach((carrera) => {
                 let poblacion = 0;
                 if (carrera['clave'] === row['clave']){
                     poblacion = carrera['poblacion'];
                     fila.push(poblacion);
+                    found = true;
                 }
             });
+            if (!found)
+                fila.push('');
         });
         table.push(fila);
     });
