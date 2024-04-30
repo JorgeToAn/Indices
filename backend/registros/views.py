@@ -5,7 +5,6 @@ from rest_framework import generics, views
 from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from django.db.models import Q
 
 from .serializers import IngresoSerializer, EgresoSerializer, TitulacionSerializer, LiberacionInglesSerializer
 from .models import Ingreso, Egreso, Titulacion, LiberacionIngles
@@ -35,44 +34,93 @@ class IngresoUpload(views.APIView):
     parser_classes = [FileUploadParser]
     permission_classes = [IsAuthenticated&IsAdminUser]
 
+    def to_dict(self, row):
+        # regresa None si el renglon son solo celdas vacias
+        for cell in row:
+            if cell.value is not None:
+                break
+            return None
+
+        data = {
+            'curp': str(row[0].value),
+            'no_control': str(row[1].value),
+            'paterno': str(row[2].value),
+            'materno': str(row[3].value),
+            'nombre': str(row[4].value),
+            'carrera': str(row[5].value),
+            'tipo': str(row[6].value)[0:2],
+        }
+        return data
+
     def post(self, request, filename, format=None):
-        try:
-            file_obj = request.data['file']
-            wb = openpyxl.load_workbook(file_obj, data_only=True)
-            ws = wb.active
+        ESTRUCTURA = [(r'^curp$', 'CURP'), (r'^no_control$', 'NO_CONTROL'), (r'^paterno$', 'PATERNO'), (r'^materno$', 'MATERNO'), (r'^nombre$', 'NOMBRE'), (r'^carrera$', 'CARRERA'), (r'^[12][0-9]{3}[13]$', 'NUMERO DE PERIODO')]
+        file_obj = request.data['file']
+        wb = openpyxl.load_workbook(file_obj, data_only=True)
+        ws = wb.active
 
-            results = {"errors": [], "created": 0}
-            header_row = ws[1]
-            for row in ws.iter_rows(min_row=2):
-                row_dict = row_to_dict(header_row, row)
+        results = {"errors": [], "created": 0}
+        header_row = ws['A1':'G1'][0] # ws['A1':'G1'] regresa una tupla de renglones, pero solo necesitamos la primera
 
+        # VALIDAR ESTRUCTURA DEL ARCHIVO COMO:
+        # curp | no_control | paterno | materno | nombre | carrera | periodo
+        for i, expresion in enumerate(ESTRUCTURA):
+            match = re.match(expresion[0], str(header_row[i].value).lower())
+            if match is None:
+                return Response(status=400, data={'message': f'Se esperaba el campo {expresion[1]} pero se obtuvo {header_row[i].value}'})
+
+        for row in ws.iter_rows(min_row=2):
+            # se debe verificar que todos los campos tengan datos
+            data = self.to_dict(row)
+            if data is None:
+                continue
+            try:
+                # VALIDAR DATOS
+                Personal.validate_curp(data['curp'])
+                Alumno.validate_nocontrol(data['no_control'])
+                carrera = Carrera.objects.get(pk=data['carrera'])
+
+                personal, created_personal = Personal.objects.get_or_create(
+                    curp=data['curp'],
+                    paterno=data['paterno'],
+                    materno=data['materno'],
+                    nombre=data['nombre'],
+                    fecha_nacimiento=obtenerFechaNac(data['curp']),
+                    genero=obtenerGenero(data['curp'])
+                )
+                alumno = None
                 try:
-                    personal, _ = Personal.objects.get_or_create(
-                        pk=row_dict['curp'],
-                        paterno=row_dict['paterno'],
-                        materno=row_dict['materno'],
-                        nombre=row_dict['nombre'],
-                        fecha_nacimiento=obtenerFechaNac(row_dict['curp']),
-                        genero=obtenerGenero(row_dict['curp']),
-                    )
-                    carrera = Carrera.objects.get(pk=row_dict['carrera'])
+                    alumno = Alumno.objects.get(no_control=data['no_control'])
+                    if alumno.plan.carrera.clave != data['carrera']:
+                        results['errors'].append({'type': 'Carrera', 'message': f"La carrera {data['carrera']} no concuerda con el plan registrado {alumno.plan.clave}"})
+                        continue
+                except Alumno.DoesNotExist:
                     plan = Plan.objects.filter(carrera=carrera).last()
-                    alumno, _ = Alumno.objects.get_or_create(no_control=row_dict['no_control'], curp=personal, plan=plan)
-                    if alumno.plan.carrera.clave != row_dict['carrera']:
-                        raise Exception(f'Carrera en archivo no concuerda con el plan registrado del alumno {alumno.no_control}')
+                    alumno = Alumno.objects.create(
+                        no_control=data['no_control'],
+                        curp=personal,
+                        plan=plan
+                    )
 
-                    for periodo, tipo in row_dict['periodos']:
-                        if not Ingreso.objects.filter(alumno=alumno, periodo=periodo, tipo=tipo).exists():
-                            ingreso = Ingreso(alumno=alumno, periodo=periodo, tipo=tipo)
-                            ingreso.save()
-                            results['created'] += 1
-                except Exception as ex:
-                    results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
-                    continue
-            return Response(status=200, data=results)
-        except Exception as e:
-            error_message = str(e)
-            return Response(status=500, data={'message': error_message})
+                # CREAR REGISTRO DE INGRESO
+                if not Ingreso.objects.filter(alumno=alumno, periodo=header_row[6].value, tipo=data['tipo']).exists():
+                    ingreso = Ingreso(alumno=alumno, periodo=header_row[6].value, tipo=data['tipo'])
+                    try:
+                        ingreso.clean() # clean calcula el num_semestre por nosotros
+                        ingreso.full_clean()
+                        ingreso.save()
+                        results['created'] += 1
+                    except Exception as ex:
+                        for err in ex.message_dict:
+                            results['errors'].append({'type': err, 'message': ex.message_dict[err], 'row_index': row[0].row})
+                        continue
+
+            except Carrera.DoesNotExist as ex:
+                results['errors'].append({'type': str(type(ex)), 'message': 'La carrera indicada no existe', 'row_index': row[0].row})
+                continue
+            except Exception as ex:
+                results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
+                continue
+        return Response(status=200, data=results)
 
 ### EGRESO
 class EgresoList(generics.ListCreateAPIView):
@@ -213,11 +261,13 @@ def corte(request):
 
 # Lee un renglon de excel y lo convierte a un diccionario de acuerdo a los campos del header_row
 def row_to_dict(header_row, data_row):
+    clean_header = clean_row(header_row)
+    clean_data = clean_row(data_row)
     keywords = ['curp', 'no_control', 'paterno', 'materno', 'nombre', 'carrera']
     row_dict = {'periodos': []}
-    for cell in data_row:
+    for cell in clean_data:
         index = cell.column - 1
-        header = str(header_row[index].value).lower()
+        header = str(clean_header[index].value).lower()
         value = str(cell.value) if cell.value else None
         if header in keywords:
             row_dict[header] = value
@@ -228,3 +278,10 @@ def row_to_dict(header_row, data_row):
     # ordenar periodos por fecha
     row_dict['periodos'].sort(key=lambda x: x[0])
     return row_dict
+
+def clean_row(row):
+    clean = []
+    for cell in row:
+        if cell.value is not None:
+            clean.append(cell)
+    return clean
