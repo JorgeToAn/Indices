@@ -65,10 +65,6 @@ class IndicesPermanencia(APIView):
                 desercion = 0
             alumnos_corte_anterior = poblacion_act['poblacion']
             response_data[periodo] = dict(poblacion=poblacion_act['poblacion'], egresados=poblacion_egr['egresados'], titulados=poblacion_titulo['titulados'], desercion=desercion, tasa_permanencia=tasa_permanencia)
-            # filter(tipo__in=tipos, periodo=periodo, alumno__plan__carrera__pk=carrera).annotate(
-            #     clave=F("alumno__plan__carrera__pk")
-            #     ).values("clave").
-
         return Response(response_data)
 
 class IndicesEgreso(APIView):
