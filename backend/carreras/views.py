@@ -13,7 +13,8 @@ class CarreraList(ListCreateAPIView):
     serializer_class = CarreraSerializer
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
     def get_queryset(self):
-        queryset = get_objects_for_user(self.request.user, "ver_carrera", klass=Carrera)
+        user = self.request.user
+        queryset = get_objects_for_user(user, 'ver_carrera', klass=Carrera)
         return queryset
 
 class CarreraDetail(RetrieveUpdateDestroyAPIView):
@@ -41,7 +42,6 @@ class RemoverPermisos(APIView):
         clave = request.GET.get('pk')
         carrera = Carrera.objects.get(clave=clave)
         user = request.user
-        remove_perm('ver_carrera', user, carrera)
         remove_perm('ver_carrera', user, carrera)
         print(get_perms(user, carrera))
         if not user.has_perm('ver_carrera', carrera):
