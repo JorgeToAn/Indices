@@ -5,17 +5,36 @@ import {
     Flex,
     Text,
     TextInput,
-    MultiSelect
+    Accordion,
+    Checkbox,
+    List
 } from "@mantine/core";
 import { DeviceFloppy } from "tabler-icons-react";
 import { PropTypes } from 'prop-types';
 import "./ModalEditarUsuario.css";
+import { useEffect, useState } from "react";
+import dropDownData from "src/mockup/dropDownData";
 
 
 function ModalEditarUsuario ({opened, close, info}) {
+    // Realizar fetch de las carreras registradas
+    const [carreras, setCarreras] = useState([]);
+    const [permisos, setPermisos] = useState([]);
+    const fetchCarreras = async() => {
+        const c = await dropDownData.getListaCarrerasAll();
+        setCarreras(c);
+    };
 
+    const updateUser = () => {
+        console.log(permisos);
+    };
+
+    useEffect(() => {
+        fetchCarreras();
+
+    }, []);
     return (
-        <Modal.Root opened={opened} onClose={close} centered size="lg" closeOnClickOutside={false}>
+        <Modal.Root opened={opened} onClose={close} centered size="xl" closeOnClickOutside={false}>
             <Modal.Overlay />
             <Modal.Content>
                 <Modal.Header>
@@ -32,42 +51,28 @@ function ModalEditarUsuario ({opened, close, info}) {
                         </Flex>
                         <Flex direction="column" className="datos" w="45%">
                             <Text fw="bold">Permisos</Text>
-                            <MultiSelect label="Tablas" data={['Consultar', 'Exportar']} styles={(theme)=>({
-                                wrapper: {
-                                    pill: {
-                                        backgroundColor: theme.white,
-                                        color: theme.white,
-                                    },
-                                },
-                            })}/>
-                            <MultiSelect label="Indices" data={['Consultar', 'Exportar']} styles={(theme)=>({
-                                wrapper: {
-                                    pill: {
-                                        backgroundColor: theme.white,
-                                        color: theme.white,
-                                    },
-                                },
-                            })}/>
-                            <MultiSelect label="Reportes" data={['Consultar', 'Exportar']} styles={(theme)=>({
-                                wrapper: {
-                                    pill: {
-                                        backgroundColor: theme.white,
-                                        color: theme.white,
-                                    },
-                                },
-                            })}/>
-                            <MultiSelect label="Cédulas" data={['Consultar', 'Exportar']} styles={(theme)=>({
-                                wrapper: {
-                                    pill: {
-                                        backgroundColor: theme.white,
-                                        color: theme.white,
-                                    },
-                                },
-                            })}/>
+                            <Accordion variant="contained" radius="md" mt={16} w='90%'>
+                                <Accordion.Item value="carreras" w="300px" >
+                                    <Accordion.Control><b>Carreras</b></Accordion.Control>
+                                    <Accordion.Panel>
+                                        <List withPadding listStyleType="none">
+                                            { carreras.map((carrera,index) =><List.Item key={index}><Checkbox checked={permisos.filter((clave) => clave === carrera.value).length > 0} label={carrera.label} labelPosition="right" radius="sm" onChange={(e) => {
+                                                const copyPermisos = [...permisos];
+                                                if (e.target.checked) {
+                                                    setPermisos(copyPermisos.filter((clave) => clave !== carrera.value));
+                                                } else {
+                                                    copyPermisos.push(carrera.value);
+                                                    setPermisos(copyPermisos);
+                                                }
+                                            }} /></List.Item> )}
+                                        </List>
+                                    </Accordion.Panel>
+                                </Accordion.Item>
+                            </Accordion>
                         </Flex>
                     </Flex>
                     <Group position='center' align="center" mt={16}>
-                        <Button leftIcon={<DeviceFloppy />} color="toronja" onClick={close}>Actualizar</Button>
+                        <Button leftIcon={<DeviceFloppy />} color="toronja" onClick={updateUser}>Actualizar</Button>
                         <Button color="gris" onClick={close}>Cancelar</Button>
                     </Group>
                 </Modal.Body>

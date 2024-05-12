@@ -17,6 +17,11 @@ class CarreraList(ListCreateAPIView):
         queryset = get_objects_for_user(user, 'ver_carrera', klass=Carrera)
         return queryset
 
+class CarreraListAll(ListCreateAPIView):
+    queryset = Carrera.objects.all()
+    serializer_class = CarreraSerializer
+    permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
+
 class CarreraDetail(RetrieveUpdateDestroyAPIView):
     queryset = Carrera.objects.all()
     serializer_class = CarreraSerializer
