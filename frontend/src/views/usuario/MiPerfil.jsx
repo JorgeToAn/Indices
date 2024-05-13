@@ -32,6 +32,7 @@ const MiPerfil = () => {
 
     const wrapper_divs = document.getElementsByClassName("user-info");
     const editarUsuario = () => {
+        console.log(user());
         document.getElementById("btns").style.display = "block";
         document.getElementById("btn-editar").style.display = "none";
         for (const div in wrapper_divs) {

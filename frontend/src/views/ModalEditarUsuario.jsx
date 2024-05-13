@@ -9,11 +9,13 @@ import {
     Checkbox,
     List
 } from "@mantine/core";
-import { DeviceFloppy } from "tabler-icons-react";
+import { DeviceFloppy, ShieldCheck } from "tabler-icons-react";
 import { PropTypes } from 'prop-types';
 import "./ModalEditarUsuario.css";
 import { useEffect, useState } from "react";
 import dropDownData from "src/mockup/dropDownData";
+import { asignarPermiso, removerTodosPermisos } from "src/routes/api/controllers/permisoController";
+import { notifications } from "@mantine/notifications";
 
 
 function ModalEditarUsuario ({opened, close, info}) {
@@ -22,17 +24,28 @@ function ModalEditarUsuario ({opened, close, info}) {
     const [permisos, setPermisos] = useState([]);
     const fetchCarreras = async() => {
         const c = await dropDownData.getListaCarrerasAll();
+        const cA = await dropDownData.getListaCarrerasForUser(info[0][0]);
+        setPermisos(cA.map((carrera) => carrera.value));
         setCarreras(c);
     };
 
-    const updateUser = () => {
+    const updateUser = async() => {
         console.log(permisos);
+        await removerTodosPermisos(info[0][0]);
+        permisos.forEach(async (clave) => {
+            await asignarPermiso(clave, info[0][0]);
+        });
+        notifications.show({
+            message: `Se han cambiado los permisos del usuario "${info[1][0]}" con éxito.`,
+            color: 'teal',
+            icon: <ShieldCheck size={20} />,
+          });
     };
 
     useEffect(() => {
         fetchCarreras();
 
-    }, []);
+    }, [info]);
     return (
         <Modal.Root opened={opened} onClose={close} centered size="xl" closeOnClickOutside={false}>
             <Modal.Overlay />
@@ -56,12 +69,13 @@ function ModalEditarUsuario ({opened, close, info}) {
                                     <Accordion.Control><b>Carreras</b></Accordion.Control>
                                     <Accordion.Panel>
                                         <List withPadding listStyleType="none">
-                                            { carreras.map((carrera,index) =><List.Item key={index}><Checkbox checked={permisos.filter((clave) => clave === carrera.value).length > 0} label={carrera.label} labelPosition="right" radius="sm" onChange={(e) => {
-                                                const copyPermisos = [...permisos];
+                                            { carreras.map((carrera,index) =><List.Item key={index}><Checkbox checked={permisos.filter((c) => c === carrera.value).length > 0} label={carrera.label} labelPosition="right" radius="sm" onChange={(e) => {
+                                                let copyPermisos = [...permisos];
                                                 if (e.target.checked) {
-                                                    setPermisos(copyPermisos.filter((clave) => clave !== carrera.value));
-                                                } else {
                                                     copyPermisos.push(carrera.value);
+                                                    setPermisos(copyPermisos);
+                                                } else {
+                                                    copyPermisos = copyPermisos.filter((clave) => clave !== carrera.value);
                                                     setPermisos(copyPermisos);
                                                 }
                                             }} /></List.Item> )}
