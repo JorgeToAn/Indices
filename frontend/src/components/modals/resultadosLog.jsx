@@ -31,7 +31,7 @@ function ResultadosLog ({opened, close, info}) {
                                 </Accordion.Control>
                             <Accordion.Panel>
                                 <List>
-                                { info.errors.length > 0 ? info.errors.map((err) => <List.Item key={1}>{info.errors[0].message}</List.Item> )  : <List.Item>No hubo ningún error</List.Item> }
+                                { info.errors.length > 0 ? info.errors.map((err, i) => <List.Item key={i}>{info.errors[i].row_index}: {info.errors[i].message}</List.Item> )  : <List.Item>No hubo ningún error</List.Item> }
                                     {/* { info.errors?.length > 0 ? info.erors.map( (error, index) => <List.Item key={index}>{error.message}</List.Item>) : <List.Item>No hubo ningún error</List.Item> } */}
                                 </List>
                             </Accordion.Panel>

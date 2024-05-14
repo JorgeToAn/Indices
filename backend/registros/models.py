@@ -76,6 +76,7 @@ class Ingreso(BaseRegistro):
         if Egreso.objects.filter(alumno=self.alumno).exists():
             raise ValidationError('No se puede registrar un ingreso para un alumno egresado')
 
+    def calcular_num_semestre(self):
         if self.num_semestre is None:
             # asignar numero de semestre por calculo de periodo
             primer_ingreso = Ingreso.objects.filter(alumno=self.alumno).order_by('periodo').first()
@@ -85,7 +86,6 @@ class Ingreso(BaseRegistro):
                 self.num_semestre = 1
 
     def save(self, *args, **kwargs):
-        self.clean()
         super(Ingreso, self).save(*args, **kwargs)
 
     class Meta(BaseRegistro.Meta):
@@ -119,12 +119,12 @@ class Titulacion(BaseRegistro):
     def clean(self):
         if not self.pk and Titulacion.objects.filter(alumno=self.alumno).exists():
             raise ValidationError('Solo puede existir una titulacion por alumno')
-
-        egreso = Egreso.objects.get(alumno=self.alumno)
-        if egreso is None:
+        try:
+            egreso = Egreso.objects.get(alumno=self.alumno)
+            if egreso.periodo > self.periodo:
+                raise ValidationError({'periodo': 'El periodo de titulación debe ser igual o mayor al de egreso'})
+        except Egreso.DoesNotExist:
             raise ValidationError('No se puede crear una titulacion sin un egreso existente')
-        elif egreso.periodo > self.periodo:
-            raise ValidationError({'periodo': 'El periodo de titulación debe ser igual o mayor al de egreso'})
 
     def save(self, *args, **kwargs):
         self.clean()

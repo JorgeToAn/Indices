@@ -14,11 +14,11 @@ def obtenerFechaNac(curp: str):
     return fecha_nacimiento
 
 def obtenerGenero(curp: str):
-    match = re.search(r'^[A-Z][AEIOU][A-Z]{2}\d{2}(((0[13578]|1[02])(0[1-9]|[1-2]\d|30|31))|((0[469]|11)(0[1-9]|[1-2]\d|30))|(02)(0[1-9]|[1-2]\d))(H|M)(AS|BC|BS|CC|CL|CM|CS|CH|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)([B-DF-HJ-NP-TV-Z]{3})[A-Z0-9]\d$', curp.upper())
+    match = re.search(r'^[A-Z][AEIOUX][A-Z]{2}\d{2}(((0[13578]|1[02])(0[1-9]|[1-2]\d|30|31))|((0[469]|11)(0[1-9]|[1-2]\d|30))|(02)(0[1-9]|[1-2]\d))(H|M)(AS|BC|BS|CC|CL|CM|CS|CH|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)([B-DF-HJ-NP-TV-Z]{3})[A-Z0-9]\d$', curp.upper())
     if match:
         return curp[10:11]
     else:
-        return None
+        return 'X'
 
 class Personal(models.Model):
     class Gender(models.TextChoices):
@@ -27,10 +27,10 @@ class Personal(models.Model):
         OTHER = 'X', _('Otro')
 
     def validate_curp(value):
-        match = re.search(r'^[A-Z][AEIOU][A-Z]{2}\d{2}(((0[13578]|1[02])(0[1-9]|[1-2]\d|30|31))|((0[469]|11)(0[1-9]|[1-2]\d|30))|(02)(0[1-9]|[1-2]\d))(H|M)(AS|BC|BS|CC|CL|CM|CS|CH|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)([B-DF-HJ-NP-TV-Z]{3})[A-Z0-9]\d$', value.upper())
-        if not match:
+        match = re.search(r'^[A-Z][AEIOUX][A-Z]{2}\d{2}(((0[13578]|1[02])(0[1-9]|[1-2]\d|30|31))|((0[469]|11)(0[1-9]|[1-2]\d|30))|(02)(0[1-9]|[1-2]\d))(H|M)(AS|BC|BS|CC|CL|CM|CS|CH|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|NE)([B-DF-HJ-NP-TV-Z]{3})[A-Z0-9]\d$', value.upper())
+        if match is None:
             raise ValidationError(
-                _('Enter a valid CURP'),
+                'CURP invalido',
                 params={'value': value},
             )
 
@@ -38,7 +38,7 @@ class Personal(models.Model):
         match = re.search(r'^[A-ZÁÉÍÓÚÑÄËÏÖÜ ]+$', value.upper())
         if not match:
             raise ValidationError(
-                _('Enter a value formed only by letters'),
+                'El campo debe ser formado solo por letras A-Z y acentos',
                 params={'value': value},
             )
 
