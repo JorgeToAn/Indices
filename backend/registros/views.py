@@ -184,10 +184,10 @@ class EgresoUpload(views.APIView):
                 return Response(status=400, data={'message': f'Se esperaba el campo {expresion[i]} pero se obtuvo {header_row[i].value}'})
 
         for row in ws.iter_rows(min_row=2):
-            data = self.to_dict(row)
-            if data is None:
-                continue
             try:
+                data = self.to_dict(row)
+                if data is None:
+                    continue
                 alumno = Alumno.objects.get(pk=data['no_control'])
                 egreso, created = Egreso.objects.get_or_create(periodo=str(header_row[1].value), alumno=alumno)
                 if created:
@@ -228,34 +228,40 @@ class TitulacionUpload(views.APIView):
 
         data = {
             'no_control': str(row[0].value).strip(),
-            'tipo_titulacion': str(row[1].value).strip(),
+            'tipo_titulacion': str(row[1].value).strip()[0:2],
         }
         return data
 
     def post(self, request, filename, format=None):
-        try:
-            file_obj = request.data['file']
-            wb = openpyxl.load_workbook(file_obj, data_only=True)
-            ws = wb.active
+        ESTRUCTURA = [(r'^no_control$', 'NO_CONTROL'), (r'^[12][0-9]{3}[13]$', 'NUMERO DE PERIODO')]
+        file_obj = request.data['file']
+        wb = openpyxl.load_workbook(file_obj, data_only=True)
+        ws = wb.active
 
-            results = { 'errors':[], 'created':0 }
-            header_row = ws[1]
-            for row in ws.iter_rows(min_row=2):
-                row_dict = row_to_dict(header_row, row)
-                try:
-                    alumno = Alumno.objects.get(pk=row_dict['no_control'])
-                    for periodo, tipo in row_dict['periodos']:
-                        if not Titulacion.objects.filter(periodo=periodo, alumno=alumno).exists():
-                            titulacion = Titulacion(periodo=periodo, alumno=alumno, tipo=tipo)
-                            titulacion.save()
-                            results['created'] += 1
-                except Exception as ex:
-                    results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
+        results = {"errors": [], "created": 0}
+        header_row = ws['A1':'B1'][0] # ws['A1':'B1'] regresa una tupla de renglones, pero solo necesitamos la primera
+
+        # VALIDAR ESTRUCTURA DEL ARCHIVO COMO:
+        # no_control | periodo
+        for i, expresion in enumerate(ESTRUCTURA):
+            match = re.match(expresion[0], str(header_row[i].value).lower())
+            if match is None:
+                return Response(status=400, data={'message': f'Se esperaba el campo {expresion[i]} pero se obtuvo {header_row[i].value}'})
+
+        for row in ws.iter_rows(min_row=2):
+            try:
+                data = self.to_dict(row)
+                if data is None:
                     continue
-            return Response(status=200, data=results)
-        except Exception as e:
-            error_message = str(e)
-            return Response(status=500, data={'message': error_message})
+                alumno = Alumno.objects.get(pk=data['no_control'])
+                titulacion, created = Titulacion.objects.get_or_create(periodo=str(header_row[1].value), tipo=data['tipo_titulacion'], alumno=alumno)
+                if created:
+                    results['created'] += 1
+            except Alumno.DoesNotExist as ex:
+                results['errors'].append({'type': str(type(ex)), 'message': f'No se encontro un alumno con no. de control {data["no_control"]}', 'row_index': row[0].row})
+            except Exception as ex:
+                results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
+        return Response(status=200, data=results)
 
 ### LIBERACION DE INGLES
 class LiberacionInglesList(generics.ListCreateAPIView):

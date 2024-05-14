@@ -119,12 +119,12 @@ class Titulacion(BaseRegistro):
     def clean(self):
         if not self.pk and Titulacion.objects.filter(alumno=self.alumno).exists():
             raise ValidationError('Solo puede existir una titulacion por alumno')
-
-        egreso = Egreso.objects.get(alumno=self.alumno)
-        if egreso is None:
+        try:
+            egreso = Egreso.objects.get(alumno=self.alumno)
+            if egreso.periodo > self.periodo:
+                raise ValidationError({'periodo': 'El periodo de titulación debe ser igual o mayor al de egreso'})
+        except Egreso.DoesNotExist:
             raise ValidationError('No se puede crear una titulacion sin un egreso existente')
-        elif egreso.periodo > self.periodo:
-            raise ValidationError({'periodo': 'El periodo de titulación debe ser igual o mayor al de egreso'})
 
     def save(self, *args, **kwargs):
         self.clean()
