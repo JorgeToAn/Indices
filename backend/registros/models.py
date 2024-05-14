@@ -76,6 +76,7 @@ class Ingreso(BaseRegistro):
         if Egreso.objects.filter(alumno=self.alumno).exists():
             raise ValidationError('No se puede registrar un ingreso para un alumno egresado')
 
+    def calcular_num_semestre(self):
         if self.num_semestre is None:
             # asignar numero de semestre por calculo de periodo
             primer_ingreso = Ingreso.objects.filter(alumno=self.alumno).order_by('periodo').first()
@@ -85,7 +86,6 @@ class Ingreso(BaseRegistro):
                 self.num_semestre = 1
 
     def save(self, *args, **kwargs):
-        self.clean()
         super(Ingreso, self).save(*args, **kwargs)
 
     class Meta(BaseRegistro.Meta):

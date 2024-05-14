@@ -41,14 +41,25 @@ class IngresoUpload(views.APIView):
                 break
             return None
 
+        if row[0].value is None:
+            raise Exception('Se necesita un CURP')
+        if row[1].value is None:
+            raise Exception('Se necesita un no. de control')
+        if row[4].value is None:
+            raise Exception('Se necesita un nombre')
+        if row[5].value is None:
+            raise Exception('Se necesita una carrera')
+        if row[6].value is None:
+            raise Exception('Se necesita un tipo de ingreso')
+
         data = {
-            'curp': str(row[0].value),
-            'no_control': str(row[1].value),
-            'paterno': str(row[2].value),
-            'materno': str(row[3].value),
-            'nombre': str(row[4].value),
-            'carrera': str(row[5].value),
-            'tipo': str(row[6].value)[0:2],
+            'curp': str(row[0].value).strip(),
+            'no_control': str(row[1].value).strip(),
+            'paterno': str(row[2].value).strip(),
+            'materno': str(row[3].value).strip(),
+            'nombre': str(row[4].value).strip(),
+            'carrera': str(row[5].value).strip(),
+            'tipo': str(row[6].value).strip()[0:2],
         }
         return data
 
@@ -69,11 +80,11 @@ class IngresoUpload(views.APIView):
                 return Response(status=400, data={'message': f'Se esperaba el campo {expresion[1]} pero se obtuvo {header_row[i].value}'})
 
         for row in ws.iter_rows(min_row=2):
-            # se debe verificar que todos los campos tengan datos
-            data = self.to_dict(row)
-            if data is None:
-                continue
             try:
+                # se debe verificar que todos los campos tengan datos
+                data = self.to_dict(row)
+                if data is None:
+                    continue
                 # VALIDAR DATOS
                 Personal.validate_curp(data['curp'])
                 Alumno.validate_nocontrol(data['no_control'])
@@ -91,7 +102,7 @@ class IngresoUpload(views.APIView):
                 try:
                     alumno = Alumno.objects.get(no_control=data['no_control'])
                     if alumno.plan.carrera.clave != data['carrera']:
-                        results['errors'].append({'type': 'Carrera', 'message': f"La carrera {data['carrera']} no concuerda con el plan registrado {alumno.plan.clave}"})
+                        results['errors'].append({'type': 'Carrera', 'message': f"La carrera {data['carrera']} no concuerda con el plan registrado {alumno.plan.clave}", 'row_index': row[0].row})
                         continue
                 except Alumno.DoesNotExist:
                     plan = Plan.objects.filter(carrera=carrera).last()
@@ -102,16 +113,19 @@ class IngresoUpload(views.APIView):
                     )
 
                 # CREAR REGISTRO DE INGRESO
-                if not Ingreso.objects.filter(alumno=alumno, periodo=header_row[6].value, tipo=data['tipo']).exists():
-                    ingreso = Ingreso(alumno=alumno, periodo=header_row[6].value, tipo=data['tipo'])
+                if not Ingreso.objects.filter(alumno=alumno, periodo=str(header_row[6].value), tipo=data['tipo']).exists():
+                    ingreso = Ingreso(alumno=alumno, periodo=str(header_row[6].value), tipo=data['tipo'])
                     try:
-                        ingreso.clean() # clean calcula el num_semestre por nosotros
+                        ingreso.calcular_num_semestre()
                         ingreso.full_clean()
                         ingreso.save()
                         results['created'] += 1
                     except Exception as ex:
-                        for err in ex.message_dict:
-                            results['errors'].append({'type': err, 'message': ex.message_dict[err], 'row_index': row[0].row})
+                        if ex.message_dict:
+                            for err in ex.message_dict:
+                                results['errors'].append({'type': err, 'message': ex.message_dict[err], 'row_index': row[0].row})
+                        else:
+                            results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
                         continue
 
             except Carrera.DoesNotExist as ex:
@@ -138,30 +152,51 @@ class EgresoUpload(views.APIView):
     parser_classes = [FileUploadParser]
     permission_classes = [IsAuthenticated&IsAdminUser]
 
-    def post(self, request, filename, format=None):
-        try:
-            file_obj = request.data['file']
-            wb = openpyxl.load_workbook(file_obj, data_only=True)
-            ws = wb.active
+    def to_dict(self, row):
+        # regresa None si el renglon son solo celdas vacias
+        for cell in row:
+            if cell.value is not None:
+                break
+            return None
 
-            results = { 'errors':[], 'created':0 }
-            header_row = ws[1]
-            for row in ws.iter_rows(min_row=2):
-                row_dict = row_to_dict(header_row, row)
-                try:
-                    alumno = Alumno.objects.get(pk=row_dict['no_control'])
-                    for periodo, _ in row_dict['periodos']:
-                        if not Egreso.objects.filter(periodo=periodo, alumno=alumno).exists():
-                            egreso = Egreso(periodo=periodo, alumno=alumno)
-                            egreso.save()
-                            results['created'] += 1
-                except Exception as ex:
-                    results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
-                    continue
-            return Response(status=200, data=results)
-        except Exception as e:
-            error_message = str(e)
-            return Response(status=500, data={'message': error_message})
+        if row[0].value is None:
+            raise Exception('Se necesita un no. de control')
+
+        data = {
+            'no_control': str(row[0].value).strip(),
+        }
+        return data
+
+    def post(self, request, filename, format=None):
+        ESTRUCTURA = [(r'^no_control$', 'NO_CONTROL'), (r'^[12][0-9]{3}[13]$', 'NUMERO DE PERIODO')]
+        file_obj = request.data['file']
+        wb = openpyxl.load_workbook(file_obj, data_only=True)
+        ws = wb.active
+
+        results = {"errors": [], "created": 0}
+        header_row = ws['A1':'B1'][0] # ws['A1':'B1'] regresa una tupla de renglones, pero solo necesitamos la primera
+
+        # VALIDAR ESTRUCTURA DEL ARCHIVO COMO:
+        # no_control | periodo
+        for i, expresion in enumerate(ESTRUCTURA):
+            match = re.match(expresion[0], str(header_row[i].value).lower())
+            if match is None:
+                return Response(status=400, data={'message': f'Se esperaba el campo {expresion[i]} pero se obtuvo {header_row[i].value}'})
+
+        for row in ws.iter_rows(min_row=2):
+            data = self.to_dict(row)
+            if data is None:
+                continue
+            try:
+                alumno = Alumno.objects.get(pk=data['no_control'])
+                egreso, created = Egreso.objects.get_or_create(periodo=str(header_row[1].value), alumno=alumno)
+                if created:
+                    results['created'] += 1
+            except Alumno.DoesNotExist as ex:
+                results['errors'].append({'type': str(type(ex)), 'message': f'No se encontro un alumno con no. de control {data["no_control"]}', 'row_index': row[0].row})
+            except Exception as ex:
+                results['errors'].append({'type': str(type(ex)), 'message': str(ex), 'row_index': row[0].row})
+        return Response(status=200, data=results)
 
 ### TITULACION
 class TitulacionList(generics.ListCreateAPIView):
@@ -178,6 +213,24 @@ class TitulacionDetail(generics.RetrieveUpdateDestroyAPIView):
 class TitulacionUpload(views.APIView):
     parser_classes = [FileUploadParser]
     permission_classes = [IsAuthenticated&IsAdminUser]
+
+    def to_dict(self, row):
+        # regresa None si el renglon son solo celdas vacias
+        for cell in row:
+            if cell.value is not None:
+                break
+            return None
+
+        if row[0].value is None:
+            raise Exception('Se necesita un no. de control')
+        if row[1].value is None:
+            raise Exception('Se necesita el tipo de titulación')
+
+        data = {
+            'no_control': str(row[0].value).strip(),
+            'tipo_titulacion': str(row[1].value).strip(),
+        }
+        return data
 
     def post(self, request, filename, format=None):
         try:
