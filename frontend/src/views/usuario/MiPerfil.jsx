@@ -7,7 +7,7 @@ import {
     Group,
     TextInput
 } from "@mantine/core";
-import { DeviceFloppy, Edit, ShieldCheck } from "tabler-icons-react";
+import { CircleX, DeviceFloppy, Edit, ShieldCheck } from "tabler-icons-react";
 import Header from "src/components/header.jsx";
 import { useAuthStore } from "src/store/auth";
 import { useEffect, useState } from "react";
@@ -30,15 +30,37 @@ const MiPerfil = () => {
 
     const updateUser = async() => {
         console.log(permisos);
-        await removerTodosPermisos(user().user_id);
-        permisos.forEach(async (clave) => {
-            await asignarPermiso(clave, user().user_id);
-        });
-        notifications.show({
-            message: `Se han cambiado los permisos del usuario "${user().username}" con éxito.`,
-            color: 'teal',
-            icon: <ShieldCheck size={20} />,
-          });
+        let assigned = false;
+        const removePerm = await removerTodosPermisos(user().user_id);
+        if (removePerm.status === 200) {
+            for (let i = 0; i < permisos.length; i++) {
+                const res = await asignarPermiso(permisos[i], user().user_id);
+                if (res.status !== 200) {
+                    assigned = false;
+                    break;
+                } else
+                    assigned = true;
+            }
+            if (assigned) {
+                notifications.show({
+                    message: `Se han cambiado los permisos del usuario "${user().username}" con éxito.`,
+                    color: 'teal',
+                    icon: <ShieldCheck size={20} />,
+                  });
+            } else {
+                notifications.show({
+                    message: `Lo sentimos, no se pudieron cambiar los permisos de tu usuario`,
+                    color: 'red',
+                    icon: <CircleX size={20} />,
+                  });
+            }
+        } else {
+            notifications.show({
+                message: `Lo sentimos, no se pudieron cambiar los permisos de tu usuario`,
+                color: 'red',
+                icon: <CircleX size={20} />,
+                });
+        }
     };
 
     useEffect(() => {
@@ -46,27 +68,17 @@ const MiPerfil = () => {
 
     }, []);
 
-    // const wrapper_divs = document.getElementsByClassName("user-info");
     const editarUsuario = () => {
         setOnEdit(true);
         document.getElementById("btns").style.display = "block";
         document.getElementById("btn-editar").style.display = "none";
-        // for (const div in wrapper_divs) {
-        //     const input = wrapper_divs[div].children[1].children;
-        //     input[0].removeAttribute("disabled");
-        //     input[0].removeAttribute("data-disabled");
-        // }
+
     };
 
     const cancelarEdicion = () => {
         document.getElementById("btns").style.display = "none";
         document.getElementById("btn-editar").style.display = "block";
         setOnEdit(false);
-        // for (const div in wrapper_divs) {
-        //     const input = wrapper_divs[div].children[1].children;
-        //     input[0].setAttribute("disabled", true);
-        //     input[0].setAttribute("data-disabled", true);
-        // }
     };
 
     return (

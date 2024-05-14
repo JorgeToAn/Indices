@@ -9,7 +9,7 @@ import {
     Checkbox,
     List
 } from "@mantine/core";
-import { DeviceFloppy, ShieldCheck } from "tabler-icons-react";
+import { CircleX, DeviceFloppy, ShieldCheck } from "tabler-icons-react";
 import { PropTypes } from 'prop-types';
 import "./ModalEditarUsuario.css";
 import { useEffect, useState } from "react";
@@ -31,15 +31,37 @@ function ModalEditarUsuario ({opened, close, info}) {
 
     const updateUser = async() => {
         console.log(permisos);
-        await removerTodosPermisos(info[0][0]);
-        permisos.forEach(async (clave) => {
-            await asignarPermiso(clave, info[0][0]);
-        });
-        notifications.show({
-            message: `Se han cambiado los permisos del usuario "${info[1][0]}" con éxito.`,
-            color: 'teal',
-            icon: <ShieldCheck size={20} />,
-          });
+        let assigned = false;
+        const removePerm = await removerTodosPermisos(info[0][0]);
+        if (removePerm.status === 200) {
+            for (let i = 0; i < permisos.length; i++) {
+                const res = await asignarPermiso(permisos[i], info[0][0]);
+                if (res.status !== 200) {
+                    assigned = false;
+                    break;
+                } else
+                    assigned = true;
+            }
+            if (assigned) {
+                notifications.show({
+                    message: `Se han cambiado los permisos del usuario "${info[1][0]}" con éxito.`,
+                    color: 'teal',
+                    icon: <ShieldCheck size={20} />,
+                  });
+            } else {
+                notifications.show({
+                    message: `Lo sentimos, no se pudieron cambiar los permisos de tu usuario`,
+                    color: 'red',
+                    icon: <CircleX size={20} />,
+                  });
+            }
+        } else {
+            notifications.show({
+                message: `Lo sentimos, no se pudieron cambiar los permisos de tu usuario`,
+                color: 'red',
+                icon: <CircleX size={20} />,
+                });
+        }
     };
 
     useEffect(() => {

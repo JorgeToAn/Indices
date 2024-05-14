@@ -21,6 +21,7 @@ import ModalLogout from './modals/ModalLogout';
 import { getAlumnoInfo } from "../routes/api/controllers/alumnoController";
 import { notifications } from '@mantine/notifications';
 import ModalCorte from "./modals/ModalCorte";
+import { useAuthStore } from "src/store/auth";
 
 const useStyles = createStyles((theme) => ({
     burger: {
@@ -76,6 +77,7 @@ const useStyles = createStyles((theme) => ({
 
 }));
 const NavBar = () => {
+    const user = useAuthStore((state) => state.user);
     const { classes } = useStyles();
     const [buscar, setBuscar] = useInputState('');
     const [opened, {open, close}] = useDisclosure(false);
@@ -352,17 +354,25 @@ const NavBar = () => {
                         </ActionIcon>
                     </Menu.Target>
 
+                    { !user().is_superuser ?
+                        <Menu.Dropdown>
+                            <Menu.Item onClick={handleMiPerfil}>MI PERFIL</Menu.Item>
+                            <Menu.Item onClick={()=>{
+                                    navigate('/cambio-contrasena');
+                                    }}>CAMBIO DE CONTRASEÑA</Menu.Item>
+                            <Menu.Item onClick={open} >CERRAR SESION</Menu.Item>
+                        </Menu.Dropdown> :
                     <Menu.Dropdown>
                         <Menu.Item onClick={handleMiPerfil}>MI PERFIL</Menu.Item>
                         <Menu.Item onClick={()=>{
-                                navigate('/usuarios/lista');
-                                }}>LISTA DE USUARIOS</Menu.Item>
+                            navigate('/usuarios/lista');
+                            }}>LISTA DE USUARIOS</Menu.Item>
                         <Menu.Item onClick={handlers.open} >REALIZAR CORTE</Menu.Item>
                         <Menu.Item onClick={()=>{
                                 navigate('/cambio-contrasena');
                                 }}>CAMBIO DE CONTRASEÑA</Menu.Item>
                         <Menu.Item onClick={open} >CERRAR SESION</Menu.Item>
-                    </Menu.Dropdown>
+                    </Menu.Dropdown> }
                 </Menu>
             </div>
             <ModalLogout opened={opened} close={close} />
