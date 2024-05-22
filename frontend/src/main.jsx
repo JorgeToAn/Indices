@@ -42,6 +42,7 @@ import ReportesEgreso from "src/views/reportes/Egreso";
 import ReportesNuevoIngreso from "src/views/reportes/NuevoIngreso";
 import RestablecerContrasena from "src/views/usuario/RestablecerContrasena";
 import EmailRestablecer from "src/views/usuario/EmailRestablecer";
+import CrearUsuario from "./views/usuario/CrearUsuario";
 
 const router = createBrowserRouter([
   {
@@ -154,6 +155,10 @@ const router = createBrowserRouter([
       {
         path: '/usuarios/lista',
         element: <UsuariosLista />,
+      },
+      {
+        path: '/usuarios/crear',
+        element: <CrearUsuario />,
       },
       {
         path: '/500',

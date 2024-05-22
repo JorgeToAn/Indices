@@ -40,7 +40,7 @@ function ResultadosLog ({opened, close, info}) {
                             <Accordion.Control icon={<AlertTriangle  color="#FFD25A" strokeWidth={3}/>}>
                             <Group>
                                 <Text fw='bold'>Advertencias</Text>
-                                <Text size='xs'>({info.created})</Text>
+                                <Text size='xs'>(0)</Text>
                             </Group>
                             </Accordion.Control>
                             <Accordion.Panel>

@@ -5,7 +5,7 @@ export const buildListaAlumnos = (lista, semestres, cohorte) => {
 
     lista.forEach((fila) => {
         const row = [];
-        const nombre = `${fila['curp']['nombre']} ${fila['curp']['paterno']} ${fila['curp']['materno']}`;
+        const nombre = `${fila['curp']['paterno']} ${fila['curp']['materno']} ${fila['curp']['nombre']}`;
         row.push(nombre, fila['no_control'], fila['plan']['carrera'], fila['curp']['genero']);
         let periodo = cohorte.split("-");
         for(let num = 0; num < semestres; num++) {
@@ -48,17 +48,17 @@ export const buildListaAlumnos = (lista, semestres, cohorte) => {
             periodo = anioPeriodo(periodo);
         }
         if (fila['registros']['egreso'][0] !== undefined) {
-            row.push(fila['registros']['egreso'][0]['periodo']);
+            row.push(`${fila['registros']['egreso'][0]['periodo'].slice(0,4)}-${fila['registros']['egreso'][0]['periodo'].slice(4,5)}`);
         } else {
             row.push('-');
         }
         if (fila['registros']['titulacion'][0] !== undefined) {
-            row.push(fila['registros']['titulacion'][0]['periodo']);
+            row.push(`${fila['registros']['titulacion'][0]['periodo'].slice(0,4)}-${fila['registros']['titulacion'][0]['periodo'].slice(4,5)}`);
         } else {
             row.push('-');
         }
         if (fila['registros']['liberacion_ingles'][0] !== undefined) {
-            row.push(fila['registros']['liberacion_ingles'][0]['periodo']);
+            row.push(`${fila['registros']['liberacion_ingles'][0]['periodo'].slice(0,4)}-${fila['registros']['liberacion_ingles'][0]['periodo'].slice(4,5)}`);
         } else {
             row.push('-');
         }

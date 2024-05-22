@@ -93,10 +93,12 @@ const AlumnosLista = () => {
     }, [page]);
 
     const handlePrint = async() => {
+        const megaTable = [];
+        fullTable.forEach((page) => page.forEach((row) => megaTable.push(row)));
         if (exportar === 'PDF') {
-            generatePDF('Lista de Alumnos', cohorte, numSemestres, heading, data, true, examenYConv, trasladoYEquiv, carrera);
+            generatePDF('Lista de Alumnos', cohorte, numSemestres, heading, megaTable, true, examenYConv, trasladoYEquiv, carrera);
         } else if (exportar === 'Excel') {
-            await generateExcel(heading, data, 'Lista de Alumnos', cohorte, numSemestres, 0, carrera);
+            await generateExcel(heading, megaTable, 'Lista de Alumnos', cohorte, numSemestres, 0, carrera);
         }
         notifications.show({
             message: 'La descarga de tu documento ha comenzado.',
@@ -132,7 +134,7 @@ const AlumnosLista = () => {
                     </Group>
                 </fieldset>
                 <Tabla colors="tabla-naranja" doubleHeader headers={heading} content={data} />
-                <p>{tableCount > 0 ? `Mostrando ${page !== 1 ? ((page-1)*30)+1 : 1} - ${(page)*30} de ${tableCount}`: null}</p>
+                <p>{tableCount > 0 ? `Mostrando ${page !== 1 ? ((page-1)*30)+1 : 1} - ${(page*30) > tableCount ? tableCount : (page)*30} de ${tableCount}`: null}</p>
                 <Pagination color="naranja" mt={20} value={page} onChange={setPage} total={(tableCount/30)+1}/>
             </Flex>
         </div>

@@ -20,3 +20,24 @@ export const cambiarContrasena = async(password1, password2) => {
         };
     }
 };
+
+export const crearUsuario = async(usuario) => {
+    try {
+        const res = await API.post('/usuario/registrar/', {
+            username: usuario.username,
+            'first_name': usuario.first_name,
+            'paternal_surname': usuario.paternal_surname,
+            'maternal_surname': usuario.maternal_surname,
+            gender: usuario.gender,
+            email: usuario.email,
+            password: usuario.password,
+            password2: usuario.copyPassword
+        });
+        return res;
+    } catch (err) {
+        return {
+            data: err.response.data,
+            status: 400
+        };
+    }
+};

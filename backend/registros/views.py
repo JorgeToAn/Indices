@@ -189,9 +189,9 @@ class EgresoUpload(views.APIView):
                 if data is None:
                     continue
                 alumno = Alumno.objects.get(pk=data['no_control'])
-                egreso, created = Egreso.objects.get_or_create(periodo=str(header_row[1].value), alumno=alumno)
-                if created:
-                    results['created'] += 1
+                egresado = Egreso.objects.create(periodo=str(header_row[1].value), alumno=alumno)
+                egresado.save()
+                results['created'] += 1
             except Alumno.DoesNotExist as ex:
                 results['errors'].append({'type': str(type(ex)), 'message': f'No se encontro un alumno con no. de control {data["no_control"]}', 'row_index': row[0].row})
             except Exception as ex:

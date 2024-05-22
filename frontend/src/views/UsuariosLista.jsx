@@ -1,12 +1,13 @@
 import { Button, Flex, TextInput } from '@mantine/core';
 import Header from 'src/components/header';
-import { Edit, Search } from 'tabler-icons-react';
+import { CirclePlus, Edit, Search } from 'tabler-icons-react';
 import { Group } from '@mantine/core';
 import Tabla from 'src/components/Tabla';
 import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { getListaUsuarios } from 'src/routes/api/controllers/adminController';
 import ModalEditarUsuario from './ModalEditarUsuario';
+import { Link } from 'react-router-dom';
 
 const UsuariosLista = () => {
     const [opened, { open, close }] = useDisclosure(false);
@@ -44,6 +45,10 @@ const UsuariosLista = () => {
                 <Group w="50%" mb={15}>
                     <TextInput label="Buscar"  icon={<Search width={20} />} />
                     <Button type="button" onClick={open} disabled={!(filaSelect.length >= 3)} mt={16} leftIcon={<Edit />} >Editar</Button>
+                    <Link to='/usuarios/crear'>
+                        <Button mt={17} leftIcon={<CirclePlus />}>Crear</Button>
+                    </Link>
+
                 </Group>
                 <Tabla colors="tabla-toronja" select row={seleccion} headers={heading} content={lista} />
             </Flex>
