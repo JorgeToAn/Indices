@@ -22,3 +22,6 @@ class Carrera(models.Model):
         self.clave = self.clave.upper()
         self.nombre = self.nombre.upper()
         super().save(*args, **kwargs)
+
+    class Meta:
+        permissions = [("ver_carrera", "puede ver la carrera")]

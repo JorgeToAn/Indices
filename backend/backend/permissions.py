@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+from guardian.shortcuts import get_perms
 
 class IsAdminUserOrReadOnly(BasePermission):
     """
@@ -11,3 +12,8 @@ class IsAdminUserOrReadOnly(BasePermission):
             request.user and
             request.user.is_staff
         )
+
+class CanViewCarrera(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        print(get_perms(request.user, obj))
+        return bool('ver_carrera' in get_perms(request.user, obj))
