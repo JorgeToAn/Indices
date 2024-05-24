@@ -46,7 +46,7 @@ const UsuariosLista = () => {
                     <TextInput label="Buscar"  icon={<Search width={20} />} />
                     <Button type="button" onClick={open} disabled={!(filaSelect.length >= 3)} mt={16} leftIcon={<Edit />} >Editar</Button>
                     <Link to='/usuarios/crear'>
-                        <Button mt={17} leftIcon={<CirclePlus />}>Crear</Button>
+                        <Button color='naranja' mt={17} leftIcon={<CirclePlus />}>Crear</Button>
                     </Link>
 
                 </Group>
