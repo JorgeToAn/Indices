@@ -44,7 +44,10 @@ class AsignarPermisos(APIView):
         userId = request.GET.get('usuario') if request.GET.get('usuario') else request.user.id
         carrera = Carrera.objects.get(clave=clave)
         print(carrera)
-        user = Usuario.objects.get(id=userId)
+        if (userId.isnumeric()):
+            user = Usuario.objects.get(id=userId)
+        else:
+            user = Usuario.objects.get(username=userId)
         print(user)
         assign_perm('ver_carrera', user, carrera)
         if user.has_perm('ver_carrera', carrera):

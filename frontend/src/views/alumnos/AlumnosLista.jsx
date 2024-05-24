@@ -71,7 +71,6 @@ const AlumnosLista = () => {
               });
         }
         setIsLoading(false);
-
     };
 
     const getFullTable = async() => {

@@ -1,12 +1,16 @@
 import {
+    Accordion,
     Button,
+    Checkbox,
     Container,
     Flex,
     Group,
+    List,
     PasswordInput,
     Popover,
     Progress,
     Select,
+    Text,
     TextInput
 } from "@mantine/core";
 import Header from "src/components/header.jsx";
@@ -15,7 +19,9 @@ import { crearUsuario } from "src/routes/api/controllers/adminController";
 import { notifications } from "@mantine/notifications";
 import { UserCheck, X } from "tabler-icons-react";
 import PasswordStrengthMeter from "src/components/PasswordStrengthMeter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { asignarPermiso } from "src/routes/api/controllers/permisoController";
+import dropDownData from "src/mockup/dropDownData";
 
 const requirements = [
     { re: /[0-9]/, label: 'Incluye 1 número' },
@@ -37,6 +43,13 @@ function getStrength(password) {
 
 const CrearUsuario = () => {
     const [popoverOpened, setPopoverOpened] = useState(false);
+    // Realizar fetch de las carreras registradas
+    const [carreras, setCarreras] = useState([]);
+    const [permisos, setPermisos] = useState([]);
+    const fetchCarreras = async() => {
+        const c = await dropDownData.getListaCarrerasAll();
+        setCarreras(c);
+    };
 
     const form = useForm({
         initialValues: {
@@ -56,17 +69,39 @@ const CrearUsuario = () => {
     });
 
     const handleCreate = async(values) => {
-        console.log(strength);
-        if (form.validate()) {
+        console.log(permisos.length);
+        if (!form.validate() || permisos.length === 0) {
+            notifications.show({
+                message: `El usuario debe tener por lo menos una carrera asignada.`,
+                color: 'red',
+                icon: <X />,
+            });
+        } else {
             const res = await crearUsuario(values);
             if (res.status === 201){
-                notifications.show({
-                    message: `Enhorabuena, el usuario ${values.username} fue creado con éxito.`,
-                    color: 'teal',
-                    icon: <UserCheck />,
-                });
+                let assigned = false;
+                for (let i = 0; i < permisos.length; i++) {
+                    const permitsRes = await asignarPermiso(permisos[i], res.data.username);
+                    if (permitsRes.status !== 200) {
+                        assigned = false;
+                        break;
+                    } else
+                        assigned = true;
+                }
+                if (assigned) {
+                    notifications.show({
+                        message: `Enhorabuena, el usuario ${values.username} fue creado con éxito.`,
+                        color: 'teal',
+                        icon: <UserCheck />,
+                    });
+                } else {
+                    notifications.show({
+                        message: `Lo sentimos. ${res.data[Object.keys(res.data)[0]]}`,
+                        color: 'red',
+                        icon: <X />,
+                    });
+                }
             } else {
-                console.log(res.data);
                 notifications.show({
                     message: `Lo sentimos. ${res.data[Object.keys(res.data)[0]]}`,
                     color: 'red',
@@ -79,6 +114,10 @@ const CrearUsuario = () => {
     const checks = requirements.map((requirement, index) => (
         <PasswordStrengthMeter key={index} label={requirement.label} meets={requirement.re.test(form.getInputProps('password').value)} />
     ));
+    useEffect(() => {
+        fetchCarreras();
+
+    }, []);
     return (
         <Container style={{
             display: 'flex',
@@ -113,19 +152,28 @@ const CrearUsuario = () => {
                         <Button type="submit" mt={16} id="btn-editar" w="100%" >Crear</Button>
                     </form>
                 </Flex>
-                {/* <Flex direction="column" align="center" justify="flex-start" >
-                    <Permisos />
-                    <Accordion variant="contained" radius="md" mt={16}>
-                        <Accordion.Item value="carreras" w="300px" >
-                            <Accordion.Control><b>Carreras</b></Accordion.Control>
-                            <Accordion.Panel>
-                                <List withPadding listStyleType="none">
-                                    { carreras.map((carrera,index) =><List.Item key={index}><Checkbox label={carrera} labelPosition="right" radius="sm" /></List.Item> )}
-                                </List>
-                            </Accordion.Panel>
-                        </Accordion.Item>
-                    </Accordion>
-                </Flex> */}
+                <Flex direction="column" className="datos" w="45%">
+                            <Text fw="bold">Permisos</Text>
+                            <Accordion variant="contained" radius="md" mt={16} w='90%'>
+                                <Accordion.Item value="carreras" w="300px" >
+                                    <Accordion.Control><b>Carreras</b></Accordion.Control>
+                                    <Accordion.Panel>
+                                        <List withPadding listStyleType="none">
+                                            { carreras.map((carrera,index) =><List.Item key={index}><Checkbox checked={permisos.filter((c) => c === carrera.value).length > 0} label={carrera.label} labelPosition="right" radius="sm" onChange={(e) => {
+                                                let copyPermisos = [...permisos];
+                                                if (e.target.checked) {
+                                                    copyPermisos.push(carrera.value);
+                                                    setPermisos(copyPermisos);
+                                                } else {
+                                                    copyPermisos = copyPermisos.filter((clave) => clave !== carrera.value);
+                                                    setPermisos(copyPermisos);
+                                                }
+                                            }} /></List.Item> )}
+                                        </List>
+                                    </Accordion.Panel>
+                                </Accordion.Item>
+                            </Accordion>
+                        </Flex>
             </Group>
 
         </Container>
