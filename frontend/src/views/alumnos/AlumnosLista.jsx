@@ -51,13 +51,22 @@ const AlumnosLista = () => {
             setHeading(headers);
             try {
                 const tabla = buildListaAlumnos(res.data['results'],numSemestres, cohorte);
-                setData(tabla);
-                getFullTable();
+                if (tabla.length > 0) {
+                    setData(tabla);
+                    getFullTable();
+                } else {
+                    throw new Error();
+                }
             } catch (err) {
                 setHeading([[],[]]);
                 setData([]);
                 setNextPage('');
                 setTableCount(0);
+                notifications.show({
+                    message: 'Lo sentimos, no pudimos encontrar los datos que solicitó. Intente una busqueda diferente.',
+                    color: 'red',
+                    icon: <X />,
+                  });
             }
         } else {
             setHeading([[],[]]);
@@ -134,7 +143,7 @@ const AlumnosLista = () => {
                 </fieldset>
                 <Tabla colors="tabla-naranja" doubleHeader headers={heading} content={data} />
                 <p>{tableCount > 0 ? `Mostrando ${page !== 1 ? ((page-1)*30)+1 : 1} - ${(page*30) > tableCount ? tableCount : (page)*30} de ${tableCount}`: null}</p>
-                <Pagination color="naranja" mt={20} value={page} onChange={setPage} total={(tableCount/30)+1}/>
+                <Pagination color="naranja" mt={20} value={page} onChange={setPage} total={Math.ceil(tableCount/30)}/>
             </Flex>
         </div>
     );
