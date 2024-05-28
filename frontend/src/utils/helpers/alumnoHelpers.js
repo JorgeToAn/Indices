@@ -5,9 +5,18 @@ export const buildListaAlumnos = (lista, semestres, cohorte) => {
 
     lista.forEach((fila) => {
         const row = [];
+        const fecha = new Date();
+        const periodoFinal = [];
+        periodoFinal.push(fecha.getFullYear().toString());
+        if (fecha.getMonth() > 7)
+            periodoFinal.push('3');
+        else
+            periodoFinal.push('1');
+
         const nombre = `${fila['curp']['paterno']} ${fila['curp']['materno']} ${fila['curp']['nombre']}`;
         row.push(nombre, fila['no_control'], fila['plan']['carrera'], fila['curp']['genero']);
         let periodo = cohorte.split("-");
+
         for(let num = 0; num < semestres; num++) {
             const dato = fila['registros']['ingresos'][num];
             if(dato !== undefined){
@@ -22,7 +31,10 @@ export const buildListaAlumnos = (lista, semestres, cohorte) => {
                         }
                     });
                     if (!found) {
-                        row.push('BAJA');
+                        if (`${periodo[0]}${periodo[1]}` >= `${periodoFinal[0]}${periodoFinal[1]}`)
+                            row.push('-');
+                        else
+                            row.push('BAJA');
                     }
                 }
             } else {
@@ -38,10 +50,16 @@ export const buildListaAlumnos = (lista, semestres, cohorte) => {
                         if (Number(fila['registros']['egreso'][0]['periodo']) <= Number(`${periodo[0]}${periodo[1]}`)) {
                             row.push('EGR');
                         } else {
-                            row.push('BAJA');
+                            if (`${periodo[0]}${periodo[1]}` >= `${periodoFinal[0]}${periodoFinal[1]}`)
+                                row.push('-');
+                            else
+                                row.push('BAJA');
                         }
                     } else {
-                        row.push('BAJA');
+                        if (`${periodo[0]}${periodo[1]}` >= `${periodoFinal[0]}${periodoFinal[1]}`)
+                            row.push('-');
+                        else
+                            row.push('BAJA');
                     }
                 }
             }
