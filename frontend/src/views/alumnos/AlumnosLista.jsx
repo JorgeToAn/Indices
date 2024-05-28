@@ -63,7 +63,7 @@ const AlumnosLista = () => {
                 setNextPage('');
                 setTableCount(0);
                 notifications.show({
-                    message: 'Lo sentimos, no pudimos encontrar los datos que solicitó. Intente una busqueda diferente.',
+                    message: 'Lo sentimos, no pudimos encontrar los datos que solicitó. Intente con una busqueda diferente.',
                     color: 'red',
                     icon: <X />,
                   });
