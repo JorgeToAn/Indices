@@ -24,7 +24,7 @@ class Usuario(AbstractUser):
 
     first_name = models.CharField(max_length=150, null=False, blank=False, validators=[validate_name])
     paternal_surname = models.CharField(max_length=150, null=False, blank=False, validators=[validate_name])
-    maternal_surname = models.CharField(max_length=150, null=True, blank=False, validators=[validate_name])
+    maternal_surname = models.CharField(max_length=150, null=True, blank=True, validators=[validate_name])
     email = models.EmailField(null=False, blank=False, unique=True)
     gender = models.CharField(choices=Gender.choices, default=Gender.OTHER, max_length=1, null=False)
 
