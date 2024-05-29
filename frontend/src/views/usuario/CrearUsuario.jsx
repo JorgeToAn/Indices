@@ -22,6 +22,7 @@ import PasswordStrengthMeter from "src/components/PasswordStrengthMeter";
 import { useEffect, useState } from "react";
 import { asignarPermiso } from "src/routes/api/controllers/permisoController";
 import dropDownData from "src/mockup/dropDownData";
+import { useNavigate } from "react-router-dom";
 
 const requirements = [
     { re: /[0-9]/, label: 'Incluye 1 número' },
@@ -42,6 +43,7 @@ function getStrength(password) {
 }
 
 const CrearUsuario = () => {
+    const navigate = useNavigate();
     const [popoverOpened, setPopoverOpened] = useState(false);
     // Realizar fetch de las carreras registradas
     const [carreras, setCarreras] = useState([]);
@@ -94,6 +96,7 @@ const CrearUsuario = () => {
                         color: 'teal',
                         icon: <UserCheck />,
                     });
+                    navigate('/usuarios/lista');
                 } else {
                     notifications.show({
                         message: `Lo sentimos. ${res.data[Object.keys(res.data)[0]]}`,

@@ -18,13 +18,13 @@ import { asignarPermiso, removerTodosPermisos } from "src/routes/api/controllers
 import { notifications } from "@mantine/notifications";
 
 
-function ModalEditarUsuario ({opened, close, info}) {
+function ModalEditarUsuario ({opened, close, info, onEdit}) {
     // Realizar fetch de las carreras registradas
     const [carreras, setCarreras] = useState([]);
     const [permisos, setPermisos] = useState([]);
     const fetchCarreras = async() => {
         const c = await dropDownData.getListaCarrerasAll();
-        const cA = await dropDownData.getListaCarrerasForUser(info[0][0]);
+        const cA = await dropDownData.getListaCarrerasForUser(info[0]);
         setPermisos(cA.map((carrera) => carrera.value));
         setCarreras(c);
     };
@@ -32,7 +32,7 @@ function ModalEditarUsuario ({opened, close, info}) {
     const updateUser = async() => {
         console.log(permisos);
         let assigned = false;
-        const removePerm = await removerTodosPermisos(info[0][0]);
+        const removePerm = await removerTodosPermisos(info[0]);
         if (removePerm.status === 200) {
             for (let i = 0; i < permisos.length; i++) {
                 const res = await asignarPermiso(permisos[i], info[0][0]);
@@ -73,7 +73,7 @@ function ModalEditarUsuario ({opened, close, info}) {
             <Modal.Overlay />
             <Modal.Content>
                 <Modal.Header>
-                    <Modal.Title  fw="bold" ta="center" ml="auto">Actualizando Usuario</Modal.Title>
+                    <Modal.Title  fw="bold" ta="center" ml="auto">{ onEdit ? 'Actualizando' : 'Detalles de'} Usuario</Modal.Title>
                     <Modal.CloseButton bg="gris" color="negro"></Modal.CloseButton>
                 </Modal.Header>
                 <Modal.Body>
@@ -91,7 +91,7 @@ function ModalEditarUsuario ({opened, close, info}) {
                                     <Accordion.Control><b>Carreras</b></Accordion.Control>
                                     <Accordion.Panel>
                                         <List withPadding listStyleType="none">
-                                            { carreras.map((carrera,index) =><List.Item key={index}><Checkbox checked={permisos.filter((c) => c === carrera.value).length > 0} label={carrera.label} labelPosition="right" radius="sm" onChange={(e) => {
+                                            { carreras.map((carrera,index) =><List.Item key={index}><Checkbox disabled={!onEdit} checked={permisos.filter((c) => c === carrera.value).length > 0} label={carrera.label} labelPosition="right" radius="sm" onChange={(e) => {
                                                 let copyPermisos = [...permisos];
                                                 if (e.target.checked) {
                                                     copyPermisos.push(carrera.value);
@@ -107,10 +107,13 @@ function ModalEditarUsuario ({opened, close, info}) {
                             </Accordion>
                         </Flex>
                     </Flex>
+                    { onEdit ?
                     <Group position='center' align="center" mt={16}>
                         <Button leftIcon={<DeviceFloppy />} color="toronja" onClick={updateUser}>Actualizar</Button>
                         <Button color="gris" onClick={close}>Cancelar</Button>
                     </Group>
+                    : null
+                }
                 </Modal.Body>
             </Modal.Content>
         </Modal.Root>
@@ -121,6 +124,7 @@ ModalEditarUsuario.propTypes = {
     opened: PropTypes.bool,
     info: PropTypes.array,
     close: PropTypes.func,
+    onEdit: PropTypes.bool
 };
 
 export default ModalEditarUsuario;

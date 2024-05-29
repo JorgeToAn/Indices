@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 
 const UsuariosLista = () => {
     const [opened, { open, close }] = useDisclosure(false);
+    const [onEdit, setOnEdit] = useState(false);
 
     const heading = [
         'Id de usuario', 'Nombre de usuario', 'Correo electrónico', 'Permisos'
@@ -19,17 +20,17 @@ const UsuariosLista = () => {
     const [lista, setLista] = useState([]);
     const [filaSelect, setFilaSelect] = useState([]);
     const seleccion = (data) => {
+        console.log(data);
         setFilaSelect(data);
     };
 
     const handleTable = async() => {
         const usuarios = await getListaUsuarios();
-        let listaU = Object.entries(usuarios);
-        listaU = listaU.map((lista) => Object.entries(lista[1]));
-        listaU = listaU.map((disc) => disc.filter((u, index) => index === 0 || index === 4 || index === 12));
-        listaU = listaU.map((disc) => disc.map((c) => c.filter((dato, index) => index > 0)));
-        console.log(listaU);
-        setLista(listaU);
+        const tb = [];
+        usuarios.forEach((u) => {
+            tb.push([u.id, u.username, u.email, u['career_permissions']]);
+        });
+        setLista(tb);
     };
 
     useEffect(() => {
@@ -52,7 +53,7 @@ const UsuariosLista = () => {
                 </Group>
                 <Tabla colors="tabla-toronja" select row={seleccion} headers={heading} content={lista} />
             </Flex>
-            <ModalEditarUsuario opened={opened} close={close} info={filaSelect} />
+            <ModalEditarUsuario opened={opened} close={close} onEdit={onEdit} info={filaSelect} />
         </div>
     );
 };
