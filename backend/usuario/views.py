@@ -20,7 +20,7 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 class UserListView(generics.ListCreateAPIView):
-    queryset = Usuario.objects.all()
+    queryset = Usuario.objects.all().exclude(username = "AnonymousUser")
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
     serializer_class = UserSerializer
 
