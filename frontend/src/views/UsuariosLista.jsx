@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 
 const UsuariosLista = () => {
     const [opened, { open, close }] = useDisclosure(false);
+    // eslint-disable-next-line no-unused-vars
     const [onEdit, setOnEdit] = useState(false);
 
     const heading = [
@@ -20,7 +21,6 @@ const UsuariosLista = () => {
     const [lista, setLista] = useState([]);
     const [filaSelect, setFilaSelect] = useState([]);
     const seleccion = (data) => {
-        console.log(data);
         setFilaSelect(data);
     };
 
