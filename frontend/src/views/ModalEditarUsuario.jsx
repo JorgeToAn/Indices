@@ -9,7 +9,7 @@ import {
     Checkbox,
     List
 } from "@mantine/core";
-import { CircleX, DeviceFloppy, ShieldCheck } from "tabler-icons-react";
+import { CircleX, DeviceFloppy, Edit, ShieldCheck } from "tabler-icons-react";
 import { PropTypes } from 'prop-types';
 import "./ModalEditarUsuario.css";
 import { useEffect, useState } from "react";
@@ -18,15 +18,20 @@ import { asignarPermiso, removerTodosPermisos } from "src/routes/api/controllers
 import { notifications } from "@mantine/notifications";
 
 
-function ModalEditarUsuario ({opened, close, info, onEdit}) {
+function ModalEditarUsuario ({opened, close, info}) {
     // Realizar fetch de las carreras registradas
     const [carreras, setCarreras] = useState([]);
     const [permisos, setPermisos] = useState([]);
+    const [onEdit, setOnEdit] = useState(false);
     const fetchCarreras = async() => {
         const c = await dropDownData.getListaCarrerasAll();
         const cA = await dropDownData.getListaCarrerasForUser(info[0]);
         setPermisos(cA.map((carrera) => carrera.value));
         setCarreras(c);
+    };
+
+    const enterEditMode = () => {
+        setOnEdit(true);
     };
 
     const updateUser = async() => {
@@ -35,7 +40,7 @@ function ModalEditarUsuario ({opened, close, info, onEdit}) {
         const removePerm = await removerTodosPermisos(info[0]);
         if (removePerm.status === 200) {
             for (let i = 0; i < permisos.length; i++) {
-                const res = await asignarPermiso(permisos[i], info[0][0]);
+                const res = await asignarPermiso(permisos[i], info[0]);
                 if (res.status !== 200) {
                     assigned = false;
                     break;
@@ -44,7 +49,7 @@ function ModalEditarUsuario ({opened, close, info, onEdit}) {
             }
             if (assigned) {
                 notifications.show({
-                    message: `Se han cambiado los permisos del usuario "${info[1][0]}" con éxito.`,
+                    message: `Se han cambiado los permisos del usuario "${info[1]}" con éxito.`,
                     color: 'teal',
                     icon: <ShieldCheck size={20} />,
                   });
@@ -61,12 +66,13 @@ function ModalEditarUsuario ({opened, close, info, onEdit}) {
                 color: 'red',
                 icon: <CircleX size={20} />,
                 });
+            setOnEdit(false);
         }
     };
 
     useEffect(() => {
         fetchCarreras();
-
+        setOnEdit(false);
     }, [info]);
     return (
         <Modal.Root opened={opened} onClose={close} centered size="xl" closeOnClickOutside={false}>
@@ -107,13 +113,14 @@ function ModalEditarUsuario ({opened, close, info, onEdit}) {
                             </Accordion>
                         </Flex>
                     </Flex>
-                    { onEdit ?
                     <Group position='center' align="center" mt={16}>
-                        <Button leftIcon={<DeviceFloppy />} color="toronja" onClick={updateUser}>Actualizar</Button>
+                        { onEdit ?
+                            <Button leftIcon={<DeviceFloppy />} color="toronja" onClick={updateUser}>Actualizar</Button>
+                        :
+                            <Button leftIcon={<Edit />} color="toronja" onClick={enterEditMode}>Editar</Button>
+                        }
                         <Button color="gris" onClick={close}>Cancelar</Button>
                     </Group>
-                    : null
-                }
                 </Modal.Body>
             </Modal.Content>
         </Modal.Root>
@@ -124,7 +131,6 @@ ModalEditarUsuario.propTypes = {
     opened: PropTypes.bool,
     info: PropTypes.array,
     close: PropTypes.func,
-    onEdit: PropTypes.bool
 };
 
 export default ModalEditarUsuario;

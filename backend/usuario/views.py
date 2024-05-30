@@ -21,24 +21,24 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 class UserListView(generics.ListCreateAPIView):
-    def get_queryset(self):
-        usuarios = Usuario.objects.all().exclude(username = "AnonymousUser")
-        # Obtener todos los usuarios
-        # Obtener todas las carreras
-        # Para cada usuario, para cada carrera, checar si tiene el permiso
-        # Si lo tiene, agregar el nombre de la carrera.
+    queryset = Usuario.objects.all().exclude(username = "AnonymousUser").values('id', 'username', 'email')
+    # def get_queryset(self):
+    #     # Obtener todos los usuarios
+    #     # Obtener todas las carreras
+    #     # Para cada usuario, para cada carrera, checar si tiene el permiso
+    #     # Si lo tiene, agregar el nombre de la carrera.
 
-        carreras = Carrera.objects.all()
-        lista = []
-        for u in usuarios:
-            permisos = []
-            for c in carreras:
-                if u.has_perm('ver_carrera', c):
-                    permisos.append(c.nombre)
-            usuario = dict(id=u.pk, username=u.username, email=u.email, career_permissions=permisos)
-            lista.append(usuario)
-        print(lista)
-        return lista
+    #     carreras = Carrera.objects.all()
+    #     lista = []
+    #     for u in usuarios:
+    #         permisos = []
+    #         for c in carreras:
+    #             if u.has_perm('ver_carrera', c):
+    #                 permisos.append(c.nombre)
+    #         usuario = dict(id=u.pk, username=u.username, email=u.email, career_permissions=permisos)
+    #         lista.append(usuario)
+    #     print(lista)
+    #     return lista
     # queryset = Usuario.objects.all().exclude(username = "AnonymousUser")
     permission_classes = [IsAuthenticated&IsAdminUserOrReadOnly]
     serializer_class = UserListSerializer

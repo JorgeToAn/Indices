@@ -65,9 +65,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserListSerializer(serializers.ModelSerializer):
-    career_permissions = serializers.SerializerMethodField()
-    def get_career_permissions(self, value):
-        return value['career_permissions']
+    # career_permissions = serializers.SerializerMethodField()
+    # def get_career_permissions(self, value):
+    #     return value['career_permissions']
     class Meta:
         model = Usuario
-        fields = ['id', 'username', 'email', 'career_permissions']
+        fields = ['id', 'username', 'email']

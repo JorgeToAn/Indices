@@ -11,10 +11,9 @@ import { Link } from 'react-router-dom';
 
 const UsuariosLista = () => {
     const [opened, { open, close }] = useDisclosure(false);
-    const [onEdit, setOnEdit] = useState(false);
 
     const heading = [
-        'Id de usuario', 'Nombre de usuario', 'Correo electrónico', 'Permisos'
+        'Id de usuario', 'Nombre de usuario', 'Correo electrónico'
     ];
 
     const [lista, setLista] = useState([]);
@@ -28,7 +27,7 @@ const UsuariosLista = () => {
         const usuarios = await getListaUsuarios();
         const tb = [];
         usuarios.forEach((u) => {
-            tb.push([u.id, u.username, u.email, u['career_permissions']]);
+            tb.push([u.id, u.username, u.email]);
         });
         setLista(tb);
     };
@@ -53,7 +52,7 @@ const UsuariosLista = () => {
                 </Group>
                 <Tabla colors="tabla-toronja" select row={seleccion} headers={heading} content={lista} />
             </Flex>
-            <ModalEditarUsuario opened={opened} close={close} onEdit={onEdit} info={filaSelect} />
+            <ModalEditarUsuario opened={opened} close={close} info={filaSelect} />
         </div>
     );
 };
