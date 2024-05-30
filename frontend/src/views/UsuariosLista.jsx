@@ -19,7 +19,6 @@ const UsuariosLista = () => {
     const [lista, setLista] = useState([]);
     const [filaSelect, setFilaSelect] = useState([]);
     const seleccion = (data) => {
-        console.log(data);
         setFilaSelect(data);
     };
 
