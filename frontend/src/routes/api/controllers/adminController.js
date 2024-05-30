@@ -41,3 +41,30 @@ export const crearUsuario = async(usuario) => {
         };
     }
 };
+
+export const editarUsuario = async(usuario) => {
+    try {
+        const res = await API.put(`/usuario/${usuario.id}/`, {
+            username: usuario.username,
+            email: usuario.email,
+        });
+        return res;
+    } catch (err) {
+        return {
+            data: err.response.data,
+            status: 400
+        };
+    }
+};
+
+export const getUsuarioById = async(id) => {
+    try {
+        const res = await API.get(`/usuario/${id}/`);
+        return res;
+    } catch (err) {
+        return {
+            data: err.response.data,
+            status: 400
+        };
+    }
+};

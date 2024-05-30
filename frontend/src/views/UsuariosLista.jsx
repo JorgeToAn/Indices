@@ -33,7 +33,7 @@ const UsuariosLista = () => {
 
     useEffect(() => {
         handleTable();
-    }, []);
+    }, [opened]);
     return(
         <div style={{
             width: '100vw',

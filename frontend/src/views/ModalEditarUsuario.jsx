@@ -9,17 +9,26 @@ import {
     Checkbox,
     List
 } from "@mantine/core";
-import { CircleX, DeviceFloppy, Edit, ShieldCheck } from "tabler-icons-react";
+import { CircleX, DeviceFloppy, Edit, ShieldCheck, X } from "tabler-icons-react";
 import { PropTypes } from 'prop-types';
 import "./ModalEditarUsuario.css";
 import { useEffect, useState } from "react";
 import dropDownData from "src/mockup/dropDownData";
 import { asignarPermiso, removerTodosPermisos } from "src/routes/api/controllers/permisoController";
 import { notifications } from "@mantine/notifications";
+import { useForm } from "@mantine/form";
+import { editarUsuario } from "src/routes/api/controllers/adminController";
 
 
 function ModalEditarUsuario ({opened, close, info}) {
     // Realizar fetch de las carreras registradas
+    const form = useForm({
+        initialValues: {
+            id: 0,
+            username:  '',
+            email: '',
+        }
+    });
     const [carreras, setCarreras] = useState([]);
     const [permisos, setPermisos] = useState([]);
     const [onEdit, setOnEdit] = useState(false);
@@ -34,45 +43,64 @@ function ModalEditarUsuario ({opened, close, info}) {
         setOnEdit(true);
     };
 
-    const updateUser = async() => {
-        console.log(permisos);
-        let assigned = false;
-        const removePerm = await removerTodosPermisos(info[0]);
-        if (removePerm.status === 200) {
-            for (let i = 0; i < permisos.length; i++) {
-                const res = await asignarPermiso(permisos[i], info[0]);
-                if (res.status !== 200) {
-                    assigned = false;
-                    break;
-                } else
-                    assigned = true;
-            }
-            if (assigned) {
-                notifications.show({
-                    message: `Se han cambiado los permisos del usuario "${info[1]}" con éxito.`,
-                    color: 'teal',
-                    icon: <ShieldCheck size={20} />,
-                  });
-            } else {
+    const updateUser = async(values) => {
+        if (!form.validate() || permisos.length === 0) {
+            notifications.show({
+                message: `El usuario debe tener por lo menos una carrera asignada.`,
+                color: 'red',
+                icon: <X />,
+            });
+        } else {
+            try {
+                const res = await editarUsuario(values);
+                if (res.status !== 200){
+                    throw new Error();
+                } else {
+                    let assigned = false;
+                    const removePerm = await removerTodosPermisos(info[0]);
+                    if (removePerm.status === 200) {
+                        for (let i = 0; i < permisos.length; i++) {
+                            const res = await asignarPermiso(permisos[i], info[0]);
+                            if (res.status !== 200) {
+                                assigned = false;
+                                break;
+                            } else
+                                assigned = true;
+                        }
+                        if (assigned) {
+                            notifications.show({
+                                message: `Se han cambiado los permisos del usuario "${values.username}" con éxito.`,
+                                color: 'teal',
+                                icon: <ShieldCheck size={20} />,
+                            });
+                        } else {
+                            throw new Error();
+                        }
+                    } else {
+                        throw new Error();
+                    }
+
+                }
+            } catch (e) {
                 notifications.show({
                     message: `Lo sentimos, no se pudieron cambiar los permisos de tu usuario`,
                     color: 'red',
                     icon: <CircleX size={20} />,
-                  });
+                    });
+                setOnEdit(false);
             }
-        } else {
-            notifications.show({
-                message: `Lo sentimos, no se pudieron cambiar los permisos de tu usuario`,
-                color: 'red',
-                icon: <CircleX size={20} />,
-                });
-            setOnEdit(false);
+
         }
     };
 
     useEffect(() => {
         fetchCarreras();
         setOnEdit(false);
+        form.setValues({
+            id: info[0],
+            username: info[1],
+            email: info[2]
+        });
     }, [info]);
     return (
         <Modal.Root opened={opened} onClose={close} centered size="xl" closeOnClickOutside={false}>
@@ -83,12 +111,13 @@ function ModalEditarUsuario ({opened, close, info}) {
                     <Modal.CloseButton bg="gris" color="negro"></Modal.CloseButton>
                 </Modal.Header>
                 <Modal.Body>
+                    <form id="editUser" onSubmit={form.onSubmit(updateUser)}>
                     <Flex direction="row" align="flex-start" justify="center" gap={20}>
                         <Flex direction="column" className="datos" w="45%">
                             <Text fw="bold">Datos de usuario</Text>
-                            <TextInput label="Id de usuario" disabled value={info[0]}/>
-                            <TextInput label="Nombre de usuario" disabled value={info[1]}/>
-                            <TextInput label="Correo electrónico" disabled value={info[2]}/>
+                            <TextInput label="Id de usuario" {...form.getInputProps('id')} disabled />
+                            <TextInput label="Nombre de usuario" {...form.getInputProps('username')} disabled={!onEdit} />
+                            <TextInput type="email" label="Correo electrónico"  {...form.getInputProps('email')} disabled={!onEdit} />
                         </Flex>
                         <Flex direction="column" className="datos" w="45%">
                             <Text fw="bold">Permisos</Text>
@@ -113,11 +142,12 @@ function ModalEditarUsuario ({opened, close, info}) {
                             </Accordion>
                         </Flex>
                     </Flex>
+                    </form>
                     <Group position='center' align="center" mt={16}>
                         { onEdit ?
-                            <Button leftIcon={<DeviceFloppy />} color="toronja" onClick={updateUser}>Actualizar</Button>
+                            <Button form="editUser" key="btnSend" leftIcon={<DeviceFloppy />} color="toronja"  type="submit">Actualizar</Button>
                         :
-                            <Button leftIcon={<Edit />} color="toronja" onClick={enterEditMode}>Editar</Button>
+                            <Button leftIcon={<Edit />} key="btnEdit" color="toronja" type="button" onClick={enterEditMode}>Editar</Button>
                         }
                         <Button color="gris" onClick={close}>Cancelar</Button>
                     </Group>
