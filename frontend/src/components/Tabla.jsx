@@ -24,7 +24,6 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                 {tripleHeader ?
                     <thead>
                         <tr>
-                            {/* { headers[0].filter((cell, index) => cell !== '').map((cell, index) => headers[2][headers[0].indexOf(cell)] === '' ? <th key={index} rowSpan="3">{ cell }</th> : headers[0][index+4] === '' ?  <th key={index} colSpan="5">{ cell }</th> : headers[0][index+2] === '' && headers[0][index+1] === '' ? <th key={index} colSpan="3">{ cell }</th> : <th key={index}>{ cell }</th>)} */}
                             { headers[0].filter((cell, i) => cell !== '').map((cells, index) => headers[2][headers[0].indexOf(cells)] === '' ? <th key={index} rowSpan="3">{ cells }</th> : <th key={index} colSpan={getBlankSpaces(cells.startsWith('Año  de') ? headers[0].lastIndexOf(cells) : headers[0].indexOf(cells))}>{ cells }</th>)}
                         </tr>
                         <tr>
@@ -38,11 +37,11 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                 doubleHeader ?
                     <thead>
                         <tr>
-                            { select ? <td></td> : null}
+                            { select ? <th></th> : null}
                             { headers[0].filter((cell, i) => cell !== '').map((cell, index) => headers[1][headers[0].indexOf(cell)] === '' ? <th key={index} rowSpan="2">{cell}</th> : <th key={index} colSpan={getBlankSpaces(headers[0].indexOf(cell))}>{ cell }</th>) }
                         </tr>
                         <tr>
-                            { select ? <td></td> : null}
+                            { select ? <th></th> : null}
                             { headers[1].filter((cell, i) => cell !== '').map((cell, index) => cell === 'Nombre' ? <th style={{top: '42px'}} key={index} className='celda-nombre'>{cell}</th> : <th style={{top: '42px'}} key={index}>{cell}</th>) }
                         </tr>
                     </thead>
@@ -50,7 +49,7 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                     <thead>
                         <tr>
 
-                        { select ? <td></td> : null}
+                        { select ? <th></th> : null}
                             { headers.map( (head, index) => head === "Nombre" ? <th key={index} className='celda-nombre'>{head}</th> : <th key={index}>{head}</th>) }
                         </tr>
                     </thead>

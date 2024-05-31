@@ -37,8 +37,9 @@ class CedulasCACEI(APIView):
 
         response_data = {}
         periodoInicial = cohorte
+        periodos = calcularPeriodos(periodoInicial, int(24))
+        inicioP = 0
         for gen in range(10):
-            periodos = calcularPeriodos(periodoInicial, int(14))
             poblacion_nuevo_ingreso = 0
             alumnos_total = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=periodoInicial))
             poblacion_total = Ingreso.objects.aggregate(poblacion=alumnos_total)
@@ -46,9 +47,10 @@ class CedulasCACEI(APIView):
                 ).values("clave")
             poblacion_egr = 0
             poblacion_titulo = 0
-            for i, periodo in enumerate(periodos):
+            # print(list(filter(lambda p: periodos.index(p) >= inicioP and periodos.index(p) < (inicioP+14), periodos)))
+            for i, periodo in enumerate(list(filter(lambda p: periodos.index(p) >= inicioP and periodos.index(p) <= (inicioP+10), periodos))):
                 if periodo == periodoInicial:
-                    activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=periodoInicial,alumno__plan__carrera__pk=carrera))
+                    activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=periodos[inicioP],alumno__plan__carrera__pk=carrera))
                     poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
                     poblacion_nuevo_ingreso = poblacion_act['poblacion']
                 else:
@@ -73,17 +75,19 @@ class CedulasCACEI(APIView):
                 porcentaje_alumnos_carrera = round(porcentaje_alumnos_carrera, 2)
             inicio = ""
             fin = ""
-            if periodos[0].endswith('1'):
-                inicio = "2/{p}".format(p=periodos[0])
+            if periodos[inicioP].endswith('1'):
+                inicio = "2/{p}".format(p=periodos[inicioP])
             else:
-                inicio = "8/{p}".format(p=periodos[0])
-            if periodos[8].endswith('1'):
-                fin = "6/{p}".format(p=periodos[8])
+                inicio = "8/{p}".format(p=periodos[inicioP])
+            if periodos[inicioP+8].endswith('1'):
+                fin = "6/{p}".format(p=periodos[inicioP+8])
             else:
-                fin = "12/{p}".format(p=periodos[8])
+                fin = "12/{p}".format(p=periodos[inicioP+8])
             generacion = "{inicio} - {fin}".format(inicio=inicio, fin=fin)
             response_data[generacion] = dict(poblacion_total=poblacion_total['poblacion'], poblacion=poblacion_nuevo_ingreso, porcentaje_alumnos_carrera=porcentaje_alumnos_carrera, egresados=poblacion_egr, tasa_egreso=tasa_egreso, titulados=poblacion_titulo, tasa_titulacion=tasa_titulo)
-            periodoInicial = periodos[1]
+            inicioP += 1
+            periodoInicial = periodos[inicioP]
+
         return Response(response_data)
 
 class CedulasCACECA(APIView):
@@ -124,12 +128,12 @@ class CedulasCACECA(APIView):
             desercion = 0
             for periodo in periodos:
                 if periodo == periodos[0]:
-                    activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=periodoInicial,alumno__plan__carrera__pk=carrera))
+                    activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, alumno__in=alumnos, periodo=periodoInicial,alumno__plan__carrera__pk=carrera))
                     poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
                     poblacion_nuevo_ingreso = poblacion_act['poblacion']
                     alumnos_corte_anterior = poblacion_act['poblacion']
                 else:
-                    activos = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno__plan__carrera__pk=carrera))
+                    activos = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', alumno__in=alumnos, periodo=periodo, alumno__plan__carrera__pk=carrera))
                     poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
                 inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo))
                 poblacion_egr = poblacion_egr + Egreso.objects.aggregate(egresados=inactivos)['egresados']
@@ -157,5 +161,5 @@ class CedulasCACECA(APIView):
                 tasa_reprobacion = round(tasa_reprobacion, 2)
             generacion = "{inicio} - {fin}".format(inicio=periodos[0], fin=periodos[8])
             response_data[generacion] = dict(poblacion=poblacion_nuevo_ingreso, desercion=desercion, tasa_desercion=tasa_desercion, reprobacion=reprobacion, tasa_reprobacion=tasa_reprobacion, egresados=poblacion_egr, titulados=poblacion_titulo, tasa_titulacion=tasa_titulo, tasa_egreso=tasa_egreso)
-            periodoInicial = periodos[8]
+            periodoInicial = periodos[1]
         return Response(response_data)

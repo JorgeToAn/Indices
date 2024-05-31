@@ -7,26 +7,39 @@ import {
     FileButton,
     Flex,
     ActionIcon,
-    Center
+    Center,
+    LoadingOverlay
 } from '@mantine/core';
 import { Dropzone } from '@mantine/dropzone';
-import { ArrowLeft, Download, FileUpload, Upload } from "tabler-icons-react";
+import { ArrowLeft, Download, FileUpload, Upload, X } from "tabler-icons-react";
 import { useDisclosure } from '@mantine/hooks';
 import ResultadosLog from 'src/components/modals/resultadosLog';
 import { subirArchivosExcel } from 'src/routes/api/controllers/archivosController';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './SubirArchivos.css';
+import { notifications } from '@mantine/notifications';
 
 const SubirArchivos = () => {
     const [opened, handlers] = useDisclosure(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [info, setInfo] = useState({'errors':[], 'created':0});
     const subirArchivos = async (file, tipo) => {
+        setIsLoading(true);
         const formData = new FormData();
         formData.append('file', file[0], file[0].name);
         const res = await subirArchivosExcel(formData, tipo);
-        setInfo(res.data);
-        handlers.open();
+        if (res.status !== 400) {
+            setInfo(res.data);
+            handlers.open();
+        } else {
+            notifications.show({
+                message: 'Lo sentimos, hubo un problema al subir el archivo',
+                color: 'red',
+                icon: <X />,
+            });
+        }
+        setIsLoading(false);
     };
 
 
@@ -38,6 +51,7 @@ const SubirArchivos = () => {
             <Title order={3}>Subir Archivos</Title>
             <p>Aqui se suben los tres archivos que utiliza el sistema para trabajar, estos deberan ser cargados una vez por semestre.<br />Los archivos deben de seguir el siguiente formato para ser aceptados en el sistema.</p>
             <Group position='center'>
+                <LoadingOverlay visible={isLoading} />
                 <div>
                     {/* Alumnos inscritos en el semestre */}
                     <Dropzone accept="MS_EXCEL_MIME_TYPE" onDrop={(file) => {
