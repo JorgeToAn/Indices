@@ -17,16 +17,16 @@ function BoxOption({color, label, route}) {
                 flexDirection: 'row',
                 gap: '20px',
                 backgroundColor: "#F0F0F0",
-                padding: '10px',
+                padding: '15px 10px',
                 minWidth: "250px",
                 justifyContent: 'center',
                 alignContent: 'center',
-                alignItems: 'baseline',
+                alignItems: 'center',
                 borderRadius: '10px',
             }}
         >
             <Text fw={600} >{ label }</Text>
-            <ActionIcon color={color} radius="xl" variant="filled" mb={10} onClick={() => {
+            <ActionIcon color={color} radius="xl" variant="filled" onClick={() => {
                 navigate(route);
             }}>
                 <ChevronRight color="white" />

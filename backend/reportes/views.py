@@ -44,7 +44,6 @@ class ReportesNuevoIngreso(APIView):
             plan_regs = {}
             for periodo in periodos:
                 plan_regs[periodo] = dict(periodo=periodo)
-
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=periodo,alumno__plan__carrera__pk=plan[0]))
                 nuevo_ingreso = Ingreso.objects.aggregate(poblacion=activos)
                 plan_regs[periodo] = dict(poblacion=nuevo_ingreso['poblacion'], periodo=periodo)
