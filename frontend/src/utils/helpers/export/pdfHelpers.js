@@ -109,10 +109,10 @@ export async function generatePDF(titulo, cohorte, numSemestres, heading, conten
         autoTable(doc, {
             headStyles: {
                 fillColor: '#1B396A',
-                fontSize: 9,
+                fontSize: 8,
             },
             bodyStyles: {
-                fontSize: 8,
+                fontSize: 7,
             },
             margin: { top: 215 },
             html: '#tabla ',
