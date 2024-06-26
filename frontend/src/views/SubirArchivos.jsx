@@ -133,7 +133,7 @@ const SubirArchivos = () => {
                 <ResultadosLog opened={opened} close={handlers.close} info={info}/>
             </Group>
             <Center mt="sm">
-                <Link style={{ textDecoration: 'none'}} to="/documents/plantillas/pdf/Manual.pdf" target="_blank" download >
+                <Link style={{ textDecoration: 'none'}} to="/documents/plantillas/pdf/Manual de usuario.pdf" target="_blank" download >
                     <Button rightIcon={<Download />}  variant='filled' color='negro'  mt="10px">Descargar Manual</Button>
                 </Link>
             </Center>
