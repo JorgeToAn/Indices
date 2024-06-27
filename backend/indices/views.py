@@ -10,6 +10,20 @@ from registros.periodos import calcularPeriodos
 
 from decimal import Decimal
 
+def calcularTasaPermanencia(poblacion_activa, poblacion_nuevo_ingreso):
+    if poblacion_nuevo_ingreso > 0:
+        tasa_permanencia = Decimal((poblacion_activa*100)/poblacion_nuevo_ingreso)
+        tasa_permanencia = round(tasa_permanencia, 2)
+    else:
+        tasa_permanencia = 0
+    return tasa_permanencia
+
+def calcularDesercion(alumnos_cohorte_anterior, poblacion_activa, egresados):
+    desercion = alumnos_cohorte_anterior - poblacion_activa - egresados
+    if desercion < 0:
+        desercion = 0
+    return desercion
+
 class IndicesPermanencia(APIView):
     """
     Vista para listar la cantidad de alumnos por carrera.
@@ -45,26 +59,27 @@ class IndicesPermanencia(APIView):
         alumnos_corte_anterior = 0
         for periodo in periodos:
             if periodo == cohorte:
+                hombres = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=cohorte, alumno__plan__carrera__pk=carrera, alumno__curp__genero='H'))
+                mujeres = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=cohorte, alumno__plan__carrera__pk=carrera, alumno__curp__genero='M'))
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=cohorte,alumno__plan__carrera__pk=carrera))
-                poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
+                poblacion_act = Ingreso.objects.aggregate(poblacion=activos, hombres=hombres, mujeres=mujeres)
                 poblacion_nuevo_ingreso = poblacion_act['poblacion']
                 alumnos_corte_anterior = poblacion_act['poblacion']
             else:
+                hombres = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno__plan__carrera__pk=carrera, alumno__curp__genero='H'))
+                mujeres = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno__plan__carrera__pk=carrera, alumno__curp__genero='M'))
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno_id__in=alumnos, alumno__plan__carrera__pk=carrera))
-                poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
+                poblacion_act = Ingreso.objects.aggregate(poblacion=activos, hombres=hombres, mujeres=mujeres)
             inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo))
-            poblacion_egr = Egreso.objects.aggregate(egresados=inactivos)
-            poblacion_titulo = Titulacion.objects.aggregate(titulados=inactivos)
-            if poblacion_nuevo_ingreso > 0:
-                tasa_permanencia = Decimal((poblacion_act['poblacion']*100)/poblacion_nuevo_ingreso)
-                tasa_permanencia = round(tasa_permanencia, 2)
-            else:
-                tasa_permanencia = 0
-            desercion = alumnos_corte_anterior - poblacion_act['poblacion'] - poblacion_egr['egresados']
-            if desercion < 0:
-                desercion = 0
+            hombres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo, alumno__curp__genero='H'))
+            mujeres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo, alumno__curp__genero='M'))
+            poblacion_egr = Egreso.objects.aggregate(egresados=inactivos, hombres=hombres, mujeres=mujeres)
+            poblacion_titulo = Titulacion.objects.aggregate(titulados=inactivos, hombres=hombres, mujeres=mujeres)
+
+            tasa_permanencia = calcularTasaPermanencia(poblacion_act['poblacion'], poblacion_nuevo_ingreso)
+            desercion = calcularDesercion(alumnos_corte_anterior, poblacion_act['poblacion'], poblacion_egr['egresados'])
             alumnos_corte_anterior = poblacion_act['poblacion']
-            response_data[periodo] = dict(poblacion=poblacion_act['poblacion'], egresados=poblacion_egr['egresados'], titulados=poblacion_titulo['titulados'], desercion=desercion, tasa_permanencia=tasa_permanencia)
+            response_data[periodo] = dict(hombres=poblacion_act['hombres'], mujeres=poblacion_act['mujeres'], hombres_egresados=poblacion_egr['hombres'], mujeres_egresadas=poblacion_egr['mujeres'], hombres_titulados=poblacion_titulo['hombres'], mujeres_tituladas=poblacion_titulo['mujeres'], desercion=desercion, tasa_permanencia=tasa_permanencia)
         return Response(response_data)
 
 class IndicesEgreso(APIView):
@@ -100,23 +115,28 @@ class IndicesEgreso(APIView):
         tasa_egreso = 0
         alumnos = Ingreso.objects.filter(tipo__in=tipos, periodo=cohorte,alumno__plan__carrera__pk=carrera).annotate(clave=F("alumno_id")
             ).values("clave")
-        print(list(alumnos))
         for periodo in periodos:
             if periodo == cohorte:
+                hombres = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=cohorte, alumno__plan__carrera__pk=carrera, alumno__curp__genero='H'))
+                mujeres = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=cohorte, alumno__plan__carrera__pk=carrera, alumno__curp__genero='M'))
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=cohorte,alumno__plan__carrera__pk=carrera))
-                poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
+                poblacion_act = Ingreso.objects.aggregate(poblacion=activos, hombres=hombres, mujeres=mujeres)
                 poblacion_nuevo_ingreso = poblacion_act['poblacion']
             else:
+                hombres = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno__plan__carrera__pk=carrera, alumno__curp__genero='H'))
+                mujeres = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno__plan__carrera__pk=carrera, alumno__curp__genero='M'))
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno_id__in=alumnos, alumno__plan__carrera__pk=carrera))
-                poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
+                poblacion_act = Ingreso.objects.aggregate(poblacion=activos, hombres=hombres, mujeres=mujeres)
             inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, alumno__plan__carrera__pk=carrera, periodo=periodo))
-            poblacion_egr = Egreso.objects.aggregate(egresados=inactivos)
+            hombres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo, alumno__curp__genero='H'))
+            mujeres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo, alumno__curp__genero='M'))
+            poblacion_egr = Egreso.objects.aggregate(egresados=inactivos, hombres=hombres, mujeres=mujeres)
             if poblacion_nuevo_ingreso > 0:
                 tasa_egreso += Decimal((poblacion_egr['egresados']*100)/poblacion_nuevo_ingreso)
                 tasa_egreso = round(tasa_egreso, 2)
             else:
                 tasa_egreso = 0
-            response_data[periodo] = dict(poblacion=poblacion_act['poblacion'], egresados=poblacion_egr['egresados'], tasa_egreso=tasa_egreso)
+            response_data[periodo] = dict(hombres=poblacion_act['hombres'], mujeres=poblacion_act['mujeres'], hombres_egresados=poblacion_egr['hombres'], mujeres_egresadas=poblacion_egr['mujeres'], tasa_egreso=tasa_egreso)
         return Response(response_data)
 
 class IndicesTitulacion(APIView):
@@ -154,21 +174,27 @@ class IndicesTitulacion(APIView):
             ).values("clave")
         for periodo in periodos:
             if periodo == cohorte:
+                hombres = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=cohorte, alumno__plan__carrera__pk=carrera, alumno__curp__genero='H'))
+                mujeres = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=cohorte, alumno__plan__carrera__pk=carrera, alumno__curp__genero='M'))
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=cohorte, alumno__plan__carrera__pk=carrera))
-                poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
+                poblacion_act = Ingreso.objects.aggregate(poblacion=activos, hombres=hombres, mujeres=mujeres)
                 poblacion_nuevo_ingreso = poblacion_act['poblacion']
             else:
+                hombres = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno_id__in=alumnos, alumno__plan__carrera__pk=carrera, alumno__curp__genero='H'))
+                mujeres = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno_id__in=alumnos, alumno__plan__carrera__pk=carrera, alumno__curp__genero='M'))
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno_id__in=alumnos, alumno__plan__carrera__pk=carrera))
-                poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
+                poblacion_act = Ingreso.objects.aggregate(poblacion=activos, hombres=hombres, mujeres=mujeres)
             inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo))
-            poblacion_egr = Egreso.objects.aggregate(egresados=inactivos)
-            poblacion_titulo = Titulacion.objects.aggregate(titulados=inactivos)
+            hombres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo, alumno__curp__genero='H'))
+            mujeres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo, alumno__curp__genero='M'))
+            poblacion_egr = Egreso.objects.aggregate(egresados=inactivos, hombres=hombres, mujeres=mujeres)
+            poblacion_titulo = Titulacion.objects.aggregate(titulados=inactivos, hombres=hombres, mujeres=mujeres)
             if poblacion_nuevo_ingreso > 0:
                 tasa_titulacion += Decimal((poblacion_titulo['titulados']*100)/poblacion_nuevo_ingreso)
                 tasa_titulacion = round(tasa_titulacion, 2)
             else:
                 tasa_titulacion = 0
-            response_data[periodo] = dict(poblacion=poblacion_act['poblacion'], egresados=poblacion_egr['egresados'], titulados=poblacion_titulo['titulados'], tasa_titulacion=tasa_titulacion)
+            response_data[periodo] = dict(hombres=poblacion_act['hombres'], mujeres=poblacion_act['mujeres'], hombres_egresados=poblacion_egr['hombres'], mujeres_egresadas=poblacion_egr['mujeres'], hombres_titulados=poblacion_titulo['hombres'], mujeres_tituladas=poblacion_titulo['mujeres'], tasa_titulacion=tasa_titulacion)
 
         return Response(response_data)
 
@@ -209,13 +235,19 @@ class IndicesDesercion(APIView):
         egreso_anterior = 0
         for periodo in periodos:
             if periodo == cohorte:
+                hombres = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, alumno_id__in=alumnos, periodo=cohorte,alumno__plan__carrera__pk=carrera, alumno__curp__genero='H'))
+                mujeres = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, alumno_id__in=alumnos, periodo=cohorte,alumno__plan__carrera__pk=carrera, alumno__curp__genero='M'))
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, alumno_id__in=alumnos, periodo=cohorte,alumno__plan__carrera__pk=carrera))
-                poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
+                poblacion_act = Ingreso.objects.aggregate(poblacion=activos, hombres=hombres, mujeres=mujeres)
+
                 poblacion_nuevo_ingreso = poblacion_act['poblacion']
                 alumnos_corte_anterior = poblacion_act['poblacion']
             else:
+                hombres = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', alumno_id__in=alumnos, periodo=periodo,alumno__plan__carrera__pk=carrera, alumno__curp__genero='H'))
+                mujeres = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', alumno_id__in=alumnos, periodo=periodo,alumno__plan__carrera__pk=carrera, alumno__curp__genero='M'))
                 activos = Count("alumno__plan__carrera__pk", filter=Q(tipo='RE', periodo=periodo, alumno_id__in=alumnos, alumno__plan__carrera__pk=carrera))
-                poblacion_act = Ingreso.objects.aggregate(poblacion=activos)
+                poblacion_act = Ingreso.objects.aggregate(poblacion=activos, hombres=hombres, mujeres=mujeres)
+
             inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=alumnos, periodo=periodo, alumno__plan__carrera__pk=carrera))
             poblacion_egr = Egreso.objects.aggregate(egresados=inactivos)
             desercion = alumnos_corte_anterior - poblacion_act['poblacion'] - egreso_anterior
@@ -229,6 +261,6 @@ class IndicesDesercion(APIView):
                 tasa_desercion = 0
             alumnos_corte_anterior = poblacion_act['poblacion']
             egreso_anterior = poblacion_egr['egresados']
-            response_data[periodo] = dict(poblacion=poblacion_act['poblacion'], egresados=poblacion_egr['egresados'], desercion=desercion, tasa_desercion=tasa_desercion)
+            response_data[periodo] = dict(hombres=poblacion_act['hombres'], mujeres=poblacion_act['mujeres'], egresados=poblacion_egr['egresados'], desercion=desercion, tasa_desercion=tasa_desercion)
 
         return Response(response_data)
