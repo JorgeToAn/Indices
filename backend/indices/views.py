@@ -7,6 +7,7 @@ from rest_framework import permissions
 
 from registros.models import Ingreso, Egreso, Titulacion
 from registros.periodos import calcularPeriodos
+from personal.models import Personal
 
 from decimal import Decimal
 
@@ -17,12 +18,6 @@ def calcularTasa(poblacion, poblacion_nuevo_ingreso):
     else:
         tasa_permanencia = 0
     return tasa_permanencia
-
-def calcularDesercion(alumnos_cohorte_anterior, poblacion_activa, egresados):
-    desercion = alumnos_cohorte_anterior - poblacion_activa - egresados
-    if desercion < 0:
-        desercion = 0
-    return desercion
 
 def calcularTipos(nuevo_ingreso, traslado_equivalencia):
     tipos = []
@@ -49,6 +44,14 @@ def obtenerPoblacionInactiva(lista_alumnos, periodo):
                  'titulacion': poblacion_titulo
                 }
     return poblacion
+
+def obtenerPoblacionEgreso(lista_alumnos, periodo):
+    inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=lista_alumnos, periodo=periodo))
+    hombres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=lista_alumnos, periodo=periodo, alumno__curp__genero='H'))
+    mujeres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=lista_alumnos, periodo=periodo, alumno__curp__genero='M'))
+    poblacion_egr = Egreso.objects.aggregate(egresados=inactivos, hombres=hombres, mujeres=mujeres)
+
+    return poblacion_egr
 
 class IndicesPermanencia(APIView):
     """
@@ -78,19 +81,25 @@ class IndicesPermanencia(APIView):
         poblacion_nuevo_ingreso = 0
         alumnos = Ingreso.objects.filter(tipo__in=tipos, periodo=cohorte,alumno__plan__carrera__pk=carrera).annotate(clave=F("alumno_id")
             ).values("clave")
-        alumnos_corte_anterior = 0
+        periodo_anterior=cohorte
         for periodo in periodos:
             if periodo == cohorte:
                 poblacion_act = obtenerPoblacionActiva(tipos, alumnos, cohorte, carrera)
                 poblacion_nuevo_ingreso = poblacion_act['poblacion']
-                alumnos_corte_anterior = poblacion_act['poblacion']
+                alumnos_periodo_anterior = alumnos
+                alumnos_periodo = Ingreso.objects.filter(tipo__in=tipos, periodo=periodo, alumno_id__in=alumnos, alumno__plan__carrera__pk=carrera).annotate(clave=F("alumno_id")
+                    ).values("clave")
             else:
                 poblacion_act = obtenerPoblacionActiva(['RE'], alumnos, periodo, carrera)
+                alumnos_periodo = Ingreso.objects.filter(tipo='RE', periodo=periodo, alumno_id__in=alumnos, alumno__plan__carrera__pk=carrera).annotate(clave=F("alumno_id")
+                    ).values("clave")
             poblacion_inactiva = obtenerPoblacionInactiva(alumnos, periodo)
 
             tasa_permanencia = calcularTasa(poblacion_act['poblacion'], poblacion_nuevo_ingreso)
-            desercion = calcularDesercion(alumnos_corte_anterior, poblacion_act['poblacion'], poblacion_inactiva['egreso']['egresados'])
-            alumnos_corte_anterior = poblacion_act['poblacion']
+            egresados_periodo = Egreso.objects.filter(periodo=periodo_anterior, alumno_id__in=alumnos).annotate(clave=F("alumno_id")).values("clave")
+            desercion = calcularDesercion(alumnos_periodo_anterior, alumnos_periodo, egresados_periodo)
+            alumnos_periodo_anterior = alumnos_periodo
+            periodo_anterior = periodo
             response_data[periodo] = dict(
                                             hombres=poblacion_act['hombres'],
                                             mujeres=poblacion_act['mujeres'],
@@ -98,7 +107,9 @@ class IndicesPermanencia(APIView):
                                             mujeres_egresadas=poblacion_inactiva['egreso']['mujeres'],
                                             hombres_titulados=poblacion_inactiva['titulacion']['hombres'],
                                             mujeres_tituladas=poblacion_inactiva['titulacion']['mujeres'],
-                                            desercion=desercion, tasa_permanencia=tasa_permanencia
+                                            hombres_desertores=desercion['hombres'],
+                                            mujeres_desertoras=desercion['mujeres'],
+                                            tasa_permanencia=tasa_permanencia
                                         )
         return Response(response_data)
 
@@ -213,24 +224,39 @@ class IndicesDesercion(APIView):
         desercion_total = 0
         alumnos = Ingreso.objects.filter(tipo__in=tipos, periodo=cohorte,alumno__plan__carrera__pk=carrera).annotate(clave=F("alumno_id")
             ).values("clave")
-        alumnos_corte_anterior = 0
-        egreso_anterior = 0
+        periodo_anterior = cohorte
         for periodo in periodos:
             if periodo == cohorte:
                 poblacion_act = obtenerPoblacionActiva(tipos, alumnos, periodo, carrera)
-
                 poblacion_nuevo_ingreso = poblacion_act['poblacion']
-                alumnos_corte_anterior = poblacion_act['poblacion']
+                alumnos_periodo_anterior = alumnos
+                alumnos_periodo = Ingreso.objects.filter(tipo__in=tipos, periodo=periodo, alumno_id__in=alumnos, alumno__plan__carrera__pk=carrera).annotate(clave=F("alumno_id")
+                    ).values("clave")
             else:
                 poblacion_inactiva = obtenerPoblacionInactiva(alumnos, periodo)
+                alumnos_periodo = Ingreso.objects.filter(tipo='RE', periodo=periodo, alumno_id__in=alumnos, alumno__plan__carrera__pk=carrera).annotate(clave=F("alumno_id")
+                    ).values("clave")
             poblacion_inactiva = obtenerPoblacionInactiva(alumnos, periodo)
 
-            desercion = calcularDesercion(alumnos_corte_anterior, poblacion_act['poblacion'], egreso_anterior)
-            desercion_total += desercion
-            tasa_desercion = calcularTasa(desercion, poblacion_nuevo_ingreso)
+            egresados_periodo = Egreso.objects.filter(periodo=periodo_anterior, alumno_id__in=alumnos).annotate(clave=F("alumno_id")).values("clave")
+            desercion = calcularDesercion(alumnos_periodo_anterior, alumnos_periodo, egresados_periodo)
+            alumnos_periodo_anterior = alumnos_periodo
+            desercion_total += desercion['hombres'] + desercion['mujeres']
+            tasa_desercion = calcularTasa(desercion_total, poblacion_nuevo_ingreso)
 
-            alumnos_corte_anterior = poblacion_act['poblacion']
-            egreso_anterior = poblacion_inactiva['egreso']['egresados']
-            response_data[periodo] = dict(hombres=poblacion_act['hombres'], mujeres=poblacion_act['mujeres'], hombres_egresados=poblacion_inactiva['egreso']['hombres'], mujeres_egresadas=poblacion_inactiva['egreso']['mujeres'], desercion=desercion, tasa_desercion=tasa_desercion)
+            periodo_anterior = periodo
+            response_data[periodo] = dict(hombres=poblacion_act['hombres'], mujeres=poblacion_act['mujeres'], hombres_egresados=poblacion_inactiva['egreso']['hombres'], mujeres_egresadas=poblacion_inactiva['egreso']['mujeres'], hombres_desertores=desercion['hombres'], mujeres_desertoras=desercion['mujeres'], tasa_desercion=tasa_desercion)
 
         return Response(response_data)
+
+def calcularDesercion(lista_alumnos_periodo_anterior, lista_alumnos_periodo_actual, lista_alumnos_egresados):
+    desertores = {'hombres': 0, 'mujeres': 0}
+    for alumno in lista_alumnos_periodo_anterior:
+        if alumno not in lista_alumnos_periodo_actual:
+            if alumno not in lista_alumnos_egresados:
+                datos_alumno = Personal.objects.get(alumno__no_control=alumno['clave'])
+                if datos_alumno.genero == 'H':
+                    desertores['hombres'] += 1
+                elif datos_alumno.genero == 'M':
+                    desertores['mujeres'] += 1
+    return desertores
