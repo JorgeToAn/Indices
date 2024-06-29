@@ -11,20 +11,20 @@ from carreras.models import Carrera
 from registros.periodos import calcularPeriodos, getPeriodoActual
 
 from decimal import Decimal
-from indices.views import obtenerPoblacionEgreso, obtenerPoblacionActiva, calcularTasa, calcularTipos
+from indices.views import obtenerPoblacionEgreso, obtenerPoblacionTitulada, obtenerPoblacionActiva, calcularTasa, calcularTipos
 
-def calcularRegistros(tipo, semestre_inicio, semestre_final, lista_alumnos, periodos, poblacion_nuevo_ingreso):
-    registros__semestres = {}
-    for sem in range(semestre_inicio, semestre_final):
-        egreso_periodo = obtenerPoblacionEgreso(lista_alumnos, periodos[sem])
-        print(egreso_periodo)
-        egreso_total = egreso_total + egreso_periodo['egresados']
-        registros__semestres[sem+1] = dict(valor=egreso_periodo['egresados'])
-    registros__semestres['total_%d' % 1 if semestre_final <= 12 else 2] = dict(valor=egreso_total)
-    tasa_egreso = calcularTasa(egreso_total, poblacion_nuevo_ingreso)
-    registros__semestres['tasa_egreso_%d' % 1 if semestre_final <= 12 else 2] = dict(valor="{tasa} %".format(tasa=tasa_egreso))
+def actualizarTotales(registros, datos_nuevos):
+    registros['total'] = registros['total'] + datos_nuevos['total']
+    registros['hombres'] = registros['hombres'] + datos_nuevos['hombres']
+    registros['mujeres'] = registros['mujeres'] + datos_nuevos['mujeres']
+    return registros
 
-    return registros__semestres
+def crearTotales():
+    registros = {}
+    registros['total'] = 0
+    registros['hombres'] = 0
+    registros['mujeres'] = 0
+    return registros
 
 class ReportesNuevoIngreso(APIView):
     """
@@ -94,35 +94,26 @@ class ReportesEgreso(APIView):
             alumnos = Ingreso.objects.filter(tipo__in=tipos, periodo=cohorte,alumno__plan__carrera__pk=carrera[0]).annotate(clave=F("alumno_id")
                 ).values("clave")
             poblacion_nuevo_ingreso = obtenerPoblacionActiva(tipos, alumnos, cohorte, carrera[0])
-            if int(semestres) <= 12:
-                egreso_total = 0
-                for sem in range(8,int(semestres)):
-                    egreso_periodo = obtenerPoblacionEgreso(alumnos, periodos[sem])
-                    egreso_total = egreso_total + egreso_periodo['egresados']
-                    registros__semestres[sem+1] = dict(hombres=egreso_periodo['hombres'], mujeres=egreso_periodo['mujeres'])
-                registros__semestres['total_1'] = dict(valor=egreso_total)
-                tasa_egreso = calcularTasa(egreso_total, poblacion_nuevo_ingreso['poblacion'])
-                registros__semestres['tasa_egreso_1'] = dict(valor="{tasa} %".format(tasa=tasa_egreso))
-            else:
-                egreso_total = 0
-                registros__semestres = {}
+            registros__semestres = {}
+            egreso_total = crearTotales()
 
-                for i in range(8,12):
-                    egreso_periodo = obtenerPoblacionEgreso(alumnos, periodos[i])
-                    egreso_total = egreso_total + egreso_periodo['egresados']
-                    registros__semestres[i+1] = dict(hombres=egreso_periodo['hombres'], mujeres=egreso_periodo['mujeres'])
-                registros__semestres['total_1'] = dict(valor=egreso_total)
-                tasa_egreso = calcularTasa(egreso_total, poblacion_nuevo_ingreso['poblacion'])
-                registros__semestres['tasa_egreso_1'] = dict(valor="{tasa} %".format(tasa=tasa_egreso))
+            for sem in range(8,int(semestres) if int(semestres) <= 12 else 12):
+                egreso_periodo = obtenerPoblacionEgreso(alumnos, periodos[sem])
+                egreso_total = actualizarTotales(egreso_total, egreso_periodo)
+                registros__semestres[sem+1] = dict(hombres=egreso_periodo['hombres'], mujeres=egreso_periodo['mujeres'])
+
+            registros__semestres['total_1'] = dict(hombres=egreso_total['hombres'], mujeres=egreso_total['mujeres'])
+            tasa_egreso = calcularTasa(egreso_total['total'], poblacion_nuevo_ingreso['poblacion'])
+            registros__semestres['tasa_egreso_1'] = dict(valor="{tasa} %".format(tasa=tasa_egreso))
+
+            egreso_total = crearTotales()
+            if int(semestres) > 12:
                 for i in range(12,int(semestres)):
                     egreso_periodo = obtenerPoblacionEgreso(alumnos, periodos[i])
-                    egreso_total = egreso_total + egreso_periodo['egresados']
-                    if i > 12:
-                        registros__semestres[13]['hombres'] += egreso_periodo['hombres']
-                        registros__semestres[13]['mujeres'] += egreso_periodo['mujeres']
-                    else:
-                        registros__semestres[13] = dict(hombres=egreso_periodo['hombres'], mujeres=egreso_periodo['mujeres'])
-                tasa_egreso = calcularTasa(egreso_total, poblacion_nuevo_ingreso['poblacion'])
+                    egreso_total = actualizarTotales(egreso_total, egreso_periodo)
+
+                registros__semestres[13] = dict(hombres=egreso_total['hombres'], mujeres=egreso_total['mujeres'])
+                tasa_egreso = calcularTasa(egreso_total['total'], poblacion_nuevo_ingreso['poblacion'])
                 registros__semestres['tasa_egreso_2'] = dict(valor="{tasa} %".format(tasa=tasa_egreso))
             response_data[carrera[2]] = dict(carrera=carrera[2],poblacion_nuevo_ingreso=poblacion_nuevo_ingreso , registros=registros__semestres)
 
@@ -147,11 +138,7 @@ class ReportesTitulacion(APIView):
         cohorte = request.query_params.get('cohorte') if request.query_params.get('cohorte') else getPeriodoActual()
         semestres = request.query_params.get('semestres') if request.query_params.get('semestres') else '9'
 
-        tipos = []
-        if nuevo_ingreso:
-            tipos.extend(['EX', 'CO'])
-        if traslado_equivalencia:
-            tipos.extend(['TR', 'EQ'])
+        tipos = calcularTipos(nuevo_ingreso, traslado_equivalencia)
 
         response_data = {}
         periodos = calcularPeriodos(cohorte, int(semestres))
@@ -159,49 +146,25 @@ class ReportesTitulacion(APIView):
         for carrera in carreras:
             alumnos = Ingreso.objects.filter(tipo__in=tipos, periodo=cohorte,alumno__plan__carrera__pk=carrera[0]).annotate(clave=F("alumno_id")
                 ).values("clave")
-            activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=cohorte,alumno__plan__carrera__pk=carrera[0], alumno_id__in=alumnos))
-            nuevo_ingreso = Ingreso.objects.aggregate(poblacion=activos)
-            poblacion_nuevo_ingreso = nuevo_ingreso['poblacion']
-            titulados_total = 0
-            if int(semestres) <= 12:
-                registros__semestres = {}
-                for i in range(8,int(semestres)):
-                    inactivos = Count("alumno__plan__carrera__pk", filter=Q(periodo=periodos[i], alumno_id__in=alumnos))
-                    titulados_periodo = Titulacion.objects.aggregate(titulados=inactivos)
-                    titulados_total = titulados_total + titulados_periodo['titulados']
-                    registros__semestres[i+1] = dict(valor=titulados_periodo['titulados'])
-                registros__semestres['total_1'] = dict(valor=titulados_total)
-                if poblacion_nuevo_ingreso > 0:
-                    tasa_titulados = Decimal(titulados_total/poblacion_nuevo_ingreso)
-                    tasa_titulados = round(tasa_titulados, 2)
-                else:
-                    tasa_titulados = 0
-                registros__semestres['tasa_titulacion_1'] = dict(valor="{tasa_titulados} %".format(tasa_titulados=tasa_titulados))
-            else:
-                registros__semestres = {}
-                for i in range(8,12):
-                    inactivos = Count("alumno__plan__carrera__pk", filter=Q(periodo=periodos[i], alumno_id__in=alumnos))
-                    titulados_periodo = Titulacion.objects.aggregate(titulados=inactivos)
-                    titulados_total = titulados_total + titulados_periodo['titulados']
-                    registros__semestres[i+1] = dict(valor=titulados_periodo['titulados'])
-                registros__semestres['total_1'] = dict(valor=titulados_total)
-                if poblacion_nuevo_ingreso > 0:
-                    tasa_titulados = Decimal(titulados_total/poblacion_nuevo_ingreso)
-                    tasa_titulados = round(tasa_titulados, 2)
-                else:
-                    tasa_titulados = 0
-                registros__semestres['tasa_titulacion_1'] = dict(valor="{tasa_titulados} %".format(tasa_titulados=tasa_titulados))
+            registros__semestres = {}
+            poblacion_nuevo_ingreso = obtenerPoblacionActiva(tipos, alumnos, cohorte, carrera[0])
+            titulados_total = crearTotales()
+            for i in range(8,int(semestres) if int(semestres) <= 12 else 12):
+                titulados_periodo = obtenerPoblacionTitulada(alumnos, periodos[i])
+                titulados_total = actualizarTotales(titulados_total, titulados_periodo)
+                registros__semestres[i+1] = dict(hombres=titulados_periodo['hombres'], mujeres=titulados_periodo['mujeres'])
+
+            registros__semestres['total_1'] = dict(hombres=titulados_total['hombres'], mujeres=titulados_total['mujeres'])
+            tasa_titulados = calcularTasa(titulados_total['total'], poblacion_nuevo_ingreso['poblacion'])
+            registros__semestres['tasa_titulacion_1'] = dict(valor="{tasa_titulados} %".format(tasa_titulados=tasa_titulados))
+
+            titulados_total = crearTotales()
+            if int(semestres) > 12:
                 for i in range(12,int(semestres)):
-                    inactivos = Count("alumno__plan__carrera__pk", filter=Q(periodo=periodos[i], alumno_id__in=alumnos))
-                    titulados_periodo = Titulacion.objects.aggregate(titulados=inactivos)
-                    titulados_total = titulados_total + titulados_periodo['titulados']
-                    registros__semestres[i+1] = dict(valor=titulados_periodo['titulados'])
-                registros__semestres['total_2'] = dict(valor=titulados_total)
-                if poblacion_nuevo_ingreso > 0:
-                    tasa_titulados = Decimal(titulados_total/poblacion_nuevo_ingreso)
-                    tasa_titulados = round(tasa_titulados, 2)
-                else:
-                    tasa_titulados = 0
+                    titulados_periodo = obtenerPoblacionTitulada(alumnos, periodos[i])
+                    titulados_total = actualizarTotales(titulados_total, titulados_periodo)
+                registros__semestres[13] = dict(hombres=titulados_total['hombres'], mujeres=titulados_total['mujeres'])
+                tasa_titulados = calcularTasa(titulados_total['total'], poblacion_nuevo_ingreso['poblacion'])
                 registros__semestres['tasa_titulacion_2'] = dict(valor="{tasa_titulados} %".format(tasa_titulados=tasa_titulados))
             response_data[carrera[2]] = dict(poblacion_nuevo_ingreso=poblacion_nuevo_ingreso , registros=registros__semestres)
 

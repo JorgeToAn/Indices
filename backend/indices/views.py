@@ -49,9 +49,17 @@ def obtenerPoblacionEgreso(lista_alumnos, periodo):
     inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=lista_alumnos, periodo=periodo))
     hombres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=lista_alumnos, periodo=periodo, alumno__curp__genero='H'))
     mujeres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=lista_alumnos, periodo=periodo, alumno__curp__genero='M'))
-    poblacion_egr = Egreso.objects.aggregate(egresados=inactivos, hombres=hombres, mujeres=mujeres)
+    poblacion_egr = Egreso.objects.aggregate(total=inactivos, hombres=hombres, mujeres=mujeres)
 
     return poblacion_egr
+
+def obtenerPoblacionTitulada(lista_alumnos, periodo):
+    inactivos = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=lista_alumnos, periodo=periodo))
+    hombres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=lista_alumnos, periodo=periodo, alumno__curp__genero='H'))
+    mujeres = Count("alumno__plan__carrera__pk", filter=Q(alumno_id__in=lista_alumnos, periodo=periodo, alumno__curp__genero='M'))
+    poblacion_titulacion = Titulacion.objects.aggregate(total=inactivos, hombres=hombres, mujeres=mujeres)
+
+    return poblacion_titulacion
 
 class IndicesPermanencia(APIView):
     """
