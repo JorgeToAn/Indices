@@ -45,6 +45,8 @@ const IndiceDesercion = () => {
                 setHeading(headers);
                 const datos = buildTablaIndices('desercion', tabla.data, numSemestres);
                 setData(datos);
+                console.log(datos);
+                console.log(headers);
             } catch (error) {
                 setHeading([[],[]]);
                 setData([]);

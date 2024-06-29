@@ -27,7 +27,13 @@ export const buildTablaReportes = (data) => {
             else
                 row.push(reg[1]['hombres'], reg[1]['mujeres']);
         });
-        tabla.push(row);
+        if (row.length > 13) {
+            const inicioRegs = row.slice(0, 12);
+            inicioRegs.push(row[14], row[12], row[13], row[15]);
+            tabla.push(inicioRegs);
+        } else {
+            tabla.push(row);
+        }
     });
     console.log(tabla);
     return tabla;

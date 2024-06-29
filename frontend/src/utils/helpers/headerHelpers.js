@@ -57,60 +57,32 @@ export function anioPeriodo(periodoAnterior) {
 
 export function getReportesHeaders(tipo, cohorte, numSemestres){
     const tabla = [];
-    const firstRow = ['Carrera', 'Nuevo Ingreso', '', `Año de ${tipo === 1 ? 'titulación' : 'egreso'}`];
-    const secondRow = ['', '', ''];
-    const thirdRow = ['', '', ''];
+    const firstRow = ['Carrera', 'Nuevo Ingreso', '', `Año de ${tipo === 1 ? 'titulación' : 'egreso'}`, ''];
+    const secondRow = [' ', ' ', ' '];
+    const thirdRow = [' ', ' ', ' '];
     let periodo = cohorte.split("-");
     for (let i = 0; i < 8; i++){
         periodo = anioPeriodo(periodo);
     }
-    if (numSemestres <= 12) {
-        for (let i = 9; i <= numSemestres; i++) {
-            if (i > 9) {
-                firstRow.push('', '');
-            }
-            secondRow.push(periodo[0]+"-"+periodo[1]);
-            secondRow.push('');
-            periodo = anioPeriodo(periodo);
-            thirdRow.push(i);
-            thirdRow.push('');
+    for (let i = 9; i <= (numSemestres >= 12 ? 12 : numSemestres); i++) {
+        if (i > 9) {
+            firstRow.push('', '');
         }
-        firstRow.push('');
-        secondRow.push("Total");
-        firstRow.push(`Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
+        secondRow.push(periodo[0]+"-"+periodo[1]+" (H/M)");
         secondRow.push('');
+        periodo = anioPeriodo(periodo);
+        thirdRow.push(i);
         thirdRow.push('');
-        thirdRow.push('');
-    } else {
-        firstRow.push('', '', '', '','', '', '', '', `Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
-        for(let n = 9; n < 13; n++){
-            secondRow.push(periodo[0]+"-"+periodo[1]);
-            secondRow.push('');
-            periodo = anioPeriodo(periodo);
-            thirdRow.push(n);
-            thirdRow.push('');
-        }
-        secondRow.push("Total");
-        secondRow.push("");
-        thirdRow.push('');
-        thirdRow.push('');
-        for (let i = 13; i <= numSemestres; i++) {
-            if (i === 13){
-                firstRow.push(`Año  de ${tipo === 1 ? 'titulación' : 'egreso'}`);
-            } else {
-                firstRow.push('');
-            }
-            secondRow.push(periodo[0]+"-"+periodo[1]);
-            secondRow.push('');
-            periodo = anioPeriodo(periodo);
-            thirdRow.push(i);
-            thirdRow.push('');
-        }
-        firstRow.push('');
-        firstRow.push(`Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
-        secondRow.push("Total");
-        secondRow.push("");
-        thirdRow.push('');
+    }
+    firstRow.push('');
+    firstRow.push(`Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
+    secondRow.push("Total",' ');
+    thirdRow.push(' ', ' ');
+    if (numSemestres > 12) {
+        firstRow.push(`Año  de ${tipo === 1 ? 'titulación' : 'egreso'}`, '', `Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
+        secondRow.push(periodo[0]+"-"+periodo[1]+" (H/M)");
+        secondRow.push('');
+        thirdRow.push(13);
         thirdRow.push('');
     }
     tabla.push(firstRow);
