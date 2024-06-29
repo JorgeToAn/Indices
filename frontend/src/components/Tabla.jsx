@@ -39,10 +39,10 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                             { headers[0].filter((cell, i) => cell !== '').map((cells, index) => headers[2][headers[0].indexOf(cells)] === '' ? <th key={index} rowSpan="3">{ cells }</th> : <th key={index} colSpan={getBlankSpaces(cells.startsWith('Año  de') ? headers[0].lastIndexOf(cells) : headers[0].indexOf(cells))}>{ cells }</th>)}
                         </tr>
                         <tr>
-                            { headers[1].filter((cell, index) => cell !== '').map((cell, index) => headers[2][headers[1].indexOf(cell)] === '' ? <th style={{top: '42.7px'}} key={index} rowSpan="2">{ cell }</th> : <th style={{top: '42.7px'}} key={index}>{ cell }</th>)}
+                            { headers[1].filter((cell, index) => cell !== '').map((cell, index) => headers[2][headers[1].indexOf(cell)] === '' ? <th style={{top: '42.7px'}} key={index} rowSpan="2" colSpan={getBlankSpaces2(headers[1].indexOf(cell), headers[1])}>{ cell }</th> : <th style={{top: '42.7px'}} colSpan={getBlankSpaces2(headers[1].indexOf(cell), headers[1])} key={index}>{ cell }</th>)}
                         </tr>
                         <tr>
-                            { headers[2].filter((cell, index) => cell !== '').map((cell, index) => <th style={{top: '85.4px'}} key={index}>{ cell }</th>)}
+                            { headers[2].filter((cell, index) => cell !== '').map((cell, index) => <th style={{top: '85.4px'}} colSpan={getBlankSpaces2(headers[2].indexOf(cell), headers[2])} key={index}>{ cell }</th>)}
                         </tr>
                     </thead>
                 :

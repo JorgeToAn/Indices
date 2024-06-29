@@ -4,21 +4,27 @@ export async function getIndicesHeaders(tipo, cohorte, carrera) {
     const tabla = [];
     const nombreCarrera = await getNombreCarrera(carrera);
     tabla.push(["Indices de rendimiento escolar cohorte generacional"+' '+cohorte+' '+nombreCarrera]);
+    const row = ['Semestre', 'Periodo', 'Inscritos (H/M)', '', 'Egresados (H/M)', ''];
     switch(tipo) {
         case 1:
-            tabla.push(['Semestre', 'Periodo', 'Inscritos', '', 'Egresados', '', 'Desercion', '', 'Tasa de retencion']);
+            row.push('Desercion (H/M)', '', 'Tasa de retencion');
+            tabla.push(row);
             break;
         case 2:
-            tabla.push(['Semestre', 'Periodo', 'Inscritos', '', 'Egresados', '', 'Desercion', '', 'Tasa de desercion escolar']);
+            row.push('Desercion (H/M)', '', 'Tasa de desercion escolar');
+            tabla.push(row);
             break;
         case 3:
-            tabla.push(['Semestre', 'Periodo', 'Inscritos', '', 'Egresados', '', 'Titulados', '', 'Eficiencia de titulacion']);
+            row.push('Titulados (H/M)', '', 'Eficiencia de titulacion');
+            tabla.push(row);
             break;
         case 4:
-            tabla.push(['Semestre', 'Periodo', 'Inscritos', '', 'Egresados', '', 'Eficiencia terminal']);
+            row.push('Eficiencia terminal');
+            tabla.push(row);
             break;
         default:
-            tabla.push(['Semestre', 'Periodo', 'Inscritos', '', 'Egresados', '', 'Desercion', '', 'Matricula final','Tasa de retencion']);
+            row.push('Desercion (H/M)', '', 'Matricula final','Tasa de retencion');
+            tabla.push(row);
     }
     return tabla;
 }
@@ -51,9 +57,9 @@ export function anioPeriodo(periodoAnterior) {
 
 export function getReportesHeaders(tipo, cohorte, numSemestres){
     const tabla = [];
-    const firstRow = ['Carrera', 'Nuevo Ingreso', `Año de ${tipo === 1 ? 'titulación' : 'egreso'}`];
-    const secondRow = ['', ''];
-    const thirdRow = ['', ''];
+    const firstRow = ['Carrera', 'Nuevo Ingreso', '', `Año de ${tipo === 1 ? 'titulación' : 'egreso'}`];
+    const secondRow = ['', '', ''];
+    const thirdRow = ['', '', ''];
     let periodo = cohorte.split("-");
     for (let i = 0; i < 8; i++){
         periodo = anioPeriodo(periodo);
@@ -61,11 +67,13 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
     if (numSemestres <= 12) {
         for (let i = 9; i <= numSemestres; i++) {
             if (i > 9) {
-                firstRow.push('');
+                firstRow.push('', '');
             }
             secondRow.push(periodo[0]+"-"+periodo[1]);
+            secondRow.push('');
             periodo = anioPeriodo(periodo);
             thirdRow.push(i);
+            thirdRow.push('');
         }
         firstRow.push('');
         secondRow.push("Total");
@@ -74,11 +82,13 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
         thirdRow.push('');
         thirdRow.push('');
     } else {
-        firstRow.push('', '', '', '', `Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
+        firstRow.push('', '', '', '','', '', '', '', `Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
         for(let n = 9; n < 13; n++){
             secondRow.push(periodo[0]+"-"+periodo[1]);
+            secondRow.push('');
             periodo = anioPeriodo(periodo);
             thirdRow.push(n);
+            thirdRow.push('');
         }
         secondRow.push("Total");
         secondRow.push("");
@@ -91,8 +101,10 @@ export function getReportesHeaders(tipo, cohorte, numSemestres){
                 firstRow.push('');
             }
             secondRow.push(periodo[0]+"-"+periodo[1]);
+            secondRow.push('');
             periodo = anioPeriodo(periodo);
             thirdRow.push(i);
+            thirdRow.push('');
         }
         firstRow.push('');
         firstRow.push(`Eficiencia de ${tipo === 1 ? 'titulación' : 'egreso'}`);
@@ -113,7 +125,8 @@ export function getNuevoIngresoHeaders(cohorte, numSemestres) {
     tabla.push(['']);
     let periodo = cohorte.split("-");
     for (let i = 0; i < numSemestres; i++) {
-        tabla[1].push(periodo[0]+"-"+periodo[1]);
+        tabla[1].push(periodo[0]+"-"+periodo[1]+" (H/M)");
+        tabla[1].push('');
         periodo = anioPeriodo(periodo);
     }
     return tabla;
