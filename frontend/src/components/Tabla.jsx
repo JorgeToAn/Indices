@@ -14,6 +14,18 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
         }
         return index > 0 ? headers[1].length-1 : headers[1].length;
     };
+
+    const getBlankSpaces2 = (index, list) => {
+        let blankSpaces = 1;
+        for (let i = index+1; i < list.length; i++) {
+            if(list[i] !== ''){
+                break;
+            } else {
+                blankSpaces++;
+            }
+        }
+        return blankSpaces;
+    };
     return(
 
         <ScrollArea w={smallSize ? '45vw': '80vw'} h="50vh" mah={500} maw={smallSize? 800: 1500} type='always' >
@@ -42,7 +54,7 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                         </tr>
                         <tr>
                             { select ? <th></th> : null}
-                            { headers[1].filter((cell, i) => cell !== '').map((cell, index) => cell === 'Nombre' ? <th style={{top: '42px'}} key={index} className='celda-nombre'>{cell}</th> : <th style={{top: '42px'}} key={index}>{cell}</th>) }
+                            { headers[1].filter((cell, i) => cell !== '').map((cells, index) => cells === 'Nombre' ? <th style={{top: '42px'}} key={index} className='celda-nombre'>{cells}</th> : <th style={{top: '42px'}} colSpan={getBlankSpaces2(headers[1].indexOf(cells), headers[1])} key={index}>{cells}</th>) }
                         </tr>
                     </thead>
                 :

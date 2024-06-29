@@ -105,7 +105,8 @@ class ReportesEgreso(APIView):
                 egreso_total = actualizarTotales(egreso_total, egreso_periodo)
                 registros__semestres[sem+1] = dict(hombres=egreso_periodo['hombres'], mujeres=egreso_periodo['mujeres'])
 
-            registros__semestres['total_1'] = dict(hombres=egreso_total['hombres'], mujeres=egreso_total['mujeres'])
+            # registros__semestres['total_1'] = dict(hombres=egreso_total['hombres'], mujeres=egreso_total['mujeres'])
+            registros__semestres['total_1'] = dict(valor=egreso_total['total'])
             tasa_egreso = calcularTasa(egreso_total['total'], poblacion_nuevo_ingreso['poblacion'])
             registros__semestres['tasa_egreso_1'] = dict(valor="{tasa} %".format(tasa=tasa_egreso))
 
@@ -157,7 +158,8 @@ class ReportesTitulacion(APIView):
                 titulados_total = actualizarTotales(titulados_total, titulados_periodo)
                 registros__semestres[i+1] = dict(hombres=titulados_periodo['hombres'], mujeres=titulados_periodo['mujeres'])
 
-            registros__semestres['total_1'] = dict(hombres=titulados_total['hombres'], mujeres=titulados_total['mujeres'])
+            # registros__semestres['total_1'] = dict(hombres=titulados_total['hombres'], mujeres=titulados_total['mujeres'])
+            registros__semestres['total_1'] = dict(valor=titulados_total['total'])
             tasa_titulados = calcularTasa(titulados_total['total'], poblacion_nuevo_ingreso['poblacion'])
             registros__semestres['tasa_titulacion_1'] = dict(valor="{tasa_titulados} %".format(tasa_titulados=tasa_titulados))
 
