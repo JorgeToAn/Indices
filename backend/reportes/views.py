@@ -26,6 +26,13 @@ def crearTotales():
     registros['mujeres'] = 0
     return registros
 
+def obtenerPoblacionNuevoIngreso(tipos_ingreso, periodo, carrera):
+    hombres = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos_ingreso, periodo=periodo,alumno__plan__carrera__pk=carrera, alumno__curp__genero='H'))
+    mujeres = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos_ingreso, periodo=periodo,alumno__plan__carrera__pk=carrera, alumno__curp__genero='M'))
+    activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos_ingreso, periodo=periodo,alumno__plan__carrera__pk=carrera))
+    poblacion = Ingreso.objects.aggregate(poblacion=activos, hombres=hombres, mujeres=mujeres)
+    return poblacion
+
 class ReportesNuevoIngreso(APIView):
     """
     Vista para listar la cantidad de alumnos de nuevo ingreso por carrera.
@@ -45,11 +52,7 @@ class ReportesNuevoIngreso(APIView):
         cohorte = request.query_params.get('cohorte') if request.query_params.get('cohorte') else getPeriodoActual()
         semestres = request.query_params.get('semestres') if request.query_params.get('semestres') else '9'
 
-        tipos = []
-        if nuevo_ingreso:
-            tipos.extend(['EX', 'CO'])
-        if traslado_equivalencia:
-            tipos.extend(['TR', 'EQ'])
+        tipos = calcularTipos(nuevo_ingreso,traslado_equivalencia)
 
         response_data = {}
         periodos = calcularPeriodos(cohorte, int(semestres))
@@ -59,9 +62,9 @@ class ReportesNuevoIngreso(APIView):
             for periodo in periodos:
                 plan_regs[periodo] = dict(periodo=periodo)
 
-                activos = Count("alumno__plan__carrera__pk", filter=Q(tipo__in=tipos, periodo=periodo,alumno__plan__carrera__pk=plan[0]))
-                nuevo_ingreso = Ingreso.objects.aggregate(poblacion=activos)
-                plan_regs[periodo] = dict(poblacion=nuevo_ingreso['poblacion'], periodo=periodo)
+                nuevo_ingreso = obtenerPoblacionNuevoIngreso(tipos, periodo, plan[0])
+
+                plan_regs[periodo] = dict(hombres=nuevo_ingreso['hombres'], mujeres=nuevo_ingreso['mujeres'], periodo=periodo)
             response_data[plan[2]] = plan_regs
 
         return Response(response_data)
