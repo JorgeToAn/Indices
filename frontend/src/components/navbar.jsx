@@ -254,7 +254,7 @@ const NavBar = () => {
                     </Menu>
                 </Group>
                 {/* Menu movil */}
-                <Menu trigger="click" openDelay={100} closeDelay={400} position="right" >
+                <Menu trigger="click" opened={opend} onChange={toggle} openDelay={100} closeDelay={400} position="right" >
                     <Menu.Target>
                         <Burger
                             opened={opend}
@@ -296,7 +296,9 @@ const NavBar = () => {
                                         <Text fw={600}>Indices</Text>
                                     </Group>
                                 </UnstyledButton>
-                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                <UnstyledButton variant="unstyled" className={classes.subLink} onClick={() => {
+                                navigate('/reportes');
+                            }}>
                                     <Group noWrap align="center">
                                         <div className="menu-movil-icon">
                                             <img src="/img/reportes.svg" alt="Icono Tablas" />
@@ -304,7 +306,9 @@ const NavBar = () => {
                                         <Text fw={600}>Reportes</Text>
                                     </Group>
                                 </UnstyledButton>
-                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                <UnstyledButton variant="unstyled" className={classes.subLink} onClick={() => {
+                                navigate('/cedulas');
+                            }}>
                                     <Group noWrap align="center">
                                         <div className="menu-movil-icon">
                                             <img src="/img/cedulas.svg" alt="Icono Tablas" />
@@ -312,7 +316,9 @@ const NavBar = () => {
                                         <Text fw={600}>Cédulas</Text>
                                     </Group>
                                 </UnstyledButton>
-                                <UnstyledButton variant="unstyled" className={classes.subLink}>
+                                <UnstyledButton variant="unstyled" className={classes.subLink} onClick={() => {
+                                navigate('/alumnos');
+                            }}>
                                     <Group noWrap align="center">
                                         <div className="menu-movil-icon">
                                             <img src="/img/alumnos.svg" alt="Icono Tablas" />

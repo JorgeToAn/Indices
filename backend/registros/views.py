@@ -168,7 +168,7 @@ class EgresoUpload(views.APIView):
         return data
 
     def post(self, request, filename, format=None):
-        ESTRUCTURA = [(r'^no_control$', 'NO_CONTROL'), (r'^[12][0-9]{3}[13]$', 'NUMERO DE PERIODO')]
+        ESTRUCTURA = [(r'^no_control$', 'NO_CONTROL'), (r'^[12][0-9]{3}[13]$', 'PERIODO')]
         file_obj = request.data['file']
         wb = openpyxl.load_workbook(file_obj, data_only=True)
         ws = wb.active
