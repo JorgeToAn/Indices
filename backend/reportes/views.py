@@ -61,9 +61,7 @@ class ReportesNuevoIngreso(APIView):
             plan_regs = {}
             for periodo in periodos:
                 plan_regs[periodo] = dict(periodo=periodo)
-
                 nuevo_ingreso = obtenerPoblacionNuevoIngreso(tipos, periodo, plan[0])
-
                 plan_regs[periodo] = dict(hombres=nuevo_ingreso['hombres'], mujeres=nuevo_ingreso['mujeres'], periodo=periodo)
             response_data[plan[2]] = plan_regs
 
