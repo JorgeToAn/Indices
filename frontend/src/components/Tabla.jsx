@@ -14,6 +14,18 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
         }
         return index > 0 ? headers[1].length-1 : headers[1].length;
     };
+
+    const getBlankSpaces2 = (index, list) => {
+        let blankSpaces = 1;
+        for (let i = index+1; i < list.length; i++) {
+            if(list[i] !== ''){
+                break;
+            } else {
+                blankSpaces++;
+            }
+        }
+        return blankSpaces;
+    };
     return(
 
         <ScrollArea w={smallSize ? '45vw': '80vw'} h="50vh" mah={500} maw={smallSize? 800: 1500} type='always' >
@@ -24,13 +36,13 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                 {tripleHeader ?
                     <thead>
                         <tr>
-                            { headers[0].filter((cell, i) => cell !== '').map((cells, index) => headers[2][headers[0].indexOf(cells)] === '' ? <th key={index} rowSpan="3">{ cells }</th> : <th key={index} colSpan={getBlankSpaces(cells.startsWith('Año  de') ? headers[0].lastIndexOf(cells) : headers[0].indexOf(cells))}>{ cells }</th>)}
+                            { headers[0].filter((cell, i) => cell !== '').map((cells, index) => headers[2][headers[0].indexOf(cells)] === ' ' ? <th key={index} rowSpan="3" colSpan={getBlankSpaces2(headers[0].indexOf(cells), headers[0])}>{ cells }</th> : <th key={index} colSpan={getBlankSpaces2(headers[0].indexOf(cells), headers[0])}>{ cells }</th>)}
                         </tr>
                         <tr>
-                            { headers[1].filter((cell, index) => cell !== '').map((cell, index) => headers[2][headers[1].indexOf(cell)] === '' ? <th style={{top: '42.7px'}} key={index} rowSpan="2">{ cell }</th> : <th style={{top: '42.7px'}} key={index}>{ cell }</th>)}
+                            { headers[1].filter((cell, index) => cell !== '' && cell !== ' ').map((cells, index) => headers[2][headers[1].indexOf(cells)] === ' ' ? <th style={{top: '42.7px'}} key={index} rowSpan="2" colSpan={getBlankSpaces2(headers[1].indexOf(cells), headers[1])}>{ cells }</th> : <th style={{top: '42.7px'}} colSpan={getBlankSpaces2(headers[1].indexOf(cells), headers[1])} key={index}>{ cells }</th>)}
                         </tr>
                         <tr>
-                            { headers[2].filter((cell, index) => cell !== '').map((cell, index) => <th style={{top: '85.4px'}} key={index}>{ cell }</th>)}
+                            { headers[2].filter((cell, index) => cell !== '' && cell !== ' ').map((cell, index) => <th style={{top: '85.4px'}} colSpan={getBlankSpaces2(headers[2].indexOf(cell), headers[2])} key={index}>{ cell }</th>)}
                         </tr>
                     </thead>
                 :
@@ -42,7 +54,7 @@ function Tabla ({headers, content, colors, doubleHeader, tripleHeader, select, r
                         </tr>
                         <tr>
                             { select ? <th></th> : null}
-                            { headers[1].filter((cell, i) => cell !== '').map((cell, index) => cell === 'Nombre' ? <th style={{top: '42px'}} key={index} className='celda-nombre'>{cell}</th> : <th style={{top: '42px'}} key={index}>{cell}</th>) }
+                            { headers[1].filter((cell, i) => cell !== '').map((cells, index) => cells === 'Nombre' ? <th style={{top: '42px'}} key={index} className='celda-nombre'>{cells}</th> : <th style={{top: '42px'}} colSpan={getBlankSpaces2(headers[1].indexOf(cells), headers[1])} key={index}>{cells}</th>) }
                         </tr>
                     </thead>
                 :
